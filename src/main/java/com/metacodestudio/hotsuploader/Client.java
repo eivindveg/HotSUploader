@@ -52,6 +52,7 @@ public class Client extends Application {
     public void start(final Stage primaryStage) throws Exception {
         Flow flow = new Flow(HomeController.class);
         FlowHandler flowHandler = flow.createHandler(new ViewFlowContext());
+        flowHandler.getFlowContext().register(getHotsRoot());
         DefaultFlowContainer container = new DefaultFlowContainer();
         StackPane pane = flowHandler.start(container);
         primaryStage.setScene(new Scene(pane));
