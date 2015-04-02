@@ -8,4 +8,13 @@
     <artifactId>hots-uploader</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencies>
+
+        <!-- The DataFX Flow API simplifies alot of JavaFX actions. -->
+        <dependency>
+            <groupId>io.datafx</groupId>
+            <artifactId>flow</artifactId>
+            <version>8.0.1</version>
+        </dependency>
+    </dependencies>
 </project>
