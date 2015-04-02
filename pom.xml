@@ -8,6 +8,8 @@
     <artifactId>hots-uploader</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <name>Heroes of the Storm Uploader</name>
+
     <dependencies>
 
         <!-- The DataFX Flow API simplifies alot of JavaFX actions. -->
