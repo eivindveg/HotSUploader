@@ -72,7 +72,6 @@ public class HomeController {
 
     @ActionMethod("invalidateExceptions")
     private void doInvalidateExceptions() {
-        System.out.println("doInvalidate");
         fileHandler.invalidateByStatus(Status.EXCEPTION);
         setUploading();
     }
