@@ -1,7 +1,9 @@
 package com.metacodestudio.hotsuploader.files;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -43,23 +45,33 @@ public class WatchHandler implements Runnable {
                 WatchEvent<Path> event = (WatchEvent<Path>) watchEvent;
                 final Path fileName = event.context();
 
-                final Path parent = fileName.getParent();
-                if(!parent.endsWith("Multiplayer")) {
-                    System.err.println("Improperly initialized");
+                File file = fileName.toFile();
+                if(!file.getName().endsWith(".StormReplay")) {
+                    continue;
+                }
+
+                long stamp = 0;
+                try {
+                    do {
+                        System.out.println("Waiting");
+                        System.out.println(file.getName());
+
+                        Thread.sleep(10000L);
+                        System.out.println(stamp);
+                        System.out.println(System.currentTimeMillis() - 20000L);
+                    } while ((stamp = file.lastModified()) > System.currentTimeMillis() - 20000L);
+                    ReplayFile replayFile = new ReplayFile(file);
+                    Platform.runLater(() -> fileMap.get(Status.NEW).add(replayFile));
+                    uploadQueue.add(replayFile);
+                } catch (InterruptedException e) {
                     break;
                 }
 
-                ReplayFile replayFile = new ReplayFile(fileName.toFile());
-
-                fileMap.get(Status.NEW).add(replayFile);
-                uploadQueue.add(replayFile);
-            }
-
-            boolean valid = key.reset();
-            if (!valid) {
-                break;
+                boolean valid = key.reset();
+                if (!valid) {
+                    break;
+                }
             }
         }
     }
-
 }
