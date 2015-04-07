@@ -8,10 +8,12 @@ import io.datafx.controller.flow.container.DefaultFlowContainer;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.net.URL;
 
 
 public class Client extends Application {
@@ -51,6 +53,12 @@ public class Client extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
+
+        ClassLoader loader = ClassLoader.getSystemClassLoader();
+        URL logo = loader.getResource("images/logo.png");
+        assert logo != null;
+        primaryStage.getIcons().add(new Image(logo.toString()));
+
         Flow flow = new Flow(HomeController.class);
         FlowHandler flowHandler = flow.createHandler(new ViewFlowContext());
         flowHandler.getFlowContext().register(new FileHandler(getRootDirectory()));
