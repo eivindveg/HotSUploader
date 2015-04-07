@@ -50,6 +50,8 @@ public class FileHandler extends Service<ReplayFile> {
             }
         });
         registerInitial();
+        WatchHandler watchHandler = new WatchHandler(watchService, fileMap, uploadQueue);
+        new Thread(watchHandler).start();
     }
 
     @SuppressWarnings("unchecked")
@@ -113,6 +115,9 @@ public class FileHandler extends Service<ReplayFile> {
 
     @Override
     protected Task<ReplayFile> createTask() {
+        if(uploadQueue.isEmpty()) {
+            return null;
+        }
         try {
             ReplayFile take = uploadQueue.take();
             UploadTask uploadTask = new UploadTask(providers, take);
@@ -146,5 +151,9 @@ public class FileHandler extends Service<ReplayFile> {
 
     public Map<Status, ObservableList<ReplayFile>> getFileMap() {
         return fileMap;
+    }
+
+    public boolean isIdle() {
+        return uploadQueue.isEmpty();
     }
 }
