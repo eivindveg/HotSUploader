@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.media.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <Accordion maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
         <panes>
@@ -36,21 +40,29 @@
       </Accordion>
    </center>
    <top>
-      <BorderPane prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <BorderPane prefHeight="50.0" prefWidth="200.0" styleClass="header" BorderPane.alignment="CENTER">
          <left>
-            <HBox prefHeight="100.0" BorderPane.alignment="CENTER">
-               <children>
-                  <VBox prefHeight="50.0" prefWidth="150.0">
-                     <children>
-                        <Label text="Status:" />
-                        <Label text="PLACEHOLDER_STATUS" />
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+               <image>
+                  <Image url="@../../../../images/logo.png" />
+               </image>
+            </ImageView>
          </left>
          <right>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Pause" BorderPane.alignment="CENTER" />
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="textwhite" text="Status" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#008f00">
+                     <font>
+                        <Font name="Calibri Bold" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
          </right>
       </BorderPane>
    </top>

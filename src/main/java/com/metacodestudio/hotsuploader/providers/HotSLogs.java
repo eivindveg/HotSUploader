@@ -31,7 +31,7 @@ public class HotSLogs extends Provider {
 
     @Override
     public Status upload(final ReplayFile replayFile) {
-        if (maintenance + 6000000L > System.currentTimeMillis()) {
+        if (isMaintenance()) {
             return null;
         }
         if (replayFile.getStatus() == Status.UPLOADED) {
@@ -44,7 +44,6 @@ public class HotSLogs extends Provider {
             String uri = "https://www.hotslogs.com/UploadFile.aspx?FileName=" + fileName;
             HttpResponse get = requestFactory.buildGetRequest(new GenericUrl(uri)).execute();
             String result = get.parseAsString();
-            System.out.println(result);
             switch (result) {
                 case "Duplicate":
                 case "Success":
@@ -63,5 +62,9 @@ public class HotSLogs extends Provider {
             return Status.EXCEPTION;
         }
 
+    }
+
+    public boolean isMaintenance() {
+        return maintenance + 6000000L > System.currentTimeMillis();
     }
 }
