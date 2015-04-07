@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
@@ -28,11 +29,25 @@
                      </children></AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane fx:id="exceptionReplaysTitlePane" animated="false" text="Failed Uploads(Reupload manually)">
+          <TitledPane fx:id="exceptionReplaysTitlePane" animated="false" text="Failed Uploads">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="exceptionReplaysView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <VBox layoutX="9.600000381469727" layoutY="9.600000381469727" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <HBox prefHeight="35.0">
+                                 <children>
+                                    <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="478.0" text="These replays have failed to upload for various reasons" />
+                                    <Button fx:id="invalidateExceptions" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Click to retry">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <ListView fx:id="exceptionReplaysView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </VBox>
                      </children></AnchorPane>
             </content>
           </TitledPane>

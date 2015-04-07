@@ -5,11 +5,14 @@ import com.metacodestudio.hotsuploader.files.ReplayFile;
 import com.metacodestudio.hotsuploader.files.Status;
 import com.metacodestudio.hotsuploader.providers.HotSLogs;
 import io.datafx.controller.ViewController;
+import io.datafx.controller.flow.action.ActionMethod;
+import io.datafx.controller.flow.action.ActionTrigger;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
@@ -48,6 +51,10 @@ public class HomeController {
     @FXML
     private Label status;
 
+    @FXML
+    @ActionTrigger("invalidateExceptions")
+    private Button invalidateExceptions;
+
     private FileHandler fileHandler;
 
 
@@ -60,6 +67,14 @@ public class HomeController {
         if(fileHandler.isIdle()) {
             setIdle();
         }
+    }
+
+
+    @ActionMethod("invalidateExceptions")
+    private void doInvalidateExceptions() {
+        System.out.println("doInvalidate");
+        fileHandler.invalidateByStatus(Status.EXCEPTION);
+        setUploading();
     }
 
     private void setFileHandlerOnSucceeded() {

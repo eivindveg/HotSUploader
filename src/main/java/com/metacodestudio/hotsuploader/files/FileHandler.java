@@ -127,7 +127,7 @@ public class FileHandler extends Service<ReplayFile> {
            return new Task<ReplayFile>() {
                @Override
                protected ReplayFile call() throws Exception {
-                   Thread.sleep(60000);
+                   Thread.sleep(20000);
                    return null;
                }
            };
@@ -141,6 +141,9 @@ public class FileHandler extends Service<ReplayFile> {
                 try {
                     ReplayFile replayFile = uploadTask.get();
                     Status status = replayFile.getStatus();
+                    if(status == oldStatus) {
+                        return;
+                    }
                     ObservableList<ReplayFile> replayFiles = fileMap.get(oldStatus);
                     if(replayFiles != null) {
                         replayFiles.remove(replayFile);
@@ -149,7 +152,6 @@ public class FileHandler extends Service<ReplayFile> {
                     if(replayFiles == null) {
                         replayFiles = FXCollections.observableArrayList();
                         fileMap.put(status, replayFiles);
-                        replayFiles.add(replayFile);
                     }
                     replayFiles.add(replayFile);
                     updateFile(replayFile);
@@ -169,5 +171,11 @@ public class FileHandler extends Service<ReplayFile> {
 
     public boolean isIdle() {
         return uploadQueue.isEmpty();
+    }
+
+    public void invalidateByStatus(final Status status) {
+        ObservableList<ReplayFile> replayFiles = fileMap.get(status);
+        uploadQueue.addAll(replayFiles);
+        restart();
     }
 }
