@@ -1,4 +1,4 @@
-package com.metacodestudio.hotsuploader.controllers;
+package com.metacodestudio.hotsuploader.window;
 
 import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.files.ReplayFile;
@@ -21,7 +21,7 @@ import javafx.scene.paint.Paint;
 import javax.annotation.PostConstruct;
 import java.util.Map;
 
-@ViewController(value = "../views/Home.fxml", iconPath = "../../../../images/logo.png", title = "HotSLogs Uploader")
+@ViewController(value = "Home.fxml", title = "HotSLogs Uploader")
 public class HomeController {
 
     @FXMLViewFlowContext

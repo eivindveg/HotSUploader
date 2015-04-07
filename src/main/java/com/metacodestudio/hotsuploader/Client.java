@@ -1,7 +1,7 @@
 package com.metacodestudio.hotsuploader;
 
-import com.metacodestudio.hotsuploader.controllers.HomeController;
 import com.metacodestudio.hotsuploader.files.FileHandler;
+import com.metacodestudio.hotsuploader.window.HomeController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowHandler;
 import io.datafx.controller.flow.container.DefaultFlowContainer;
@@ -53,7 +53,6 @@ public class Client extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-
         ClassLoader loader = ClassLoader.getSystemClassLoader();
         URL logo = loader.getResource("images/logo.png");
         assert logo != null;
@@ -68,5 +67,6 @@ public class Client extends Application {
         primaryStage.setOnCloseRequest(event -> System.exit(0));
         primaryStage.show();
     }
+
 
 }
