@@ -19,7 +19,7 @@ public class HotSLogs extends Provider {
     public static final String SECRET_ACCESS_KEY = "LJUzeVlvw1WX1TmxDqSaIZ9ZU04WQGcshPQyp21x";
     private final AmazonS3Client s3Client;
     private final HttpRequestFactory requestFactory;
-    private long maintenance;
+    private static long maintenance;
 
     public HotSLogs() {
         super("HotSLogs.com");
@@ -64,7 +64,7 @@ public class HotSLogs extends Provider {
 
     }
 
-    public boolean isMaintenance() {
+    public static boolean isMaintenance() {
         return maintenance + 6000000L > System.currentTimeMillis();
     }
 }
