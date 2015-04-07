@@ -82,9 +82,17 @@ public class FileHandler extends Service<ReplayFile> {
                     return file;
                 }).collect(Collectors.groupingBy(ReplayFile::getStatus,
                 ConcurrentHashMap::new,
-                Collectors.toCollection(FXCollections::observableArrayList)));;
+                Collectors.toCollection(FXCollections::observableArrayList)));
+        verifyMap();
+    }
 
-        System.out.println(fileMap);
+    private void verifyMap() {
+        Status[] keys = Status.values();
+        for (final Status key : keys) {
+            if(!fileMap.containsKey(key)) {
+                fileMap.put(key, FXCollections.observableArrayList());
+            }
+        }
     }
 
     private File getPropertiesFile(final File file) {
@@ -115,8 +123,14 @@ public class FileHandler extends Service<ReplayFile> {
 
     @Override
     protected Task<ReplayFile> createTask() {
-        if(uploadQueue.isEmpty()) {
-            return null;
+        if(isIdle()) {
+           return new Task<ReplayFile>() {
+               @Override
+               protected ReplayFile call() throws Exception {
+                   Thread.sleep(60000);
+                   return null;
+               }
+           };
         }
         try {
             ReplayFile take = uploadQueue.take();

@@ -52,6 +52,9 @@ public class HomeController {
         bindLists();
         setFileHandlerOnSucceeded();
         fileHandler.start();
+        if(fileHandler.isIdle()) {
+            setIdle();
+        }
     }
 
     private void setFileHandlerOnSucceeded() {
@@ -70,18 +73,29 @@ public class HomeController {
 
     private void bindLists() {
         Map<Status, ObservableList<ReplayFile>> fileMap = fileHandler.getFileMap();
+
         final String newReplaysTitle = newReplaysTitlePane.textProperty().get();
         ObservableList<ReplayFile> newReplays = fileMap.get(Status.NEW);
-        newReplays.addListener((ListChangeListener<ReplayFile>) c -> newReplaysTitlePane.setText(newReplaysTitle + " (" + newReplays.size() + ")"));
+        newReplays.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(newReplaysTitlePane, newReplaysTitle, newReplays));
         newReplaysView.setItems(newReplays);
+
         final String uploadedReplaysTitle = uploadedReplaysTitlePane.textProperty().get();
         ObservableList<ReplayFile> uploadedReplays = fileMap.get(Status.UPLOADED);
-        newReplays.addListener((ListChangeListener<ReplayFile>) c -> uploadedReplaysTitlePane.setText(uploadedReplaysTitle + " (" + uploadedReplays.size() + ")"));
+        newReplays.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(uploadedReplaysTitlePane, uploadedReplaysTitle, uploadedReplays));
         uploadedReplaysView.setItems(uploadedReplays);
+
         final String exceptionReplaysTitle = exceptionReplaysTitlePane.textProperty().get();
         ObservableList<ReplayFile> exceptionReplays = fileMap.get(Status.EXCEPTION);
-        newReplays.addListener((ListChangeListener<ReplayFile>) c -> exceptionReplaysTitlePane.setText(exceptionReplaysTitle + " (" + exceptionReplays.size() + ")"));
+        newReplays.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(exceptionReplaysTitlePane, exceptionReplaysTitle, exceptionReplays));
         exceptionReplaysView.setItems(exceptionReplays);
+
+        updatePaneTitle(newReplaysTitlePane, newReplaysTitle, newReplays);
+        updatePaneTitle(uploadedReplaysTitlePane, uploadedReplaysTitle, uploadedReplays);
+        updatePaneTitle(exceptionReplaysTitlePane, exceptionReplaysTitle, exceptionReplays);
+    }
+
+    private void updatePaneTitle(final TitledPane pane, final String baseTitle, final ObservableList<ReplayFile> list) {
+        pane.setText(baseTitle + " (" + list.size() + ")");
     }
 
     private void setIdle() {
