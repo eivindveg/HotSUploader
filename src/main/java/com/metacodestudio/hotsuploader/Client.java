@@ -1,6 +1,7 @@
 package com.metacodestudio.hotsuploader;
 
 import com.metacodestudio.hotsuploader.controllers.HomeController;
+import com.metacodestudio.hotsuploader.files.FileHandler;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowHandler;
 import io.datafx.controller.flow.container.DefaultFlowContainer;
@@ -52,7 +53,7 @@ public class Client extends Application {
     public void start(final Stage primaryStage) throws Exception {
         Flow flow = new Flow(HomeController.class);
         FlowHandler flowHandler = flow.createHandler(new ViewFlowContext());
-        flowHandler.getFlowContext().register(getHotsRoot());
+        flowHandler.getFlowContext().register(new FileHandler(getRootDirectory()));
         DefaultFlowContainer container = new DefaultFlowContainer();
         StackPane pane = flowHandler.start(container);
         primaryStage.setScene(new Scene(pane));
