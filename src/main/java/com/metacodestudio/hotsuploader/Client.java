@@ -40,8 +40,8 @@ public class Client extends Application {
     }
 
     private static boolean isMacintosh() {
-        // TODO DETERMINE MACINTOSH PROPERTIES
-        throw new UnsupportedOperationException("Macintosh check not yet implemented");
+        String osName = System.getProperty("os.name");
+        return osName.contains("Mac");
     }
 
     private static boolean isWindows() {
