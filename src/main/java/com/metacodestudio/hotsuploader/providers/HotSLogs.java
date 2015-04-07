@@ -10,7 +10,6 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.metacodestudio.hotsuploader.files.ReplayFile;
 import com.metacodestudio.hotsuploader.files.Status;
 
-import java.io.IOException;
 import java.util.UUID;
 
 public class HotSLogs extends Provider {
@@ -34,37 +33,37 @@ public class HotSLogs extends Provider {
         if (isMaintenance()) {
             return null;
         }
-        if (replayFile.getStatus() == Status.UPLOADED) {
-            return replayFile.getStatus();
-        }
+
         String fileName = UUID.randomUUID() + ".StormReplay";
-        s3Client.putObject("heroesreplays", fileName, replayFile.getFile());
+        String uri = "https://www.hotslogs.com/UploadFile.aspx?FileName=" + fileName;
 
         try {
-            String uri = "https://www.hotslogs.com/UploadFile.aspx?FileName=" + fileName;
+            s3Client.putObject("heroesreplays", fileName, replayFile.getFile());
             HttpResponse get = requestFactory.buildGetRequest(new GenericUrl(uri)).execute();
             String result = get.parseAsString();
             switch (result) {
                 case "Duplicate":
                 case "Success":
                     return Status.UPLOADED;
-                case "Exception":
-                    return Status.EXCEPTION;
+                case "ComputerPlayerFound":
+                case "PreAlphaWipe":
+                case "TryMeMode":
+                    return Status.UNSUPPORTED_GAME_MODE;
                 case "Maintenance":
                     maintenance = System.currentTimeMillis();
-                    return null;
+                    return Status.NEW;
                 default:
                     return Status.EXCEPTION;
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return Status.EXCEPTION;
+            return Status.NEW;
         }
 
     }
 
     public static boolean isMaintenance() {
-        return maintenance + 6000000L > System.currentTimeMillis();
+        return maintenance + 600000L > System.currentTimeMillis();
     }
 }

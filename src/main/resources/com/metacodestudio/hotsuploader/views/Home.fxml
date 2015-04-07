@@ -28,7 +28,7 @@
                      </children></AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane fx:id="exceptionReplaysTitlePane" animated="false" text="Failed Replays">
+          <TitledPane fx:id="exceptionReplaysTitlePane" animated="false" text="Failed Uploads(Reupload manually)">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -36,6 +36,15 @@
                      </children></AnchorPane>
             </content>
           </TitledPane>
+            <TitledPane fx:id="botReplaysTitlePane" animated="false" text="Unsupported Game Mode">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView fx:id="botReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </TitledPane>
         </panes>
       </Accordion>
    </center>
