@@ -1,10 +1,11 @@
 package com.metacodestudio.hotsuploader.files;
 
+import javafx.collections.ObservableList;
+
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -14,10 +15,10 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 public class WatchHandler implements Runnable {
 
     private WatchService watchService;
-    private Map<Status, List<ReplayFile>> fileMap;
+    private Map<Status, ObservableList<ReplayFile>> fileMap;
     private Queue<ReplayFile> uploadQueue;
 
-    public WatchHandler(final WatchService watchService, final Map<Status, List<ReplayFile>> fileMap, final Queue<ReplayFile> uploadQueue) {
+    public WatchHandler(final WatchService watchService, final Map<Status, ObservableList<ReplayFile>> fileMap, final Queue<ReplayFile> uploadQueue) {
         this.watchService = watchService;
         this.fileMap = fileMap;
         this.uploadQueue = uploadQueue;
