@@ -12,7 +12,7 @@
    <center>
       <Accordion maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
         <panes>
-          <TitledPane animated="false" text="New Replays">
+          <TitledPane fx:id="newReplaysTitlePane" animated="false" text="New Replays">
             <content>
               <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
                      <children>
@@ -20,7 +20,7 @@
                      </children></AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Uploaded Replays">
+          <TitledPane fx:id="uploadedReplaysTitlePane" animated="false" text="Uploaded Replays">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -28,7 +28,7 @@
                      </children></AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Failed Replays">
+          <TitledPane fx:id="exceptionReplaysTitlePane" animated="false" text="Failed Replays">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -56,7 +56,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#008f00">
+                  <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#008f00">
                      <font>
                         <Font name="Calibri Bold" size="14.0" />
                      </font>
