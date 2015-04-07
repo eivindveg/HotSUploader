@@ -26,7 +26,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 public class FileHandler extends Service<ReplayFile> {
 
     public static final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
-    public static final String HOTS_ACCOUNT_FILTER = "(\\d-Hero-\\d-\\d{6})";
+    public static final String HOTS_ACCOUNT_FILTER = "(\\d-Hero-\\d-\\d{1,6})";
     private final List<File> watchDirectories;
     private WatchService watchService;
     private Map<Status, ObservableList<ReplayFile>> fileMap;
