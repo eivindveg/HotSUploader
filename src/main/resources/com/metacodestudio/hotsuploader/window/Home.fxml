@@ -67,11 +67,11 @@
         </Accordion>
     </center>
     <top>
-        <BorderPane prefHeight="50.0" prefWidth="200.0" styleClass="header" BorderPane.alignment="CENTER">
+        <BorderPane prefHeight="75.0" prefWidth="338.0" styleClass="header" BorderPane.alignment="CENTER">
             <left>
-                <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                <ImageView fitHeight="75.0" fitWidth="338.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                     <image>
-                        <Image url="@../../../../images/logo.png" />
+                        <Image url="@../../../../images/hotslogs-large.png" />
                     </image>
                 </ImageView>
             </left>
