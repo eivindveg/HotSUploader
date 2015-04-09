@@ -111,8 +111,7 @@ public class HomeController {
         prepareAccordion();
         setPlayerSearchActions();
         bindLists();
-        setFileHandlerOnSucceeded();
-        fileHandler.start();
+        setupFileHandler();
         if (fileHandler.isIdle()) {
             setIdle();
         }
@@ -130,7 +129,7 @@ public class HomeController {
 
     private void setPlayerSearchActions() {
         playerSearchInput.setOnKeyPressed(event -> {
-            if(event.getCode() == KeyCode.ENTER) {
+            if (event.getCode() == KeyCode.ENTER) {
                 try {
                     doPlayerSearch();
                 } catch (IOException | URISyntaxException e) {
@@ -174,6 +173,9 @@ public class HomeController {
         accountSelect.converterProperty().setValue(new StringConverter<Account>() {
             @Override
             public String toString(final Account object) {
+                if(object == null) {
+                    return "";
+                }
                 return object.getName();
             }
 
@@ -197,6 +199,9 @@ public class HomeController {
     }
 
     private void updateAccountView(final Account account) {
+        if(account == null) {
+            return;
+        }
         Optional<Integer> quickMatchMmr = readMmr(account.getLeaderboardRankings(), "QuickMatch");
         if (quickMatchMmr.isPresent()) {
             qmMmr.setText(String.valueOf(quickMatchMmr.get()));
@@ -247,7 +252,8 @@ public class HomeController {
         setUploading();
     }
 
-    private void setFileHandlerOnSucceeded() {
+    private void setupFileHandler() {
+        fileHandler.setRestartOnFailure(true);
         fileHandler.setOnSucceeded(event -> {
             if (HotSLogs.isMaintenance()) {
                 setMaintenance();
@@ -256,9 +262,9 @@ public class HomeController {
             } else {
                 setUploading();
             }
-
-            fileHandler.restart();
         });
+        fileHandler.setOnFailed(event -> setError());
+        fileHandler.start();
     }
 
     private void bindLists() {
@@ -308,6 +314,11 @@ public class HomeController {
     private void setUploading() {
         status.setText("Uploading");
         status.textFillProperty().setValue(Paint.valueOf("#008f00"));
+    }
+
+    private void setError() {
+        status.setText("Connection error");
+        status.textFillProperty().setValue(Paint.valueOf("#FF0000"));
     }
 
 }

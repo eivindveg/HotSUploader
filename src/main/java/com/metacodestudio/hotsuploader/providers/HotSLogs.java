@@ -50,8 +50,7 @@ public class HotSLogs extends Provider {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return Status.NEW;
+            return null;
         }
 
     }

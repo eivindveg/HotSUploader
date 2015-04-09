@@ -9,7 +9,7 @@ import com.metacodestudio.hotsuploader.utils.OSUtils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Service;
+import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import org.apache.commons.io.FileUtils;
 
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class FileHandler extends Service<ReplayFile> {
+public class FileHandler extends ScheduledService<ReplayFile> {
 
     private final List<File> watchDirectories;
     private final ObjectMapper mapper;
@@ -140,6 +140,7 @@ public class FileHandler extends Service<ReplayFile> {
                     e.printStackTrace();
                 }
             });
+            uploadTask.setOnFailed(event -> uploadQueue.add(take));
             return uploadTask;
         } catch (InterruptedException e) {
             return null;

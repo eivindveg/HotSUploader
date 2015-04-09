@@ -21,18 +21,15 @@ public class UploadTask extends Task<ReplayFile> {
     protected ReplayFile call() throws Exception {
         providers.forEach(provider -> {
             Status upload = provider.upload(take);
-            System.out.println(upload);
             if (upload == null) {
-                System.out.println("Cancelling");
-                cancelled();
-                return;
+                throw new RuntimeException("Failed");
             }
             List<UploadStatus> uploadStatuses = take.getUploadStatuses();
             UploadStatus status = uploadStatuses.stream()
                     .filter(uploadStatus -> uploadStatus.getHost().equals(provider.getName()))
                     .findFirst()
                     .orElse(null);
-            if(status == null) {
+            if (status == null) {
                 uploadStatuses.add(new UploadStatus(provider.getName(), upload));
             } else {
                 status.setStatus(upload);
