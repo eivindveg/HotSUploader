@@ -1,4 +1,4 @@
-package com.metacodestudio.hotsuploader.files;
+package com.metacodestudio.hotsuploader.models;
 
 public enum Status {
     NEW, UPLOADED, EXCEPTION, UNSUPPORTED_GAME_MODE

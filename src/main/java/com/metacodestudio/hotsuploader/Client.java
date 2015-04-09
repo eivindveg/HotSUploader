@@ -1,6 +1,7 @@
 package com.metacodestudio.hotsuploader;
 
 import com.metacodestudio.hotsuploader.files.FileHandler;
+import com.metacodestudio.hotsuploader.utils.OSUtils;
 import com.metacodestudio.hotsuploader.window.HomeController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowHandler;
@@ -25,30 +26,8 @@ public class Client extends Application {
     }
 
     public static void main(String[] args) {
-        hotsRoot = getRootDirectory();
+        hotsRoot = OSUtils.getHotSHome();
         Application.launch(Client.class, args);
-    }
-
-    private static File getRootDirectory() {
-        StringBuilder builder = new StringBuilder(System.getProperty("user.home"));
-        if (isWindows()) {
-            builder.append("\\Documents\\Heroes of the Storm\\Accounts\\");
-        } else if (isMacintosh()) {
-            builder.append("/Library/Application Support/Blizzard/Heroes of the Storm/Accounts/");
-        } else {
-            throw new UnsupportedOperationException("This application requires Windows or Macintosh OSX to run");
-        }
-        return new File(builder.toString());
-    }
-
-    private static boolean isMacintosh() {
-        String osName = System.getProperty("os.name");
-        return osName.contains("Mac");
-    }
-
-    private static boolean isWindows() {
-        String osName = System.getProperty("os.name");
-        return osName.contains("Windows");
     }
 
     @Override
@@ -57,10 +36,11 @@ public class Client extends Application {
         URL logo = loader.getResource("images/logo.png");
         assert logo != null;
         primaryStage.getIcons().add(new Image(logo.toString()));
+        primaryStage.setResizable(false);
 
         Flow flow = new Flow(HomeController.class);
         FlowHandler flowHandler = flow.createHandler(new ViewFlowContext());
-        flowHandler.getFlowContext().register(new FileHandler(getRootDirectory()));
+        flowHandler.getFlowContext().register(new FileHandler(OSUtils.getHotSHome()));
         DefaultFlowContainer container = new DefaultFlowContainer();
         StackPane pane = flowHandler.start(container);
         primaryStage.setScene(new Scene(pane));

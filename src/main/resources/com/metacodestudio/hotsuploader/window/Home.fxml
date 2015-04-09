@@ -1,93 +1,188 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.media.*?>
-<?import javafx.scene.control.*?>
 <?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <Accordion maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
-        <panes>
-          <TitledPane fx:id="newReplaysTitlePane" animated="false" text="New Replays">
-            <content>
-              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
-                     <children>
-                        <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children></AnchorPane>
-            </content>
-          </TitledPane>
-          <TitledPane fx:id="uploadedReplaysTitlePane" animated="false" text="Uploaded Replays">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <ListView fx:id="uploadedReplaysView" layoutX="9.6" prefHeight="200.0" prefWidth="591.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children></AnchorPane>
-            </content>
-          </TitledPane>
-          <TitledPane fx:id="exceptionReplaysTitlePane" animated="false" text="Failed Uploads">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <VBox layoutX="9.600000381469727" layoutY="9.600000381469727" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <HBox prefHeight="35.0">
-                                 <children>
-                                    <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="478.0" text="These replays have failed to upload for various reasons" />
-                                    <Button fx:id="invalidateExceptions" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Click to retry">
-                                       <HBox.margin>
-                                          <Insets bottom="5.0" left="10.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                 </children>
-                              </HBox>
-                              <ListView fx:id="exceptionReplaysView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                           </children>
-                        </VBox>
-                     </children></AnchorPane>
-            </content>
-          </TitledPane>
-            <TitledPane fx:id="botReplaysTitlePane" animated="false" text="Unsupported Game Mode">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <ListView fx:id="botReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children>
-                  </AnchorPane>
-              </content>
-            </TitledPane>
-        </panes>
-      </Accordion>
-   </center>
-   <top>
-      <BorderPane prefHeight="50.0" prefWidth="200.0" styleClass="header" BorderPane.alignment="CENTER">
-         <left>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
-               <image>
-                  <Image url="@../../../../images/logo.png" />
-               </image>
-            </ImageView>
-         </left>
-         <right>
-            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="textwhite" text="Status" textFill="WHITE">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" styleClass="header" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <center>
+        <Accordion fx:id="accordion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+            <panes>
+                <TitledPane fx:id="newReplaysTitlePane" animated="false" text="New Replays">
+                    <content>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header">
+                            <children>
+                                <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane fx:id="uploadedReplaysTitlePane" animated="false" text="Uploaded Replays">
+                    <content>
+                        <AnchorPane styleClass="header">
+                            <children>
+                                <ListView fx:id="uploadedReplaysView" layoutX="9.6" prefHeight="200.0" prefWidth="591.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane fx:id="exceptionReplaysTitlePane" animated="false" text="Failed Uploads">
+                    <content>
+                        <AnchorPane styleClass="header">
+                            <children>
+                                <VBox layoutX="9.600000381469727" layoutY="9.600000381469727" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <children>
+                              <BorderPane>
+                                 <left>
+                                                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="These replays have failed to upload for various reasons" textFill="WHITE" BorderPane.alignment="CENTER" />
+                                 </left>
+                                 <right>
+                                                <Button fx:id="invalidateExceptions" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Click to retry" BorderPane.alignment="CENTER" />
+                                 </right>
+                              </BorderPane>
+                                        <ListView fx:id="exceptionReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane fx:id="botReplaysTitlePane" animated="false" text="Unsupported Game Mode">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" styleClass="header">
+                            <children>
+                                <ListView fx:id="botReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+            </panes>
+        </Accordion>
+    </center>
+    <top>
+        <BorderPane prefHeight="50.0" prefWidth="200.0" styleClass="header" BorderPane.alignment="CENTER">
+            <left>
+                <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                    <image>
+                        <Image url="@../../../../images/logo.png" />
+                    </image>
+                </ImageView>
+            </left>
+            <right>
+                <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="textwhite" text="Status" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#008f00">
+                            <font>
+                                <Font name="Calibri Bold" size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+            </right>
+        </BorderPane>
+    </top>
+   <right>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <top>
+            <BorderPane BorderPane.alignment="CENTER">
+               <top>
+                  <Label alignment="CENTER" text="Players" textFill="WHITE" BorderPane.alignment="CENTER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#008f00">
+               </top>
+               <center>
+                  <BorderPane BorderPane.alignment="CENTER">
+                     <left>
+                        <ChoiceBox fx:id="accountSelect" nodeOrientation="RIGHT_TO_LEFT" prefWidth="150.0" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
+                              <Insets top="10.0" />
+                           </BorderPane.margin>
+                        </ChoiceBox>
+                     </left>
+                  </BorderPane>
+               </center>
+               <right>
+                  <Button fx:id="viewProfile" disable="true" mnemonicParsing="false" text="Open Profile" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets top="10.0" />
+                     </BorderPane.margin>
+                  </Button>
+               </right>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </BorderPane>
+         </top>
+         <center>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
+               <children>
+                  <BorderPane>
+                     <left>
+                        <Label text="Team League MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
+                     </left>
+                     <right>
+                        <Label fx:id="tlMmr" text="N/A" textFill="#008f00" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+                  <BorderPane>
+                     <left>
+                        <Label text="Hero League MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
+                     </left>
+                     <right>
+                        <Label fx:id="hlMmr" text="N/A" textFill="#008f00" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+                  <BorderPane>
+                     <left>
+                        <Label text="Quick Match MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
+                     </left>
+                     <right>
+                        <Label fx:id="qmMmr" text="N/A" textFill="#008f00" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+               </children>
+               <padding>
+                  <Insets left="5.0" right="5.0" top="10.0" />
+               </padding>
+            </VBox>
+         </center>
+         <BorderPane.margin>
+            <Insets left="5.0" />
+         </BorderPane.margin>
+         <bottom>
+            <BorderPane BorderPane.alignment="CENTER">
+               <top>
+                  <Label text="Lookup Player" textFill="#f8f8f8" BorderPane.alignment="CENTER">
                      <font>
-                        <Font name="Calibri Bold" size="14.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-               </children>
-            </VBox>
-         </right>
+               </top>
+               <right>
+                  <Button fx:id="playerSearch" mnemonicParsing="false" text="Search" BorderPane.alignment="CENTER" />
+               </right>
+               <center>
+                  <TextField fx:id="playerSearchInput" maxWidth="1.7976931348623157E308" promptText="Enter Player Name" BorderPane.alignment="CENTER" />
+               </center>
+            </BorderPane>
+         </bottom>
       </BorderPane>
-   </top>
+   </right>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
 </BorderPane>

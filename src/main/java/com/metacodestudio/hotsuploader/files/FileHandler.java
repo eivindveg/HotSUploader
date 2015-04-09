@@ -1,7 +1,12 @@
 package com.metacodestudio.hotsuploader.files;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.metacodestudio.hotsuploader.models.ReplayFile;
+import com.metacodestudio.hotsuploader.models.Status;
+import com.metacodestudio.hotsuploader.models.UploadStatus;
 import com.metacodestudio.hotsuploader.providers.Provider;
+import com.metacodestudio.hotsuploader.utils.OSUtils;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -10,48 +15,52 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Paths;
-import java.nio.file.WatchService;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-
 public class FileHandler extends Service<ReplayFile> {
 
-    public static final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
-    public static final String HOTS_ACCOUNT_FILTER = "(\\d-Hero-\\d-\\d{1,6})";
     private final List<File> watchDirectories;
-    private WatchService watchService;
+    private final ObjectMapper mapper;
     private Map<Status, ObservableList<ReplayFile>> fileMap;
     private List<Provider> providers = Provider.getAll();
     private BlockingQueue<ReplayFile> uploadQueue;
-    private final Gson gson;
 
     public FileHandler(final File root) throws IOException {
-        gson = new Gson();
+        mapper = new ObjectMapper();
         uploadQueue = new ArrayBlockingQueue<>(2500);
         fileMap = new HashMap<>();
-        watchDirectories = getWatchDirectories(root);
-        watchDirectories.forEach(System.out::println);
+        watchDirectories = OSUtils.getAccountDirectories(root);
 
-        watchService = FileSystems.getDefault().newWatchService();
+        cleanup();
+        registerInitial();
         watchDirectories.stream().map(file -> Paths.get(file.toString())).forEach(path -> {
             try {
-                path.register(watchService, ENTRY_CREATE, ENTRY_MODIFY);
+                WatchHandler watchHandler = new WatchHandler(path, fileMap, uploadQueue);
+                new Thread(watchHandler).start();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
-        registerInitial();
-        WatchHandler watchHandler = new WatchHandler(watchService, fileMap, uploadQueue);
-        new Thread(watchHandler).start();
+    }
+
+    private void cleanup() {
+        List<File> accounts = OSUtils.getAccountDirectories(new File(OSUtils.getApplicationHome(), "Accounts"));
+        accounts.stream()
+                .flatMap(folder -> {
+                    File[] children = folder.listFiles();
+                    return Arrays.asList(children != null ? children : new File[0]).stream();
+                }).map(OSUtils::getReplayFile)
+                .filter(file -> !file.exists())
+                .map(OSUtils::getPropertiesFile).forEach(File::delete);
     }
 
     @SuppressWarnings("unchecked")
@@ -61,76 +70,56 @@ public class FileHandler extends Service<ReplayFile> {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
         fileMap = fileList.stream()
-                .map(file -> {
-                    File propertiesFile = getPropertiesFile(file.getFile());
+                .map(replay -> {
+                    File propertiesFile = OSUtils.getPropertiesFile(replay.getFile());
                     try {
                         if (propertiesFile.exists()) {
-                            file.addStatuses(ReplayUtils.fromJson(gson.fromJson(FileUtils.readFileToString(propertiesFile), List.class)));
+                            String properties = FileUtils.readFileToString(propertiesFile);
+                            replay.addStatuses(Arrays.asList(mapper.readValue(properties, UploadStatus[].class)));
                         } else {
-                            file.addStatuses(providers.stream()
+                            replay.addStatuses(providers.stream()
                                     .map(UploadStatus::new)
                                     .collect(Collectors.toList()));
-                            FileUtils.write(propertiesFile, gson.toJson(file.getUploadStatuses()));
+                            FileUtils.write(propertiesFile, mapper.writeValueAsString(replay.getUploadStatuses()));
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    if (file.getStatus() == Status.NEW) {
-                        uploadQueue.add(file);
+                    if (replay.getStatus() == Status.NEW) {
+                        uploadQueue.add(replay);
                     }
 
-                    return file;
-                }).collect(Collectors.groupingBy(ReplayFile::getStatus,
-                ConcurrentHashMap::new,
-                Collectors.toCollection(FXCollections::observableArrayList)));
+                    return replay;
+                }).collect(Collectors.groupingBy(ReplayFile::getStatus, ConcurrentHashMap::new,
+                        Collectors.toCollection(FXCollections::observableArrayList)));
         verifyMap();
     }
 
     private void verifyMap() {
         Status[] keys = Status.values();
         for (final Status key : keys) {
-            if(!fileMap.containsKey(key)) {
+            if (!fileMap.containsKey(key)) {
                 fileMap.put(key, FXCollections.observableArrayList());
             }
         }
     }
 
-    private File getPropertiesFile(final File file) {
-        String propertiesFileName = file.toString().replaceAll(".StormReplay", "") + ".json";
-        return new File(propertiesFileName);
-    }
-
     public void updateFile(ReplayFile file) throws IOException {
-        File propertiesFile = getPropertiesFile(file.getFile());
-        Gson gson = new Gson();
-        String data = gson.toJson(file.getUploadStatuses());
+        File propertiesFile = OSUtils.getPropertiesFile(file.getFile());
+        String data = mapper.writeValueAsString(file.getUploadStatuses());
         FileUtils.write(propertiesFile, data);
-    }
-
-    private List<File> getWatchDirectories(final File root) {
-        List<File> hotsAccounts = new ArrayList<>();
-        File[] files = root.listFiles((dir, name) -> name.matches(ACCOUNT_FOLDER_FILTER));
-
-        for (final File file : files) {
-            File[] hotsFolders = file.listFiles((dir, name) -> name.matches(HOTS_ACCOUNT_FILTER));
-            Arrays.stream(hotsFolders)
-                    .map(folder -> new File(folder, "Replays"))
-                    .map(folder -> new File(folder, "Multiplayer"))
-                    .forEach(hotsAccounts::add);
-        }
-        return hotsAccounts;
     }
 
     @Override
     protected Task<ReplayFile> createTask() {
-        if(isIdle()) {
-           return new Task<ReplayFile>() {
-               @Override
-               protected ReplayFile call() throws Exception {
-                   Thread.sleep(20000);
-                   return null;
-               }
-           };
+        if (isIdle()) {
+            return new Task<ReplayFile>() {
+                @Override
+                protected ReplayFile call() throws Exception {
+                    Thread.sleep(20000);
+                    return null;
+                }
+            };
         }
         try {
             ReplayFile take = uploadQueue.take();
@@ -141,19 +130,11 @@ public class FileHandler extends Service<ReplayFile> {
                 try {
                     ReplayFile replayFile = uploadTask.get();
                     Status status = replayFile.getStatus();
-                    if(status == oldStatus) {
+                    if (status == oldStatus) {
                         return;
                     }
-                    ObservableList<ReplayFile> replayFiles = fileMap.get(oldStatus);
-                    if(replayFiles != null) {
-                        replayFiles.remove(replayFile);
-                    }
-                    replayFiles = fileMap.get(replayFile.getStatus());
-                    if(replayFiles == null) {
-                        replayFiles = FXCollections.observableArrayList();
-                        fileMap.put(status, replayFiles);
-                    }
-                    replayFiles.add(replayFile);
+                    fileMap.get(oldStatus).remove(replayFile);
+                    fileMap.get(status).add(replayFile);
                     updateFile(replayFile);
                 } catch (InterruptedException | ExecutionException | IOException e) {
                     e.printStackTrace();
@@ -175,7 +156,15 @@ public class FileHandler extends Service<ReplayFile> {
 
     public void invalidateByStatus(final Status status) {
         ObservableList<ReplayFile> replayFiles = fileMap.get(status);
+        replayFiles.stream()
+                .flatMap(replayFile -> replayFile.getUploadStatuses()
+                        .stream())
+                .forEach(uploadStatus -> uploadStatus.setStatus(Status.NEW));
         uploadQueue.addAll(replayFiles);
+        Platform.runLater(() -> {
+            fileMap.get(Status.NEW).addAll(replayFiles);
+            replayFiles.clear();
+        });
         restart();
     }
 }

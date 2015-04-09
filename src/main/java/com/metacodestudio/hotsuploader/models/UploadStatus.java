@@ -1,4 +1,4 @@
-package com.metacodestudio.hotsuploader.files;
+package com.metacodestudio.hotsuploader.models;
 
 import com.metacodestudio.hotsuploader.providers.Provider;
 
@@ -6,6 +6,10 @@ public class UploadStatus {
 
     private String host;
     private Status status;
+
+    public UploadStatus() {
+
+    }
 
     public UploadStatus(final Provider host) {
         this.host = host.getName();

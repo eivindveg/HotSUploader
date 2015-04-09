@@ -1,4 +1,4 @@
-package com.metacodestudio.hotsuploader.files;
+package com.metacodestudio.hotsuploader.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -37,10 +37,27 @@ public class ReplayFile {
         return file.getName();
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final ReplayFile that = (ReplayFile) o;
+
+        return !(file != null ? !file.equals(that.file) : that.file != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return file != null ? file.hashCode() : 0;
+    }
+
     @JsonIgnore
     public Status getStatus() {
         // TODO MAKE MULTIPROVIDER-FRIENDLY
         if(uploadStatuses.size() < 1) {
+            System.out.println("Empty status list");
             return Status.NEW;
         }
         return uploadStatuses.get(0).getStatus();

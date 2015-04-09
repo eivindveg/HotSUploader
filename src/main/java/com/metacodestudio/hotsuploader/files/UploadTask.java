@@ -1,5 +1,8 @@
 package com.metacodestudio.hotsuploader.files;
 
+import com.metacodestudio.hotsuploader.models.ReplayFile;
+import com.metacodestudio.hotsuploader.models.Status;
+import com.metacodestudio.hotsuploader.models.UploadStatus;
 import com.metacodestudio.hotsuploader.providers.Provider;
 import javafx.concurrent.Task;
 
@@ -25,10 +28,15 @@ public class UploadTask extends Task<ReplayFile> {
                 return;
             }
             List<UploadStatus> uploadStatuses = take.getUploadStatuses();
-            uploadStatuses.stream()
-                    .filter(st -> st.getHost().equals(provider.getName()))
+            UploadStatus status = uploadStatuses.stream()
+                    .filter(uploadStatus -> uploadStatus.getHost().equals(provider.getName()))
                     .findFirst()
-                    .ifPresent(st -> st.setStatus(upload));
+                    .orElse(null);
+            if(status == null) {
+                uploadStatuses.add(new UploadStatus(provider.getName(), upload));
+            } else {
+                status.setStatus(upload);
+            }
             succeeded();
         });
         return take;

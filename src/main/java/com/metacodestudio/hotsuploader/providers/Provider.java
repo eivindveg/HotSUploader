@@ -1,7 +1,7 @@
 package com.metacodestudio.hotsuploader.providers;
 
-import com.metacodestudio.hotsuploader.files.ReplayFile;
-import com.metacodestudio.hotsuploader.files.Status;
+import com.metacodestudio.hotsuploader.models.ReplayFile;
+import com.metacodestudio.hotsuploader.models.Status;
 
 import java.util.ArrayList;
 import java.util.List;
