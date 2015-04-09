@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
@@ -69,10 +71,16 @@
     <top>
         <BorderPane prefHeight="75.0" prefWidth="338.0" styleClass="header" BorderPane.alignment="CENTER">
             <left>
-                <ImageView fitHeight="75.0" fitWidth="338.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                <ImageView fx:id="logo" fitHeight="75.0" fitWidth="338.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                     <image>
                         <Image url="@../../../../images/hotslogs-large.png" />
                     </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <Bloom threshold="0.95" />
+               </effect>
                 </ImageView>
             </left>
             <right>
