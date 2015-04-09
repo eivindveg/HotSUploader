@@ -33,7 +33,7 @@ public class Client extends Application {
     @Override
     public void start(final Stage primaryStage) throws Exception {
         ClassLoader loader = ClassLoader.getSystemClassLoader();
-        URL logo = loader.getResource("images/logo.png");
+        URL logo = loader.getResource("images/logo-desktop.png");
         assert logo != null;
         primaryStage.getIcons().add(new Image(logo.toString()));
         primaryStage.setResizable(false);

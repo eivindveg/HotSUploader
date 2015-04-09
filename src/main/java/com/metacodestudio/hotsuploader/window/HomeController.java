@@ -21,6 +21,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
@@ -29,8 +30,8 @@ import javafx.util.StringConverter;
 import javax.annotation.PostConstruct;
 import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -78,6 +79,9 @@ public class HomeController {
     private Label tlMmr;
 
     @FXML
+    private ImageView logo;
+
+    @FXML
     @ActionTrigger("playerSearch")
     private Button playerSearch;
 
@@ -96,12 +100,35 @@ public class HomeController {
     private Button invalidateExceptions;
 
     private FileHandler fileHandler;
+    private Desktop desktop;
 
 
     @PostConstruct
     public void init() {
+        desktop = Desktop.getDesktop();
         fileHandler = viewFlowContext.getRegisteredObject(FileHandler.class);
+        logo.setOnMouseClicked(event -> doOpenHotsLogs());
         prepareAccordion();
+        setPlayerSearchActions();
+        bindLists();
+        setFileHandlerOnSucceeded();
+        fileHandler.start();
+        if (fileHandler.isIdle()) {
+            setIdle();
+        }
+
+        setupAccounts();
+    }
+
+    private void doOpenHotsLogs()  {
+        try {
+            desktop.browse(URI.create("https://www.hotslogs.com/Default"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setPlayerSearchActions() {
         playerSearchInput.setOnKeyPressed(event -> {
             if(event.getCode() == KeyCode.ENTER) {
                 try {
@@ -111,15 +138,6 @@ public class HomeController {
                 }
             }
         });
-
-        bindLists();
-        setFileHandlerOnSucceeded();
-        fileHandler.start();
-        if (fileHandler.isIdle()) {
-            setIdle();
-        }
-
-        setupAccounts();
     }
 
     private void prepareAccordion() {
@@ -134,24 +152,22 @@ public class HomeController {
 
     @ActionMethod("playerSearch")
     private void doPlayerSearch() throws IOException, URISyntaxException {
-        Desktop desktop = Desktop.getDesktop();
         String playerName = playerSearchInput.getText().replaceAll(" ", "");
         if (playerName.equals("")) {
             return;
         } else {
             playerSearchInput.setText("");
         }
-        desktop.browse(new URL("https://www.hotslogs.com/PlayerSearch?Name=" + playerName).toURI());
+        desktop.browse(URI.create("https://www.hotslogs.com/PlayerSearch?Name=" + playerName));
     }
 
     @ActionMethod("viewProfile")
     private void doViewProfile() throws IOException, URISyntaxException {
-        Desktop desktop = Desktop.getDesktop();
         Account account = accountSelect.getValue();
         if (account == null) {
             return;
         }
-        desktop.browse(new URL("https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId()).toURI());
+        desktop.browse(URI.create("https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId()));
     }
 
     private void setupAccounts() {
