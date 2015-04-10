@@ -201,7 +201,7 @@
                         <ComboBox fx:id="heroName" editable="true" maxWidth="1.7976931348623157E308" promptText="Enter Hero Name" BorderPane.alignment="CENTER" />
                      </center>
                      <right>
-                        <Button fx:id="heroLookup" mnemonicParsing="false" text="View" BorderPane.alignment="CENTER" />
+                        <Button fx:id="lookupHero" mnemonicParsing="false" text="View" BorderPane.alignment="CENTER" />
                      </right>
                   </BorderPane>
                </children>
