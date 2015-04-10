@@ -32,7 +32,6 @@ import javax.annotation.PostConstruct;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -159,7 +158,7 @@ public class HomeController {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
                     doPlayerSearch();
-                } catch (IOException | URISyntaxException e) {
+                } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -176,8 +175,19 @@ public class HomeController {
         });
     }
 
+    @ActionMethod("lookupHero")
+    private void doLookupHero() throws IOException {
+        String heroName = this.heroName.getValue().getBoxValue();
+        if(heroName.equals("")) {
+            return;
+        } else {
+            this.heroName.setValue(null);
+        }
+        desktop.browse(URI.create("https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName));
+    }
+
     @ActionMethod("playerSearch")
-    private void doPlayerSearch() throws IOException, URISyntaxException {
+    private void doPlayerSearch() throws IOException {
         String playerName = playerSearchInput.getText().replaceAll(" ", "");
         if (playerName.equals("")) {
             return;
@@ -188,7 +198,7 @@ public class HomeController {
     }
 
     @ActionMethod("viewProfile")
-    private void doViewProfile() throws IOException, URISyntaxException {
+    private void doViewProfile() throws IOException {
         Account account = accountSelect.getValue();
         if (account == null) {
             return;
