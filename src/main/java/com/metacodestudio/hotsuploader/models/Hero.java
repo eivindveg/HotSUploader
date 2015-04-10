@@ -9,6 +9,14 @@ public class Hero {
     @JsonProperty("ImageURL")
     private String imageURL;
 
+    public Hero() {
+    }
+
+    public Hero(final String primaryName, final String imageURL) {
+        this.primaryName = primaryName;
+        this.imageURL = imageURL;
+    }
+
     @Override
     public String toString() {
         return "Hero{" +
