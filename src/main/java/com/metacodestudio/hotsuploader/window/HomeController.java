@@ -130,6 +130,7 @@ public class HomeController {
     }
 
     private void fetchHeroNames() {
+        new AutoCompleteComboBoxListener<>(heroName);
         heroName.converterProperty().setValue(new HeroConverter());
         Task<List<Hero>> task = new Task<List<Hero>>() {
             @Override
