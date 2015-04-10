@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 public class OSUtilsTest {
