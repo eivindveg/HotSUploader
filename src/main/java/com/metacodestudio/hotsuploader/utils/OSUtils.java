@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class OSUtils {
 
     private static final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
-    private static final String HOTS_ACCOUNT_FILTER = "(\\d-Hero-\\d-\\d{1,6})";
+    private static final String HOTS_ACCOUNT_FILTER = "(\\d-Hero-\\d-\\d{1,20})";
     private static final String APPLICATION_DIRECTORY = "HotSUploader";
     private static final String APPLICATION_DIRECTORY_LOWER = "." + APPLICATION_DIRECTORY.toLowerCase();
     private static final String OS_NAME = System.getProperty("os.name");
