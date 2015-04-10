@@ -11,6 +11,8 @@
     <properties>
         <name.friendly>HotSUploader-${project.version}</name.friendly>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.mainClass>com.metacodestudio.hotsuploader.Client</project.mainClass>
+        <project.organization.name>MetaCode Studio</project.organization.name>
     </properties>
 
     <name>Heroes of the Storm Uploader</name>
@@ -46,7 +48,7 @@
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>com.metacodestudio.hotsuploader.Client</mainClass>
+                            <mainClass>${project.mainClass}</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -62,6 +64,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.zenjava</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>8.1.2</version>
+                <configuration>
+                    <mainClass>${project.mainClass}</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
