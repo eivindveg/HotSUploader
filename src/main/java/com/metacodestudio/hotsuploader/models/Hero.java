@@ -2,7 +2,7 @@ package com.metacodestudio.hotsuploader.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Hero {
+public class Hero implements Boxable {
 
     @JsonProperty("PrimaryName")
     private String primaryName;
@@ -58,5 +58,10 @@ public class Hero {
 
     public void setImageURL(final String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    @Override
+    public String getBoxValue() {
+        return getPrimaryName();
     }
 }
