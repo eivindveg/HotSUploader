@@ -1,12 +1,12 @@
 package com.metacodestudio.hotsuploader.window;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.metacodestudio.hotsuploader.AccountService;
 import com.metacodestudio.hotsuploader.files.FileHandler;
-import com.metacodestudio.hotsuploader.models.Account;
-import com.metacodestudio.hotsuploader.models.LeaderboardRanking;
-import com.metacodestudio.hotsuploader.models.ReplayFile;
-import com.metacodestudio.hotsuploader.models.Status;
+import com.metacodestudio.hotsuploader.models.*;
+import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotSLogs;
+import com.metacodestudio.hotsuploader.utils.NetUtils;
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.action.ActionMethod;
 import io.datafx.controller.flow.action.ActionTrigger;
@@ -16,6 +16,7 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -32,6 +33,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -96,6 +98,13 @@ public class HomeController {
     private ChoiceBox<Account> accountSelect;
 
     @FXML
+    @ActionTrigger("lookupHero")
+    private Button lookupHero;
+
+    @FXML
+    private ComboBox<Hero> heroName;
+
+    @FXML
     @ActionTrigger("invalidateExceptions")
     private Button invalidateExceptions;
 
@@ -108,6 +117,7 @@ public class HomeController {
         desktop = Desktop.getDesktop();
         fileHandler = viewFlowContext.getRegisteredObject(FileHandler.class);
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
+        fetchHeroNames();
         prepareAccordion();
         setPlayerSearchActions();
         bindLists();
@@ -117,6 +127,22 @@ public class HomeController {
         }
 
         setupAccounts();
+    }
+
+    private void fetchHeroNames() {
+        heroName.converterProperty().setValue(new HeroConverter());
+        Task<List<Hero>> task = new Task<List<Hero>>() {
+            @Override
+            protected List<Hero> call() throws Exception {
+                final String result = NetUtils.simpleRequest("https://www.hotslogs.com/API/Data/Heroes");
+                final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
+                System.out.println(Arrays.toString(heroes));
+                return Arrays.asList(heroes);
+            }
+        };
+        task.setOnSucceeded(event -> heroName.getItems().setAll(task.getValue()));
+
+        new Thread(task).start();
     }
 
     private void doOpenHotsLogs()  {
