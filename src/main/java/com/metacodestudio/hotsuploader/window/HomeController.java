@@ -135,7 +135,6 @@ public class HomeController {
             protected List<Hero> call() throws Exception {
                 final String result = NetUtils.simpleRequest("https://www.hotslogs.com/API/Data/Heroes");
                 final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
-                System.out.println(Arrays.toString(heroes));
                 return Arrays.asList(heroes);
             }
         };
@@ -144,11 +143,11 @@ public class HomeController {
         new Thread(task).start();
     }
 
-    private void doOpenHotsLogs()  {
+    private void doOpenHotsLogs() {
         try {
             desktop.browse(URI.create("https://www.hotslogs.com/Default"));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -177,11 +176,11 @@ public class HomeController {
     @ActionMethod("lookupHero")
     private void doLookupHero() throws IOException {
         Hero hero = this.heroName.getValue();
-        if(hero == null) {
+        if (hero == null) {
             return;
         }
         String heroName = hero.getBoxValue();
-        if(heroName.equals("")) {
+        if (heroName.equals("")) {
             return;
         } else {
             this.heroName.setValue(null);
@@ -213,7 +212,7 @@ public class HomeController {
         accountSelect.converterProperty().setValue(new StringConverter<Account>() {
             @Override
             public String toString(final Account object) {
-                if(object == null) {
+                if (object == null) {
                     return "";
                 }
                 return object.getName();
@@ -239,7 +238,7 @@ public class HomeController {
     }
 
     private void updateAccountView(final Account account) {
-        if(account == null) {
+        if (account == null) {
             return;
         }
         Optional<Integer> quickMatchMmr = readMmr(account.getLeaderboardRankings(), "QuickMatch");
