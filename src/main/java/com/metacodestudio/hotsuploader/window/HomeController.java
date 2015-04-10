@@ -129,7 +129,6 @@ public class HomeController {
     }
 
     private void fetchHeroNames() {
-        new AutoCompleteComboBoxListener<>(heroName);
         heroName.converterProperty().setValue(new HeroConverter());
         Task<List<Hero>> task = new Task<List<Hero>>() {
             @Override
@@ -177,7 +176,11 @@ public class HomeController {
 
     @ActionMethod("lookupHero")
     private void doLookupHero() throws IOException {
-        String heroName = this.heroName.getValue().getBoxValue();
+        Hero hero = this.heroName.getValue();
+        if(hero == null) {
+            return;
+        }
+        String heroName = hero.getBoxValue();
         if(heroName.equals("")) {
             return;
         } else {
