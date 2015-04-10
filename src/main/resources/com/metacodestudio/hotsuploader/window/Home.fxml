@@ -115,7 +115,7 @@
                <center>
                   <BorderPane BorderPane.alignment="CENTER">
                      <left>
-                        <ChoiceBox fx:id="accountSelect" nodeOrientation="RIGHT_TO_LEFT" prefWidth="150.0" BorderPane.alignment="CENTER">
+                        <ChoiceBox fx:id="accountSelect" prefWidth="150.0" BorderPane.alignment="CENTER">
                            <BorderPane.margin>
                               <Insets top="10.0" />
                            </BorderPane.margin>
@@ -172,21 +172,40 @@
             <Insets left="5.0" />
          </BorderPane.margin>
          <bottom>
-            <BorderPane BorderPane.alignment="CENTER">
-               <top>
-                  <Label text="Lookup Player" textFill="#f8f8f8" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-               </top>
-               <right>
-                  <Button fx:id="playerSearch" mnemonicParsing="false" text="Search" BorderPane.alignment="CENTER" />
-               </right>
-               <center>
-                  <TextField fx:id="playerSearchInput" maxWidth="1.7976931348623157E308" promptText="Enter Player Name" BorderPane.alignment="CENTER" />
-               </center>
-            </BorderPane>
+            <VBox spacing="25.0">
+               <children>
+                  <BorderPane BorderPane.alignment="CENTER">
+                     <top>
+                        <Label text="Lookup Player" textFill="WHITE" BorderPane.alignment="CENTER">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </top>
+                     <right>
+                        <Button fx:id="playerSearch" mnemonicParsing="false" text="Search" BorderPane.alignment="CENTER" />
+                     </right>
+                     <center>
+                        <TextField fx:id="playerSearchInput" maxWidth="1.7976931348623157E308" promptText="Enter Player Name" BorderPane.alignment="CENTER" />
+                     </center>
+                  </BorderPane>
+                  <BorderPane>
+                     <top>
+                        <Label text="Lookup Hero Details" textFill="WHITE" BorderPane.alignment="CENTER">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </top>
+                     <center>
+                        <ComboBox fx:id="heroName" editable="true" maxWidth="1.7976931348623157E308" promptText="Enter Hero Name" BorderPane.alignment="CENTER" />
+                     </center>
+                     <right>
+                        <Button fx:id="heroLookup" mnemonicParsing="false" text="View" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+               </children>
+            </VBox>
          </bottom>
       </BorderPane>
    </right>
