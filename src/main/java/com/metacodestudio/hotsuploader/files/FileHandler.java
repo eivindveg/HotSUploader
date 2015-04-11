@@ -5,13 +5,13 @@ import com.metacodestudio.hotsuploader.models.ReplayFile;
 import com.metacodestudio.hotsuploader.models.Status;
 import com.metacodestudio.hotsuploader.models.UploadStatus;
 import com.metacodestudio.hotsuploader.providers.Provider;
+import com.metacodestudio.hotsuploader.utils.FileUtils;
 import com.metacodestudio.hotsuploader.utils.OSUtils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +80,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                             replay.addStatuses(providers.stream()
                                     .map(UploadStatus::new)
                                     .collect(Collectors.toList()));
-                            FileUtils.write(propertiesFile, mapper.writeValueAsString(replay.getUploadStatuses()));
+                            FileUtils.writeStringToFile(propertiesFile, mapper.writeValueAsString(replay.getUploadStatuses()));
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -107,7 +107,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     public void updateFile(ReplayFile file) throws IOException {
         File propertiesFile = OSUtils.getPropertiesFile(file.getFile());
         String data = mapper.writeValueAsString(file.getUploadStatuses());
-        FileUtils.write(propertiesFile, data);
+        FileUtils.writeStringToFile(propertiesFile, data);
     }
 
     @Override
