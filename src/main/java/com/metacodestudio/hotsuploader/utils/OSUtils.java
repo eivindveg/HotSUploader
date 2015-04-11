@@ -14,11 +14,11 @@ public class OSUtils {
 
     private static final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
     private static final String HOTS_ACCOUNT_FILTER = "(\\d-Hero-\\d-\\d{1,20})";
-    private static final String APPLICATION_DIRECTORY = "HotSUploader";
-    private static final String APPLICATION_DIRECTORY_LOWER = "." + APPLICATION_DIRECTORY.toLowerCase();
+    private static final String APPLICATION_DIRECTORY = "HotSLogs UploaderFX";
     private static final String OS_NAME = System.getProperty("os.name");
     private static final String USER_HOME = System.getProperty("user.home");
     private static final String SEPARATOR = System.getProperty("file.separator");
+    public static final String OSX_LIBRARY = "/Library/Application Support/";
 
     private OSUtils() {
     }
@@ -34,9 +34,9 @@ public class OSUtils {
     public static File getApplicationHome() {
         StringBuilder builder = new StringBuilder(USER_HOME).append(SEPARATOR);
         if(isWindows()) {
-            builder.append(APPLICATION_DIRECTORY);
+            builder.append("\\Documents\\" + APPLICATION_DIRECTORY);
         } else if(isMacintosh()) {
-            builder.append(APPLICATION_DIRECTORY_LOWER);
+            builder.append(OSX_LIBRARY + "MetaCode Studio/").append(APPLICATION_DIRECTORY);
         }
         return new File(builder.append(SEPARATOR).toString());
     }
@@ -58,7 +58,7 @@ public class OSUtils {
         if (isWindows()) {
             builder.append("\\Documents\\Heroes of the Storm\\Accounts\\");
         } else if (isMacintosh()) {
-            builder.append("/Library/Application Support/Blizzard/Heroes of the Storm/Accounts/");
+            builder.append(OSX_LIBRARY + "Blizzard/Heroes of the Storm/Accounts/");
         } else {
             throw new UnsupportedOperationException("This application requires Windows or Macintosh OSX to run");
         }
