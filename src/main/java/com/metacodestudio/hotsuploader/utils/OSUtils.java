@@ -14,11 +14,16 @@ public class OSUtils {
 
     private static final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
     private static final String HOTS_ACCOUNT_FILTER = "(\\d-Hero-\\d-\\d{1,20})";
-    private static final String APPLICATION_DIRECTORY = "HotSUploader";
-    private static final String APPLICATION_DIRECTORY_LOWER = "." + APPLICATION_DIRECTORY.toLowerCase();
+    private static final String APPLICATION_DIRECTORY = "HotSLogs UploaderFX";
     private static final String OS_NAME = System.getProperty("os.name");
     private static final String USER_HOME = System.getProperty("user.home");
     private static final String SEPARATOR = System.getProperty("file.separator");
+    public static final String OSX_LIBRARY = "/Library/Application Support/";
+
+    static {
+        System.out.println("Detected Heroes of the Storm profile: " + getHotSHome());
+        System.out.println("Using Uploader directory: " + getApplicationHome());
+    }
 
     private OSUtils() {
     }
@@ -34,9 +39,9 @@ public class OSUtils {
     public static File getApplicationHome() {
         StringBuilder builder = new StringBuilder(USER_HOME).append(SEPARATOR);
         if(isWindows()) {
-            builder.append(APPLICATION_DIRECTORY);
+            builder.append("\\Documents\\" + APPLICATION_DIRECTORY);
         } else if(isMacintosh()) {
-            builder.append(APPLICATION_DIRECTORY_LOWER);
+            builder.append(OSX_LIBRARY + "MetaCode Studio/").append(APPLICATION_DIRECTORY);
         }
         return new File(builder.append(SEPARATOR).toString());
     }
@@ -58,7 +63,7 @@ public class OSUtils {
         if (isWindows()) {
             builder.append("\\Documents\\Heroes of the Storm\\Accounts\\");
         } else if (isMacintosh()) {
-            builder.append("/Library/Application Support/Blizzard/Heroes of the Storm/Accounts/");
+            builder.append(OSX_LIBRARY + "Blizzard/Heroes of the Storm/Accounts/");
         } else {
             throw new UnsupportedOperationException("This application requires Windows or Macintosh OSX to run");
         }
@@ -68,7 +73,6 @@ public class OSUtils {
     public static List<File> getAccountDirectories(final File root) {
         List<File> hotsAccounts = new ArrayList<>();
         File[] files = root.listFiles((dir, name) -> name.matches(ACCOUNT_FOLDER_FILTER));
-        System.out.println(root);
         if(files == null) {
             files = new File[0];
         }
@@ -95,10 +99,8 @@ public class OSUtils {
                         accountNameBuilder.append("/").append(s);
                     }
                     String uri = "https://www.hotslogs.com/API/Players" + accountNameBuilder.toString();
-                    System.out.println(uri);
                     try {
                         String playerInfo = NetUtils.simpleRequest(uri);
-                        System.out.println(playerInfo);
                         return mapper.readValue(playerInfo, Account.class);
                     } catch (IOException e) {
                         return null;
