@@ -20,6 +20,11 @@ public class OSUtils {
     private static final String SEPARATOR = System.getProperty("file.separator");
     public static final String OSX_LIBRARY = "/Library/Application Support/";
 
+    static {
+        System.out.println("Detected Heroes of the Storm profile: " + getHotSHome());
+        System.out.println("Using Uploader directory: " + getApplicationHome());
+    }
+
     private OSUtils() {
     }
 
@@ -68,7 +73,6 @@ public class OSUtils {
     public static List<File> getAccountDirectories(final File root) {
         List<File> hotsAccounts = new ArrayList<>();
         File[] files = root.listFiles((dir, name) -> name.matches(ACCOUNT_FOLDER_FILTER));
-        System.out.println(root);
         if(files == null) {
             files = new File[0];
         }
@@ -95,10 +99,8 @@ public class OSUtils {
                         accountNameBuilder.append("/").append(s);
                     }
                     String uri = "https://www.hotslogs.com/API/Players" + accountNameBuilder.toString();
-                    System.out.println(uri);
                     try {
                         String playerInfo = NetUtils.simpleRequest(uri);
-                        System.out.println(playerInfo);
                         return mapper.readValue(playerInfo, Account.class);
                     } catch (IOException e) {
                         return null;
