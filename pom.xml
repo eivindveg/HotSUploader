@@ -48,7 +48,18 @@
                 <configuration>
                     <mainClass>${project.mainClass}</mainClass>
                     <nativeReleaseVersion>1.0</nativeReleaseVersion>
+                    <identifier>${build.finalName}</identifier>
+                    <css2bin>true</css2bin>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>jfx</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>native</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -65,6 +76,12 @@
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client</artifactId>
             <version>1.20.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
