@@ -62,14 +62,6 @@ public class FileUtils {
     }
 
     public static String readFileToString(final File file) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        try(InputStreamReader in = new InputStreamReader(openInputStream(file), Charset.forName("UTF-8"))) {
-            final char[] buffer = new char[4096];
-            int n;
-            while (-1 != (n = in.read(buffer))) {
-                stringBuilder.append(buffer, 0, n);
-            }
-        }
-        return stringBuilder.toString();
+        return IOUtils.readInputStream(new FileInputStream(file));
     }
 }
