@@ -1,19 +1,25 @@
 package com.metacodestudio.hotsuploader.utils;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.javanet.NetHttpTransport;
-
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
 
 public class NetUtils {
-
-    private static final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
 
     private NetUtils() {
     }
 
-    public static String simpleRequest(String target) throws IOException {
-        return requestFactory.buildGetRequest(new GenericUrl(target)).execute().parseAsString();
+    public static String simpleRequest(final String target) throws IOException {
+        return simpleRequest(URI.create(target));
+    }
+
+    public static String simpleRequest(final URI uri) throws IOException {
+        return simpleRequest(uri.toURL());
+    }
+
+    public static String simpleRequest(final URL url) throws IOException {
+        InputStream inputStream = url.openStream();
+        return IOUtils.readInputStream(inputStream);
     }
 }
