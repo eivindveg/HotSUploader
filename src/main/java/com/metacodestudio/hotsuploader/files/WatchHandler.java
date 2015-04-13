@@ -37,15 +37,18 @@ public class WatchHandler implements Runnable {
     @SuppressWarnings("unchecked")
     @Override
     public void run() {
+        WatchKey key = null;
         for (; ; ) {
-            WatchKey key;
+            if(key != null) {
+                if(!key.reset()) {
+                    break;
+                }
+            }
             try {
                 key = watchService.take();
             } catch (InterruptedException e) {
-                return;
+                break;
             }
-            System.out.println("Watch event!");
-
             for (final WatchEvent<?> watchEvent : key.pollEvents()) {
                 WatchEvent.Kind<?> kind = watchEvent.kind();
                 if (kind == OVERFLOW) {
@@ -57,23 +60,9 @@ public class WatchHandler implements Runnable {
 
                 File file = new File(path.toFile(), fileName.toString());
                 if (!file.getName().endsWith(".StormReplay")) {
-                    System.out.println("\tInvalid file");
                     continue;
                 }
-                Handler handler;
-                /*
-                if(modifiedFiles.contains(file)) {
-                    continue;
-                } else {
-                    modifiedFiles.add(file);
-                }
-                */
-                if (kind == ENTRY_MODIFY) {
-                    handler = new ModificationHandler(file);
-                } else {
-                    handler = new CreationHandler(file);
-                }
-                ReplayFile replayFile = handler.getFile();
+                ReplayFile replayFile = getReplayFileForEvent(kind, file);
                 File propertiesFile = OSUtils.getPropertiesFile(file);
                 if(propertiesFile.exists()) {
                     propertiesFile.delete();
@@ -88,6 +77,28 @@ public class WatchHandler implements Runnable {
                 }
             }
         }
+        try {
+            watchService.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private ReplayFile getReplayFileForEvent(final WatchEvent.Kind<?> kind, final File file) {
+        Handler handler;
+        /*
+        if(modifiedFiles.contains(file)) {
+            continue;
+        } else {
+            modifiedFiles.add(file);
+        }
+        */
+        if (kind == ENTRY_MODIFY) {
+            handler = new ModificationHandler(file);
+        } else {
+            handler = new CreationHandler(file);
+        }
+        return handler.getFile();
     }
 
     private abstract class Handler {
