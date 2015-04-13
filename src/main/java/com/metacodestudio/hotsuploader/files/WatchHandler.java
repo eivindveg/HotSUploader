@@ -9,8 +9,6 @@ import javafx.collections.ObservableList;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -22,14 +20,12 @@ public class WatchHandler implements Runnable {
     private Map<Status, ObservableList<ReplayFile>> fileMap;
     private Queue<ReplayFile> uploadQueue;
 
-    private List<File> modifiedFiles;
     private Path path;
 
     public WatchHandler(final Path path, final Map<Status, ObservableList<ReplayFile>> fileMap, final Queue<ReplayFile> uploadQueue) throws IOException {
         this.path = path;
         watchService = FileSystems.getDefault().newWatchService();
         path.register(watchService, ENTRY_CREATE);
-        this.modifiedFiles = new ArrayList<>();
         this.fileMap = fileMap;
         this.uploadQueue = uploadQueue;
     }
@@ -37,15 +33,18 @@ public class WatchHandler implements Runnable {
     @SuppressWarnings("unchecked")
     @Override
     public void run() {
+        WatchKey key = null;
         for (; ; ) {
-            WatchKey key;
+            if(key != null) {
+                if(!key.reset()) {
+                    break;
+                }
+            }
             try {
                 key = watchService.take();
             } catch (InterruptedException e) {
-                return;
+                break;
             }
-            System.out.println("Watch event!");
-
             for (final WatchEvent<?> watchEvent : key.pollEvents()) {
                 WatchEvent.Kind<?> kind = watchEvent.kind();
                 if (kind == OVERFLOW) {
@@ -57,26 +56,14 @@ public class WatchHandler implements Runnable {
 
                 File file = new File(path.toFile(), fileName.toString());
                 if (!file.getName().endsWith(".StormReplay")) {
-                    System.out.println("\tInvalid file");
                     continue;
                 }
-                Handler handler;
-                /*
-                if(modifiedFiles.contains(file)) {
-                    continue;
-                } else {
-                    modifiedFiles.add(file);
-                }
-                */
-                if (kind == ENTRY_MODIFY) {
-                    handler = new ModificationHandler(file);
-                } else {
-                    handler = new CreationHandler(file);
-                }
-                ReplayFile replayFile = handler.getFile();
+                ReplayFile replayFile = getReplayFileForEvent(kind, file);
                 File propertiesFile = OSUtils.getPropertiesFile(file);
                 if(propertiesFile.exists()) {
-                    propertiesFile.delete();
+                    if(!propertiesFile.delete()) {
+                        throw new RuntimeException(new IOException("Could not delete file"));
+                    }
                 }
                 System.out.println(replayFile.getStatus());
                 Platform.runLater(() -> fileMap.get(Status.NEW).add(replayFile));
@@ -88,6 +75,21 @@ public class WatchHandler implements Runnable {
                 }
             }
         }
+        try {
+            watchService.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private ReplayFile getReplayFileForEvent(final WatchEvent.Kind<?> kind, final File file) {
+        Handler handler;
+        if (kind == ENTRY_MODIFY) {
+            handler = new ModificationHandler(file);
+        } else {
+            handler = new CreationHandler(file);
+        }
+        return handler.getFile();
     }
 
     private abstract class Handler {
