@@ -9,8 +9,6 @@ import javafx.collections.ObservableList;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -22,14 +20,12 @@ public class WatchHandler implements Runnable {
     private Map<Status, ObservableList<ReplayFile>> fileMap;
     private Queue<ReplayFile> uploadQueue;
 
-    private List<File> modifiedFiles;
     private Path path;
 
     public WatchHandler(final Path path, final Map<Status, ObservableList<ReplayFile>> fileMap, final Queue<ReplayFile> uploadQueue) throws IOException {
         this.path = path;
         watchService = FileSystems.getDefault().newWatchService();
         path.register(watchService, ENTRY_CREATE);
-        this.modifiedFiles = new ArrayList<>();
         this.fileMap = fileMap;
         this.uploadQueue = uploadQueue;
     }
@@ -86,13 +82,6 @@ public class WatchHandler implements Runnable {
 
     private ReplayFile getReplayFileForEvent(final WatchEvent.Kind<?> kind, final File file) {
         Handler handler;
-        /*
-        if(modifiedFiles.contains(file)) {
-            continue;
-        } else {
-            modifiedFiles.add(file);
-        }
-        */
         if (kind == ENTRY_MODIFY) {
             handler = new ModificationHandler(file);
         } else {
