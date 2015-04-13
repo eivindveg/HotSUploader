@@ -31,7 +31,6 @@ import javafx.util.StringConverter;
 import javax.annotation.PostConstruct;
 import java.awt.*;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +144,7 @@ public class HomeController {
 
     private void doOpenHotsLogs() {
         try {
-            desktop.browse(URI.create("https://www.hotslogs.com/Default"));
+            desktop.browse(NetUtils.encode("https://www.hotslogs.com/Default"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -185,7 +184,7 @@ public class HomeController {
         } else {
             this.heroName.setValue(null);
         }
-        desktop.browse(URI.create("https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName));
+        desktop.browse(NetUtils.encode("https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName));
     }
 
     @ActionMethod("playerSearch")
@@ -196,7 +195,7 @@ public class HomeController {
         } else {
             playerSearchInput.setText("");
         }
-        desktop.browse(URI.create("https://www.hotslogs.com/PlayerSearch?Name=" + playerName));
+        desktop.browse(NetUtils.encode("https://www.hotslogs.com/PlayerSearch?Name=" + playerName));
     }
 
     @ActionMethod("viewProfile")
@@ -205,7 +204,7 @@ public class HomeController {
         if (account == null) {
             return;
         }
-        desktop.browse(URI.create("https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId()));
+        desktop.browse(NetUtils.encode("https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId()));
     }
 
     private void setupAccounts() {
