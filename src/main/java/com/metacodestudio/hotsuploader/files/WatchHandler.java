@@ -61,7 +61,9 @@ public class WatchHandler implements Runnable {
                 ReplayFile replayFile = getReplayFileForEvent(kind, file);
                 File propertiesFile = OSUtils.getPropertiesFile(file);
                 if(propertiesFile.exists()) {
-                    propertiesFile.delete();
+                    if(!propertiesFile.delete()) {
+                        throw new RuntimeException(new IOException("Could not delete file"));
+                    }
                 }
                 System.out.println(replayFile.getStatus());
                 Platform.runLater(() -> fileMap.get(Status.NEW).add(replayFile));
