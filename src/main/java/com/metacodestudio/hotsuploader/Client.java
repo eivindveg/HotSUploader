@@ -37,6 +37,7 @@ public class Client extends Application {
         assert logo != null;
         primaryStage.getIcons().add(new Image(logo.toString()));
         primaryStage.setResizable(false);
+        primaryStage.setTitle("HotSLogs UploaderFX");
 
         Flow flow = new Flow(HomeController.class);
         FlowHandler flowHandler = flow.createHandler(new ViewFlowContext());
