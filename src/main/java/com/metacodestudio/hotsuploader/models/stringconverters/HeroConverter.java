@@ -16,7 +16,6 @@ public class HeroConverter extends StringConverter<Hero> {
     @Override
     public Hero fromString(final String primaryName) {
         final String imageURL = primaryName.replaceAll("[\\W_]", "");
-        System.out.println(imageURL);
         if (imageURL.equals("")) {
             return null;
         }
