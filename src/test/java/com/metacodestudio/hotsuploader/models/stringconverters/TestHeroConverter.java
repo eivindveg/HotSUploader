@@ -37,5 +37,6 @@ public class TestHeroConverter {
 
         assertEquals("HeroConverter creates a hero from a string", expected, actual);
         assertEquals("HeroConverter knows how to build an ImageURL", expected.getImageURL(), actual.getImageURL());
+        assertNull("HeroConverter returns null when receiving an empty string", heroConverter.fromString(""));
     }
 }
