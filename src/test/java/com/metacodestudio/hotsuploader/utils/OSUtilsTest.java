@@ -14,9 +14,7 @@ public class OSUtilsTest {
 
     @Test
     public void testHotsAccountFilterMatching() throws Exception {
-        final Field field = OSUtils.class.getDeclaredField("HOTS_ACCOUNT_FILTER");
-        field.setAccessible(true);
-        final String hotsAccountFilter = (String) field.get(OSUtils.class);
+        final String hotsAccountFilter = getHotSAccountFilter();
 
         String value = "1-Hero-1-";
         assertFalse(NO_MATCH, value.matches(hotsAccountFilter));
@@ -32,5 +30,11 @@ public class OSUtilsTest {
 
         value = "2-Hero-2-1234567890";
         assertTrue(MATCH, value.matches(hotsAccountFilter));
+    }
+
+    public static String getHotSAccountFilter() throws NoSuchFieldException, IllegalAccessException {
+        final Field field = OSUtils.class.getDeclaredField("HOTS_ACCOUNT_FILTER");
+        field.setAccessible(true);
+        return (String) field.get(OSUtils.class);
     }
 }
