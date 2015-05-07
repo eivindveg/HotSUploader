@@ -28,14 +28,23 @@ public class Account {
                 '}';
     }
 
+    /**
+     * Returns the HotSLogs.com player id to use when building URLs to open the browser to this account's profile
+     * @return this account's player id
+     */
     public Long getPlayerId() {
         return playerId;
     }
+
 
     public void setPlayerId(final Long playerId) {
         this.playerId = playerId;
     }
 
+    /**
+     * Gets the player name associated with this HotSLogs.com account, as represented by this player's battletag
+     * @return this account's name
+     */
     public String getName() {
         return name;
     }
@@ -44,10 +53,20 @@ public class Account {
         this.name = name;
     }
 
+    /**
+     * Gets a list containing the various {@link LeaderboardRanking}s this player has achieved on HotSLogs.com
+     * @return a list of type {@link LeaderboardRanking}
+     * @see LeaderboardRanking
+     */
     public List<LeaderboardRanking> getLeaderboardRankings() {
         return leaderboardRankings;
     }
 
+    /**
+     * Replace the list of {@link LeaderboardRanking}s this player has achieved on HotSLogs.com. As this is a simple
+     * data object representation of data retrieved from HotSLogs.com, this has absolutely no effect.
+     * @param leaderboardRankings a list of type {@link LeaderboardRanking}
+     */
     public void setLeaderboardRankings(final List<LeaderboardRanking> leaderboardRankings) {
         this.leaderboardRankings = leaderboardRankings;
     }
