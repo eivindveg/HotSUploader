@@ -63,7 +63,6 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                 .map(OSUtils::getPropertiesFile).forEach(File::delete);
     }
 
-    @SuppressWarnings("unchecked")
     private void registerInitial() {
         List<ReplayFile> fileList = watchDirectories.stream()
                 .map(ReplayFile::fromDirectory)
