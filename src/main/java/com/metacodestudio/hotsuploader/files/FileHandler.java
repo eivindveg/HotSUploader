@@ -91,10 +91,10 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                     return replay;
                 }).collect(Collectors.groupingBy(ReplayFile::getStatus, ConcurrentHashMap::new,
                         Collectors.toCollection(FXCollections::observableArrayList)));
-        verifyMap();
+        verifyMap(fileMap);
     }
 
-    private void verifyMap() {
+    private void verifyMap(Map<Status, ObservableList<ReplayFile>> fileMap) {
         Status[] keys = Status.values();
         for (final Status key : keys) {
             if (!fileMap.containsKey(key)) {
