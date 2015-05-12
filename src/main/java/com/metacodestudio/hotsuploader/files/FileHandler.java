@@ -16,10 +16,7 @@ import javafx.concurrent.Task;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,7 +25,7 @@ import java.util.stream.Collectors;
 
 public class FileHandler extends ScheduledService<ReplayFile> {
 
-    private final List<File> watchDirectories;
+    private final Set<File> watchDirectories;
     private final ObjectMapper mapper;
     private final StormHandler stormHandler;
     private Map<Status, ObservableList<ReplayFile>> fileMap;
@@ -36,14 +33,16 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     private BlockingQueue<ReplayFile> uploadQueue;
 
     public FileHandler(final StormHandler stormHandler) throws IOException {
+        watchDirectories = new HashSet<>();
         this.stormHandler = stormHandler;
         mapper = new ObjectMapper();
         uploadQueue = new ArrayBlockingQueue<>(2500);
         fileMap = new HashMap<>();
-        watchDirectories = stormHandler.getAccountDirectories(stormHandler.getHotSHome());
+    }
 
-        cleanup();
-        registerInitial();
+    public void beginWatch() {
+        watchDirectories.addAll(stormHandler.getAccountDirectories(stormHandler.getHotSHome()));
+
         watchDirectories.stream().map(file -> Paths.get(file.toString())).forEach(path -> {
             try {
                 WatchHandler watchHandler = new WatchHandler(stormHandler, path, fileMap, uploadQueue);
@@ -54,7 +53,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
         });
     }
 
-    private void cleanup() {
+    public void cleanup() {
         List<File> accounts = stormHandler.getAccountDirectories(new File(stormHandler.getApplicationHome(), "Accounts"));
         accounts.stream()
                 .flatMap(folder -> {
@@ -65,7 +64,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                 .map(stormHandler::getPropertiesFile).forEach(File::delete);
     }
 
-    private void registerInitial() {
+    public void registerInitial() {
         List<ReplayFile> fileList = watchDirectories.stream()
                 .map(ReplayFile::fromDirectory)
                 .flatMap(List::stream)

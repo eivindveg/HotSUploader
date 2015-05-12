@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 
 
@@ -37,13 +38,21 @@ public class Client extends Application {
         ViewFlowContext flowContext = flowHandler.getFlowContext();
         StormHandler stormHandler = new StormHandler();
         flowContext.register(stormHandler);
-        flowContext.register(new FileHandler(stormHandler));
+        flowContext.register(setupFileHandler(stormHandler));
         flowContext.register(new SimpleHttpClient());
         DefaultFlowContainer container = new DefaultFlowContainer();
         StackPane pane = flowHandler.start(container);
         primaryStage.setScene(new Scene(pane));
         primaryStage.setOnCloseRequest(event -> System.exit(0));
         primaryStage.show();
+    }
+
+    private FileHandler setupFileHandler(final StormHandler stormHandler) throws IOException {
+        FileHandler fileHandler = new FileHandler(stormHandler);
+        fileHandler.cleanup();
+        fileHandler.registerInitial();
+        fileHandler.beginWatch();
+        return fileHandler;
     }
 
 
