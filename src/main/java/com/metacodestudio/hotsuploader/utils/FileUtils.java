@@ -6,11 +6,11 @@ import java.nio.charset.Charset;
 /**
  * NOTICE: MANY METHODS HERE ARE DIRECTLY REVERSED ENGINEERED FROM APACHE SOFTWARE FOUNDATION'S COMMONS-IO LIBRARY
  * https://github.com/apache/commons-io/blob/trunk/src/main/java/org/apache/commons/io/FileUtils.java
- *
+ * <p/>
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,10 +20,10 @@ import java.nio.charset.Charset;
 public class FileUtils {
 
     public static void writeStringToFile(final File file, final String content) throws IOException {
-        if(content == null) {
+        if (content == null) {
             throw new UnsupportedOperationException("Cannot write null to file. Consider deleting it instead");
         }
-        try(OutputStream fos = openOutputStream(file)) {
+        try (OutputStream fos = openOutputStream(file)) {
             fos.write(content.getBytes(Charset.forName("UTF-8")));
         }
     }
@@ -62,7 +62,7 @@ public class FileUtils {
     }
 
     public static String readFileToString(final File file) throws IOException {
-        try(FileInputStream inputStream = openInputStream(file)) {
+        try (FileInputStream inputStream = openInputStream(file)) {
             return IOUtils.readInputStream(inputStream);
         }
     }

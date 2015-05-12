@@ -12,13 +12,17 @@ public class HotsLogsProvider extends Provider {
 
     private static final String ACCESS_KEY_ID = "AKIAIESBHEUH4KAAG4UA";
     private static final String SECRET_ACCESS_KEY = "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";
-    private final AmazonS3Client s3Client;
     private static long maintenance;
+    private final AmazonS3Client s3Client;
 
     public HotsLogsProvider() {
         super("HotSLogs.com");
         final AWSCredentials credentials = new BasicAWSCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
         s3Client = new AmazonS3Client(credentials);
+    }
+
+    public static boolean isMaintenance() {
+        return maintenance + 600000L > System.currentTimeMillis();
     }
 
     @Override
@@ -52,9 +56,5 @@ public class HotsLogsProvider extends Provider {
             return null;
         }
 
-    }
-
-    public static boolean isMaintenance() {
-        return maintenance + 600000L > System.currentTimeMillis();
     }
 }

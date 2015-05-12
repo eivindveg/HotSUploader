@@ -56,7 +56,7 @@ public class ReplayFile {
     @JsonIgnore
     public Status getStatus() {
         // TODO MAKE MULTIPROVIDER-FRIENDLY
-        if(uploadStatuses.size() < 1) {
+        if (uploadStatuses.size() < 1) {
             System.out.println("Empty status list");
             return Status.NEW;
         }

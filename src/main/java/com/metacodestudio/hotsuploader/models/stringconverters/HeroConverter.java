@@ -7,7 +7,7 @@ public class HeroConverter extends StringConverter<Hero> {
 
     @Override
     public String toString(final Hero hero) {
-        if(hero == null) {
+        if (hero == null) {
             return "";
         }
         return hero.getBoxValue();

@@ -21,6 +21,7 @@ public class AccountService extends ScheduledService<List<Account>> {
         this.httpClient = httpClient;
         mapper = new ObjectMapper();
     }
+
     @Override
     protected Task<List<Account>> createTask() {
         return new Task<List<Account>>() {

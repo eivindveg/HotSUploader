@@ -17,10 +17,9 @@ import static java.nio.file.StandardWatchEventKinds.*;
 public class WatchHandler implements Runnable {
 
     private final WatchService watchService;
+    private final StormHandler stormHandler;
     private Map<Status, ObservableList<ReplayFile>> fileMap;
     private Queue<ReplayFile> uploadQueue;
-
-    private final StormHandler stormHandler;
     private Path path;
 
     public WatchHandler(final StormHandler stormHandler, final Path path, final Map<Status, ObservableList<ReplayFile>> fileMap, final Queue<ReplayFile> uploadQueue) throws IOException {
@@ -37,8 +36,8 @@ public class WatchHandler implements Runnable {
     public void run() {
         WatchKey key = null;
         for (; ; ) {
-            if(key != null) {
-                if(!key.reset()) {
+            if (key != null) {
+                if (!key.reset()) {
                     break;
                 }
             }
@@ -62,8 +61,8 @@ public class WatchHandler implements Runnable {
                 }
                 ReplayFile replayFile = getReplayFileForEvent(kind, file);
                 File propertiesFile = stormHandler.getPropertiesFile(file);
-                if(propertiesFile.exists()) {
-                    if(!propertiesFile.delete()) {
+                if (propertiesFile.exists()) {
+                    if (!propertiesFile.delete()) {
                         throw new RuntimeException(new IOException("Could not delete file"));
                     }
                 }

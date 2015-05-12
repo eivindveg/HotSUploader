@@ -9,14 +9,12 @@ import java.util.List;
 
 public abstract class Provider {
 
-    private String name;
     private static final SimpleHttpClient httpClient = new SimpleHttpClient();
+    private String name;
 
     public Provider(String name) {
         this.name = name;
     }
-
-    public abstract Status upload(ReplayFile replayFile);
 
     public static List<Provider> getAll() {
         // TODO ADD MORE PROVIDERS
@@ -25,11 +23,13 @@ public abstract class Provider {
         return providers;
     }
 
-    public String getName() {
-        return name;
-    }
-
     protected static final SimpleHttpClient getHttpClient() {
         return httpClient;
+    }
+
+    public abstract Status upload(ReplayFile replayFile);
+
+    public String getName() {
+        return name;
     }
 }
