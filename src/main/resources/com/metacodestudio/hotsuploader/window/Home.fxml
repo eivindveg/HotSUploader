@@ -17,7 +17,7 @@
     <center>
         <Accordion fx:id="accordion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
             <panes>
-                <TitledPane fx:id="newReplaysTitlePane" animated="false" text="New Replays">
+                <TitledPane fx:id="newReplaysTitlePane" text="New Replays">
                     <content>
                         <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header">
                             <children>
@@ -26,7 +26,7 @@
                         </AnchorPane>
                     </content>
                 </TitledPane>
-                <TitledPane fx:id="uploadedReplaysTitlePane" animated="false" text="Uploaded Replays">
+                <TitledPane fx:id="uploadedReplaysTitlePane" text="Uploaded Replays">
                     <content>
                         <AnchorPane styleClass="header">
                             <children>
@@ -35,7 +35,7 @@
                         </AnchorPane>
                     </content>
                 </TitledPane>
-                <TitledPane fx:id="exceptionReplaysTitlePane" animated="false" text="Failed Uploads">
+                <TitledPane fx:id="exceptionReplaysTitlePane" text="Failed Uploads">
                     <content>
                         <AnchorPane styleClass="header">
                             <children>
@@ -56,7 +56,7 @@
                         </AnchorPane>
                     </content>
                 </TitledPane>
-                <TitledPane fx:id="botReplaysTitlePane" animated="false" text="Unsupported Game Mode">
+                <TitledPane fx:id="botReplaysTitlePane" text="Unsupported Game Mode">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" styleClass="header">
                             <children>
