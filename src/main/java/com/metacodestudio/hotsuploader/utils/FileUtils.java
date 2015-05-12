@@ -62,6 +62,8 @@ public class FileUtils {
     }
 
     public static String readFileToString(final File file) throws IOException {
-        return IOUtils.readInputStream(new FileInputStream(file));
+        try(FileInputStream inputStream = openInputStream(file)) {
+            return IOUtils.readInputStream(inputStream);
+        }
     }
 }
