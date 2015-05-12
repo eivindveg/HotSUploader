@@ -182,7 +182,7 @@ public class HomeController {
         if (hero == null) {
             return;
         }
-        String heroName = hero.getBoxValue();
+        String heroName = hero.getPrimaryName();
         if (heroName.equals("")) {
             return;
         } else {

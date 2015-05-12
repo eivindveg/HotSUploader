@@ -21,7 +21,7 @@ public class TestHeroConverter {
 
     @Test
     public void testToString() {
-        String expected = hero.getBoxValue();
+        String expected = hero.getPrimaryName();
         String actual = heroConverter.toString(hero);
         assertEquals("HeroConverter builds proper String representation of hero", expected, actual);
 

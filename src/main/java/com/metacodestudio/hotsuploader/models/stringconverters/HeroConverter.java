@@ -10,7 +10,7 @@ public class HeroConverter extends StringConverter<Hero> {
         if (hero == null) {
             return "";
         }
-        return hero.getBoxValue();
+        return hero.getPrimaryName();
     }
 
     @Override
