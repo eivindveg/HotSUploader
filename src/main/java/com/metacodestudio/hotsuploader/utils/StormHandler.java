@@ -16,7 +16,6 @@ public class StormHandler {
     private final String USER_HOME = System.getProperty("user.home");
     private final String OSX_LIBRARY = "/Library/Application Support/";
 
-    private final SimpleHttpClient httpClient = new SimpleHttpClient();
     private File applicationHome;
     private File hotsHome;
 
