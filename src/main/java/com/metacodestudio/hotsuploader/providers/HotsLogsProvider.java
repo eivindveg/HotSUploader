@@ -8,14 +8,14 @@ import com.metacodestudio.hotsuploader.models.Status;
 
 import java.util.UUID;
 
-public class HotSLogs extends Provider {
+public class HotsLogsProvider extends Provider {
 
     private static final String ACCESS_KEY_ID = "AKIAIESBHEUH4KAAG4UA";
     private static final String SECRET_ACCESS_KEY = "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";
     private final AmazonS3Client s3Client;
     private static long maintenance;
 
-    public HotSLogs() {
+    public HotsLogsProvider() {
         super("HotSLogs.com");
         final AWSCredentials credentials = new BasicAWSCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY);
         s3Client = new AmazonS3Client(credentials);

@@ -5,7 +5,7 @@ import com.metacodestudio.hotsuploader.AccountService;
 import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.models.*;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
-import com.metacodestudio.hotsuploader.providers.HotSLogs;
+import com.metacodestudio.hotsuploader.providers.HotsLogsProvider;
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
 import com.metacodestudio.hotsuploader.utils.StormHandler;
 import io.datafx.controller.ViewController;
@@ -297,7 +297,7 @@ public class HomeController {
     private void setupFileHandler() {
         fileHandler.setRestartOnFailure(true);
         fileHandler.setOnSucceeded(event -> {
-            if (HotSLogs.isMaintenance()) {
+            if (HotsLogsProvider.isMaintenance()) {
                 setMaintenance();
             } else if (fileHandler.isIdle()) {
                 setIdle();

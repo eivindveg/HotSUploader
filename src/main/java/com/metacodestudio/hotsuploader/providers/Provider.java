@@ -21,7 +21,7 @@ public abstract class Provider {
     public static List<Provider> getAll() {
         // TODO ADD MORE PROVIDERS
         List<Provider> providers = new ArrayList<>();
-        providers.add(new HotSLogs());
+        providers.add(new HotsLogsProvider());
         return providers;
     }
 
