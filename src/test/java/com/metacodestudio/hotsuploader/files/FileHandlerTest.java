@@ -10,7 +10,7 @@ import java.util.Collections;
 import static org.mockito.Mockito.*;
 
 public class FileHandlerTest {
-    
+
     private FileHandler fileHandler;
     private StormHandler stormHandlerMock;
 
