@@ -20,6 +20,8 @@ public class OSUtils {
     private static final String SEPARATOR = System.getProperty("file.separator");
     public static final String OSX_LIBRARY = "/Library/Application Support/";
 
+    private static final SimpleHttpClient httpClient = new SimpleHttpClient();
+
     static {
         System.out.println("Detected Heroes of the Storm profile: " + getHotSHome());
         System.out.println("Using Uploader directory: " + getApplicationHome());
@@ -100,7 +102,7 @@ public class OSUtils {
                     }
                     String uri = "https://www.hotslogs.com/API/Players" + accountNameBuilder.toString();
                     try {
-                        String playerInfo = NetUtils.simpleRequest(uri);
+                        String playerInfo = httpClient.simpleRequest(uri);
                         return mapper.readValue(playerInfo, Account.class);
                     } catch (IOException e) {
                         return null;

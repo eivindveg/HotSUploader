@@ -5,7 +5,6 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.metacodestudio.hotsuploader.models.ReplayFile;
 import com.metacodestudio.hotsuploader.models.Status;
-import com.metacodestudio.hotsuploader.utils.NetUtils;
 
 import java.util.UUID;
 
@@ -33,7 +32,7 @@ public class HotSLogs extends Provider {
 
         try {
             s3Client.putObject("heroesreplays", fileName, replayFile.getFile());
-            String result = NetUtils.simpleRequest(uri);
+            String result = getHttpClient().simpleRequest(uri);
             switch (result) {
                 case "Duplicate":
                 case "Success":

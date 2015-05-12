@@ -5,22 +5,19 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
-public class NetUtils {
+public class SimpleHttpClient {
 
     public static final String SPACE = "%20";
 
-    private NetUtils() {
-    }
-
-    public static String simpleRequest(final String target) throws IOException {
+    public String simpleRequest(final String target) throws IOException {
         return simpleRequest(encode(target));
     }
 
-    public static String simpleRequest(final URI uri) throws IOException {
+    public String simpleRequest(final URI uri) throws IOException {
         return simpleRequest(uri.toURL());
     }
 
-    public static String simpleRequest(final URL url) throws IOException {
+    public String simpleRequest(final URL url) throws IOException {
         InputStream inputStream = url.openStream();
         return IOUtils.readInputStream(inputStream);
     }

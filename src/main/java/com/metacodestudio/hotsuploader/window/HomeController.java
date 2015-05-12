@@ -6,7 +6,7 @@ import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.models.*;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotSLogs;
-import com.metacodestudio.hotsuploader.utils.NetUtils;
+import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.action.ActionMethod;
 import io.datafx.controller.flow.action.ActionTrigger;
@@ -39,6 +39,7 @@ import java.util.Optional;
 @ViewController(value = "Home.fxml", title = "HotSLogs UploaderFX")
 public class HomeController {
 
+    private final SimpleHttpClient httpClient;
     @FXMLViewFlowContext
     private ViewFlowContext viewFlowContext;
 
@@ -109,6 +110,10 @@ public class HomeController {
     private FileHandler fileHandler;
     private Desktop desktop;
 
+    public HomeController() {
+        httpClient = new SimpleHttpClient();
+    }
+
 
     @PostConstruct
     public void init() {
@@ -132,7 +137,7 @@ public class HomeController {
         Task<List<Hero>> task = new Task<List<Hero>>() {
             @Override
             protected List<Hero> call() throws Exception {
-                final String result = NetUtils.simpleRequest("https://www.hotslogs.com/API/Data/Heroes");
+                final String result = httpClient.simpleRequest("https://www.hotslogs.com/API/Data/Heroes");
                 final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
                 return Arrays.asList(heroes);
             }
@@ -144,7 +149,7 @@ public class HomeController {
 
     private void doOpenHotsLogs() {
         try {
-            desktop.browse(NetUtils.encode("https://www.hotslogs.com/Default"));
+            desktop.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Default"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -184,7 +189,7 @@ public class HomeController {
         } else {
             this.heroName.setValue(null);
         }
-        desktop.browse(NetUtils.encode("https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName));
+        desktop.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName));
     }
 
     @ActionMethod("playerSearch")
@@ -195,7 +200,7 @@ public class HomeController {
         } else {
             playerSearchInput.setText("");
         }
-        desktop.browse(NetUtils.encode("https://www.hotslogs.com/PlayerSearch?Name=" + playerName));
+        desktop.browse(SimpleHttpClient.encode("https://www.hotslogs.com/PlayerSearch?Name=" + playerName));
     }
 
     @ActionMethod("viewProfile")
@@ -204,7 +209,7 @@ public class HomeController {
         if (account == null) {
             return;
         }
-        desktop.browse(NetUtils.encode("https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId()));
+        desktop.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId()));
     }
 
     private void setupAccounts() {

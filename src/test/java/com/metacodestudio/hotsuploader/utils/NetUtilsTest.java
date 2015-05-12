@@ -10,7 +10,7 @@ public class NetUtilsTest {
 
     @Test
     public void testStringEncoding() {
-        URI uri = NetUtils.encode("http://test.test/?query=que ry");
+        URI uri = SimpleHttpClient.encode("http://test.test/?query=que ry");
         assertNotNull("We got an uri", uri);
     }
 }

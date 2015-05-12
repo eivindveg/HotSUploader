@@ -2,6 +2,7 @@ package com.metacodestudio.hotsuploader.providers;
 
 import com.metacodestudio.hotsuploader.models.ReplayFile;
 import com.metacodestudio.hotsuploader.models.Status;
+import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 public abstract class Provider {
 
     private String name;
+    private static final SimpleHttpClient httpClient = new SimpleHttpClient();
 
     public Provider(String name) {
         this.name = name;
@@ -25,5 +27,9 @@ public abstract class Provider {
 
     public String getName() {
         return name;
+    }
+
+    protected static final SimpleHttpClient getHttpClient() {
+        return httpClient;
     }
 }
