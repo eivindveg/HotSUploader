@@ -244,6 +244,7 @@ public class HomeController {
         if (account == null) {
             return;
         }
+
         Optional<Integer> quickMatchMmr = readMmr(account.getLeaderboardRankings(), "QuickMatch");
         if (quickMatchMmr.isPresent()) {
             qmMmr.setText(String.valueOf(quickMatchMmr.get()));
