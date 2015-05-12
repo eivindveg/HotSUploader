@@ -12,7 +12,7 @@ public class StormHandler {
     private static final String OS_NAME = System.getProperty("os.name");
     private static final String SEPARATOR = System.getProperty("file.separator");
     private final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
-    private final String HOTS_ACCOUNT_FILTER = "(\\d-Hero-\\d-\\d{1,20})";
+    private final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
     private final String USER_HOME = System.getProperty("user.home");
     private final String OSX_LIBRARY = "/Library/Application Support/";
 
@@ -87,7 +87,7 @@ public class StormHandler {
             files = new File[0];
         }
         for (final File file : files) {
-            File[] hotsFolders = file.listFiles((dir, name) -> name.matches(HOTS_ACCOUNT_FILTER));
+            File[] hotsFolders = file.listFiles((dir, name) -> name.matches(hotsAccountFilter));
             Arrays.stream(hotsFolders)
                     .map(folder -> new File(folder, "Replays"))
                     .map(folder -> new File(folder, "Multiplayer"))
@@ -109,5 +109,9 @@ public class StormHandler {
                     }
                     return "https://www.hotslogs.com/API/Players" + accountNameBuilder.toString();
                 }).collect(Collectors.toList());
+    }
+
+    public String getHotSAccountFilter() {
+        return hotsAccountFilter;
     }
 }
