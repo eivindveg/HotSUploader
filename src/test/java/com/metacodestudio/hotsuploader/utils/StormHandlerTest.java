@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-public class OSUtilsTest {
+public class StormHandlerTest {
 
     public static final String NO_MATCH = "Invalid string does not match";
     public static final String MATCH = "Valid string matches";
@@ -33,8 +33,8 @@ public class OSUtilsTest {
     }
 
     public static String getHotSAccountFilter() throws NoSuchFieldException, IllegalAccessException {
-        final Field field = OSUtils.class.getDeclaredField("HOTS_ACCOUNT_FILTER");
+        final Field field = StormHandler.class.getDeclaredField("HOTS_ACCOUNT_FILTER");
         field.setAccessible(true);
-        return (String) field.get(OSUtils.class);
+        return (String) field.get(StormHandler.class);
     }
 }

@@ -7,6 +7,7 @@ import com.metacodestudio.hotsuploader.models.*;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotSLogs;
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
+import com.metacodestudio.hotsuploader.utils.StormHandler;
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.action.ActionMethod;
 import io.datafx.controller.flow.action.ActionTrigger;
@@ -39,7 +40,7 @@ import java.util.Optional;
 @ViewController(value = "Home.fxml", title = "HotSLogs UploaderFX")
 public class HomeController {
 
-    private final SimpleHttpClient httpClient;
+    private SimpleHttpClient httpClient;
     @FXMLViewFlowContext
     private ViewFlowContext viewFlowContext;
 
@@ -109,15 +110,13 @@ public class HomeController {
 
     private FileHandler fileHandler;
     private Desktop desktop;
-
-    public HomeController() {
-        httpClient = new SimpleHttpClient();
-    }
-
+    private StormHandler stormHandler;
 
     @PostConstruct
     public void init() {
         desktop = Desktop.getDesktop();
+        stormHandler = viewFlowContext.getRegisteredObject(StormHandler.class);
+        httpClient = viewFlowContext.getRegisteredObject(SimpleHttpClient.class);
         fileHandler = viewFlowContext.getRegisteredObject(FileHandler.class);
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
@@ -233,7 +232,7 @@ public class HomeController {
                 viewProfile.setDisable(false);
             }
         });
-        ScheduledService<List<Account>> service = new AccountService();
+        ScheduledService<List<Account>> service = new AccountService(stormHandler, httpClient);
         service.setDelay(Duration.ZERO);
         service.setPeriod(Duration.minutes(10));
 

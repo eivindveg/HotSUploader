@@ -1,7 +1,8 @@
 package com.metacodestudio.hotsuploader;
 
 import com.metacodestudio.hotsuploader.files.FileHandler;
-import com.metacodestudio.hotsuploader.utils.OSUtils;
+import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
+import com.metacodestudio.hotsuploader.utils.StormHandler;
 import com.metacodestudio.hotsuploader.window.HomeController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowHandler;
@@ -13,20 +14,12 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.net.URL;
 
 
 public class Client extends Application {
 
-    private static File hotsRoot;
-
-    public static File getHotsRoot() {
-        return hotsRoot;
-    }
-
     public static void main(String[] args) {
-        hotsRoot = OSUtils.getHotSHome();
         Application.launch(Client.class, args);
     }
 
@@ -41,7 +34,11 @@ public class Client extends Application {
 
         Flow flow = new Flow(HomeController.class);
         FlowHandler flowHandler = flow.createHandler(new ViewFlowContext());
-        flowHandler.getFlowContext().register(new FileHandler(OSUtils.getHotSHome()));
+        ViewFlowContext flowContext = flowHandler.getFlowContext();
+        StormHandler stormHandler = new StormHandler();
+        flowContext.register(stormHandler);
+        flowContext.register(new FileHandler(stormHandler));
+        flowContext.register(new SimpleHttpClient());
         DefaultFlowContainer container = new DefaultFlowContainer();
         StackPane pane = flowHandler.start(container);
         primaryStage.setScene(new Scene(pane));

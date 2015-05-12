@@ -6,7 +6,7 @@ import com.metacodestudio.hotsuploader.models.Status;
 import com.metacodestudio.hotsuploader.models.UploadStatus;
 import com.metacodestudio.hotsuploader.providers.Provider;
 import com.metacodestudio.hotsuploader.utils.FileUtils;
-import com.metacodestudio.hotsuploader.utils.OSUtils;
+import com.metacodestudio.hotsuploader.utils.StormHandler;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,21 +30,23 @@ public class FileHandler extends ScheduledService<ReplayFile> {
 
     private final List<File> watchDirectories;
     private final ObjectMapper mapper;
+    private final StormHandler stormHandler;
     private Map<Status, ObservableList<ReplayFile>> fileMap;
     private List<Provider> providers = Provider.getAll();
     private BlockingQueue<ReplayFile> uploadQueue;
 
-    public FileHandler(final File root) throws IOException {
+    public FileHandler(final StormHandler stormHandler) throws IOException {
+        this.stormHandler = stormHandler;
         mapper = new ObjectMapper();
         uploadQueue = new ArrayBlockingQueue<>(2500);
         fileMap = new HashMap<>();
-        watchDirectories = OSUtils.getAccountDirectories(root);
+        watchDirectories = stormHandler.getAccountDirectories(stormHandler.getHotSHome());
 
         cleanup();
         registerInitial();
         watchDirectories.stream().map(file -> Paths.get(file.toString())).forEach(path -> {
             try {
-                WatchHandler watchHandler = new WatchHandler(path, fileMap, uploadQueue);
+                WatchHandler watchHandler = new WatchHandler(stormHandler, path, fileMap, uploadQueue);
                 new Thread(watchHandler).start();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -53,14 +55,14 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     }
 
     private void cleanup() {
-        List<File> accounts = OSUtils.getAccountDirectories(new File(OSUtils.getApplicationHome(), "Accounts"));
+        List<File> accounts = stormHandler.getAccountDirectories(new File(stormHandler.getApplicationHome(), "Accounts"));
         accounts.stream()
                 .flatMap(folder -> {
                     File[] children = folder.listFiles();
                     return Arrays.asList(children != null ? children : new File[0]).stream();
-                }).map(OSUtils::getReplayFile)
+                }).map(stormHandler::getReplayFile)
                 .filter(file -> !file.exists())
-                .map(OSUtils::getPropertiesFile).forEach(File::delete);
+                .map(stormHandler::getPropertiesFile).forEach(File::delete);
     }
 
     private void registerInitial() {
@@ -70,7 +72,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                 .collect(Collectors.toList());
         fileMap = fileList.stream()
                 .map(replay -> {
-                    File propertiesFile = OSUtils.getPropertiesFile(replay.getFile());
+                    File propertiesFile = stormHandler.getPropertiesFile(replay.getFile());
                     try {
                         if (propertiesFile.exists()) {
                             String properties = FileUtils.readFileToString(propertiesFile);
@@ -104,7 +106,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     }
 
     public void updateFile(ReplayFile file) throws IOException {
-        File propertiesFile = OSUtils.getPropertiesFile(file.getFile());
+        File propertiesFile = stormHandler.getPropertiesFile(file.getFile());
         String data = mapper.writeValueAsString(file.getUploadStatuses());
         FileUtils.writeStringToFile(propertiesFile, data);
     }

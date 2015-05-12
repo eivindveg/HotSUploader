@@ -2,7 +2,7 @@ package com.metacodestudio.hotsuploader.files;
 
 import com.metacodestudio.hotsuploader.models.ReplayFile;
 import com.metacodestudio.hotsuploader.models.Status;
-import com.metacodestudio.hotsuploader.utils.OSUtils;
+import com.metacodestudio.hotsuploader.utils.StormHandler;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 
@@ -20,9 +20,11 @@ public class WatchHandler implements Runnable {
     private Map<Status, ObservableList<ReplayFile>> fileMap;
     private Queue<ReplayFile> uploadQueue;
 
+    private final StormHandler stormHandler;
     private Path path;
 
-    public WatchHandler(final Path path, final Map<Status, ObservableList<ReplayFile>> fileMap, final Queue<ReplayFile> uploadQueue) throws IOException {
+    public WatchHandler(final StormHandler stormHandler, final Path path, final Map<Status, ObservableList<ReplayFile>> fileMap, final Queue<ReplayFile> uploadQueue) throws IOException {
+        this.stormHandler = stormHandler;
         this.path = path;
         watchService = FileSystems.getDefault().newWatchService();
         path.register(watchService, ENTRY_CREATE);
@@ -59,7 +61,7 @@ public class WatchHandler implements Runnable {
                     continue;
                 }
                 ReplayFile replayFile = getReplayFileForEvent(kind, file);
-                File propertiesFile = OSUtils.getPropertiesFile(file);
+                File propertiesFile = stormHandler.getPropertiesFile(file);
                 if(propertiesFile.exists()) {
                     if(!propertiesFile.delete()) {
                         throw new RuntimeException(new IOException("Could not delete file"));
