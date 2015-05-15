@@ -1,6 +1,7 @@
 package com.metacodestudio.hotsuploader.versions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
 
 import java.io.IOException;
@@ -14,9 +15,9 @@ public class ReleaseManager {
     protected static final String GITHUB_MAINTAINER = "eivindveg";
     protected static final String GITHUB_REPOSITORY = "HotSUploader";
     protected static final String GITHUB_RELEASES_ALL
-            = "https://github.com/{maintainer}/{repository}/releases";
+            = "https://api.github.com/repos/{maintainer}/{repository}/releases";
     protected static final String GITHUB_FORMAT_VERSION
-            = GITHUB_RELEASES_ALL + "/tag/{version}";
+            = "http://github.com/{maintainer}/{repository}/releases/tag/{version}";
     private final SimpleHttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final GitHubRelease currentRelease;
@@ -24,7 +25,7 @@ public class ReleaseManager {
     public ReleaseManager(SimpleHttpClient httpClient) {
         this.httpClient = httpClient;
         objectMapper = new ObjectMapper();
-
+        objectMapper.registerModule(new JodaModule());
         currentRelease = buildCurrentRelease();
     }
 
@@ -54,7 +55,6 @@ public class ReleaseManager {
         String apiUrl = GITHUB_RELEASES_ALL.replace("{maintainer}", GITHUB_MAINTAINER)
                 .replace("{repository}", GITHUB_REPOSITORY);
         String response = httpClient.simpleRequest(apiUrl);
-
         releases.addAll(Arrays.asList(objectMapper.readValue(response, GitHubRelease[].class)));
         return releases;
     }
