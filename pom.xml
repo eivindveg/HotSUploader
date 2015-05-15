@@ -47,7 +47,7 @@
                 <version>8.1.2</version>
                 <configuration>
                     <mainClass>${project.mainClass}</mainClass>
-                    <nativeReleaseVersion>1.0</nativeReleaseVersion>
+                    <nativeReleaseVersion>1.1</nativeReleaseVersion>
                     <identifier>${project.build.finalName}</identifier>
                     <css2bin>true</css2bin>
                 </configuration>
