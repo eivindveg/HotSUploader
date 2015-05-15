@@ -1,9 +1,11 @@
 package com.metacodestudio.hotsuploader.versions;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joda.time.DateTime;
 
-import java.time.LocalDateTime;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GitHubRelease {
 
     @JsonProperty
@@ -17,8 +19,9 @@ public class GitHubRelease {
 
     @JsonProperty
     private Boolean prerelease;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     @JsonProperty("published_at")
-    private LocalDateTime publishedAt;
+    private DateTime publishedAt;
 
     public GitHubRelease() {
     }
@@ -28,11 +31,22 @@ public class GitHubRelease {
         this.htmlUrl = htmlUrl;
     }
 
-    public LocalDateTime getPublishedAt() {
+    @Override
+    public String toString() {
+        return "GitHubRelease{" +
+                "id='" + id + '\'' +
+                ", tagName='" + tagName + '\'' +
+                ", htmlUrl='" + htmlUrl + '\'' +
+                ", prerelease=" + prerelease +
+                ", publishedAt=" + publishedAt +
+                '}';
+    }
+
+    public DateTime getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(final LocalDateTime publishedAt) {
+    public void setPublishedAt(final DateTime publishedAt) {
         this.publishedAt = publishedAt;
     }
 
