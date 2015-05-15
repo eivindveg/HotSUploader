@@ -11,13 +11,13 @@ public class ReleaseComparator implements Comparator<GitHubRelease> {
             return -1;
         }
 
-        double release1Version = stripVersion(release1.getTagName());
-        double release2Version = stripVersion(release2.getTagName());
+        String release1Version = stripVersion(release1.getTagName());
+        String release2Version = stripVersion(release2.getTagName());
 
-        return Double.compare(release1Version, release2Version);
+        return release1Version.compareTo(release2Version);
     }
 
-    private double stripVersion(final String tagName) {
-        return Double.parseDouble(tagName.replaceAll("-\\w*", ""));
+    private String stripVersion(final String tagName) {
+        return tagName.replaceFirst("v", "").replaceAll("-\\w*", "");
     }
 }
