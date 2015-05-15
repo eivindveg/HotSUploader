@@ -30,19 +30,23 @@ public class ReleaseManager {
     }
 
     private GitHubRelease buildCurrentRelease() {
-        String htmlUrl = GITHUB_FORMAT_VERSION.replace("{maintainer}", GITHUB_MAINTAINER)
-                .replace("{repository}", GITHUB_REPOSITORY)
-                .replace("{version}", CURRENT_VERSION);
+        String htmlUrl = getCurrentReleaseString();
         return new GitHubRelease(CURRENT_VERSION, htmlUrl);
     }
 
-    public GitHubRelease getNewerVersionIfAny() throws IOException {
+    public GitHubRelease getNewerVersionIfAny() {
         ReleaseComparator releaseComparator = new ReleaseComparator();
-        List<GitHubRelease> latest = getLatest();
+        List<GitHubRelease> latest;
+        try {
+            latest = getLatest();
+        } catch (IOException e) {
+            System.out.println("Unable to get latest versions");
+            return null;
+        }
         latest.sort(releaseComparator);
 
         GitHubRelease latestRelease = latest.get(0);
-        if(latest.size() > 0 && releaseComparator.compare(currentRelease, latestRelease) < 0) {
+        if (latest.size() > 0 && releaseComparator.compare(currentRelease, latestRelease) < 0) {
             return latestRelease;
         }
 
@@ -52,11 +56,21 @@ public class ReleaseManager {
     private List<GitHubRelease> getLatest() throws IOException {
         ArrayList<GitHubRelease> releases = new ArrayList<>();
 
-        String apiUrl = GITHUB_RELEASES_ALL.replace("{maintainer}", GITHUB_MAINTAINER)
-                .replace("{repository}", GITHUB_REPOSITORY);
+        String apiUrl = getAllReleasesString();
         String response = httpClient.simpleRequest(apiUrl);
         releases.addAll(Arrays.asList(objectMapper.readValue(response, GitHubRelease[].class)));
         return releases;
+    }
+
+    protected String getAllReleasesString() {
+        return GITHUB_RELEASES_ALL.replace("{maintainer}", GITHUB_MAINTAINER)
+                .replace("{repository}", GITHUB_REPOSITORY);
+    }
+
+    protected String getCurrentReleaseString() {
+        return GITHUB_FORMAT_VERSION.replace("{maintainer}", GITHUB_MAINTAINER)
+                .replace("{repository}", GITHUB_REPOSITORY)
+                .replace("{version}", CURRENT_VERSION);
     }
 
 }
