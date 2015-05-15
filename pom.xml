@@ -6,7 +6,7 @@
 
     <groupId>com.metacodestudio</groupId>
     <artifactId>hots-uploader-fx</artifactId>
-    <version>1.0-RELEASE-SNAPSHOT</version>
+    <version>1.1-RELEASE-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
