@@ -8,6 +8,8 @@ import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotsLogsProvider;
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
 import com.metacodestudio.hotsuploader.utils.StormHandler;
+import com.metacodestudio.hotsuploader.versions.GitHubRelease;
+import com.metacodestudio.hotsuploader.versions.ReleaseManager;
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.action.ActionMethod;
 import io.datafx.controller.flow.action.ActionTrigger;
@@ -129,6 +131,34 @@ public class HomeController {
         }
 
         setupAccounts();
+
+        checkNewVersion();
+    }
+
+    private void checkNewVersion() {
+        ReleaseManager releaseManager = new ReleaseManager(httpClient);
+        try {
+            GitHubRelease newerVersionIfAny = releaseManager.getNewerVersionIfAny();
+            if(newerVersionIfAny != null) {
+                displayVersionPrompt(newerVersionIfAny);
+            }
+        } catch (IOException ignored) {
+            ignored.printStackTrace();
+        }
+    }
+
+    private void displayVersionPrompt(final GitHubRelease newerVersionIfAny) throws IOException {
+        String version = newerVersionIfAny.getTagName();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "A new version of the client is available: "
+                + version + "!\n"
+        + "Do you wish to go to the download page?",
+                ButtonType.YES, ButtonType.NO);
+        alert.setHeaderText("New version");
+
+        Optional<ButtonType> buttonType = alert.showAndWait();
+        if(buttonType.isPresent() && buttonType.get() == ButtonType.YES) {
+            desktop.browse(SimpleHttpClient.encode(newerVersionIfAny.getHtmlUrl()));
+        }
     }
 
     private void fetchHeroNames() {
