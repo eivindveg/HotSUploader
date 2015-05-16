@@ -102,7 +102,7 @@
                                 <Font name="System Bold" size="18.0" />
                             </font>
                         </Label>
-                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" styleClass="textgreen" text="Uploading" textFill="#00b000">
+                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" text="Uploading" textFill="#00b000">
                             <font>
                                 <Font name="Calibri Bold" size="14.0" />
                             </font>
