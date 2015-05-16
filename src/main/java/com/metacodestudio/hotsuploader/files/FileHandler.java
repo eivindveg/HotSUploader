@@ -38,11 +38,10 @@ public class FileHandler extends ScheduledService<ReplayFile> {
         mapper = new ObjectMapper();
         uploadQueue = new ArrayBlockingQueue<>(2500);
         fileMap = new HashMap<>();
+        watchDirectories.addAll(stormHandler.getAccountDirectories(stormHandler.getHotSHome()));
     }
 
     public void beginWatch() {
-        watchDirectories.addAll(stormHandler.getAccountDirectories(stormHandler.getHotSHome()));
-
         watchDirectories.stream().map(file -> Paths.get(file.toString())).forEach(path -> {
             try {
                 WatchHandler watchHandler = new WatchHandler(stormHandler, path, fileMap, uploadQueue);
@@ -92,10 +91,9 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                     return replay;
                 }).collect(Collectors.groupingBy(ReplayFile::getStatus, ConcurrentHashMap::new,
                         Collectors.toCollection(FXCollections::observableArrayList)));
-        verifyMap(fileMap);
     }
 
-    private void verifyMap(Map<Status, ObservableList<ReplayFile>> fileMap) {
+    public void verifyMap(Map<Status, ObservableList<ReplayFile>> fileMap) {
         Status[] keys = Status.values();
         for (final Status key : keys) {
             if (!fileMap.containsKey(key)) {

@@ -50,7 +50,6 @@ public class Client extends Application {
     private FileHandler setupFileHandler(final StormHandler stormHandler) throws IOException {
         FileHandler fileHandler = new FileHandler(stormHandler);
         fileHandler.cleanup();
-        fileHandler.beginWatch();
         fileHandler.registerInitial();
         return fileHandler;
     }

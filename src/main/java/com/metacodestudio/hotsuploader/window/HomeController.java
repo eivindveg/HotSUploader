@@ -120,6 +120,7 @@ public class HomeController {
         stormHandler = viewFlowContext.getRegisteredObject(StormHandler.class);
         httpClient = viewFlowContext.getRegisteredObject(SimpleHttpClient.class);
         fileHandler = viewFlowContext.getRegisteredObject(FileHandler.class);
+        fileHandler.verifyMap(fileHandler.getFileMap());
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
         prepareAccordion();
@@ -133,6 +134,7 @@ public class HomeController {
         setupAccounts();
 
         checkNewVersion();
+        fileHandler.beginWatch();
     }
 
     private void checkNewVersion() {
