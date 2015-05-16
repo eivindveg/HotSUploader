@@ -20,19 +20,24 @@ public class UploadTask extends Task<ReplayFile> {
     @Override
     protected ReplayFile call() throws Exception {
         providers.forEach(provider -> {
-            Status upload = provider.upload(take);
-            if (upload == null) {
-                throw new RuntimeException("Failed");
-            }
             List<UploadStatus> uploadStatuses = take.getUploadStatuses();
             UploadStatus status = uploadStatuses.stream()
                     .filter(uploadStatus -> uploadStatus.getHost().equals(provider.getName()))
                     .findFirst()
                     .orElse(null);
-            if (status == null) {
-                uploadStatuses.add(new UploadStatus(provider.getName(), upload));
-            } else {
-                status.setStatus(upload);
+
+            if (status == null || status.getStatus() == Status.EXCEPTION || status.getStatus() == Status.NEW)
+            {
+                Status upload = provider.upload(take);
+                if (upload == null) {
+                    throw new RuntimeException("Failed");
+                }
+
+                if (status == null) {
+                    uploadStatuses.add(new UploadStatus(provider.getName(), upload));
+                } else {
+                    status.setStatus(upload);
+                }
             }
             succeeded();
         });
