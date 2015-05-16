@@ -55,12 +55,17 @@ public class ReplayFile {
 
     @JsonIgnore
     public Status getStatus() {
-        // TODO MAKE MULTIPROVIDER-FRIENDLY
-        if (uploadStatuses.size() < 1) {
+        if (uploadStatuses.size() < 2) {
             System.out.println("Empty status list");
             return Status.NEW;
         }
-        return uploadStatuses.get(0).getStatus();
+
+        Status hotsLogStatus = uploadStatuses.get(0).getStatus();
+        Status heroGGStatus = uploadStatuses.get(1).getStatus();
+        if (heroGGStatus == Status.EXCEPTION || heroGGStatus == Status.NEW)
+            return heroGGStatus;
+        else
+            return hotsLogStatus;
     }
 
     public File getFile() {
