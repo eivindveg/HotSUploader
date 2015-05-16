@@ -1,11 +1,11 @@
 package com.metacodestudio.hotsuploader.providers;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.metacodestudio.hotsuploader.models.ReplayFile;
 import com.metacodestudio.hotsuploader.models.Status;
 import org.apache.commons.codec.binary.Base64;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -13,6 +13,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.Map;
 import java.util.UUID;
 
 public class HeroGGProvider extends Provider {
@@ -62,16 +63,17 @@ public class HeroGGProvider extends Provider {
             }
 
             String result = new String(b, Charset.forName(ENCODING));
-            JSONObject resultObj = new JSONObject(result);
-            String status = resultObj.getString("success");
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String,Object> resultMap = mapper.readValue(result, Map.class);
+            Object status = resultMap.get("success");
 
-            if ("true".equals(status)) {
+            if (status != null && (Boolean)status) {
                 return Status.UPLOADED;
             } else {
                 return Status.EXCEPTION;
             }
 
-        } catch (UnsupportedEncodingException | ProtocolException | MalformedURLException | JSONException e) {
+        } catch (UnsupportedEncodingException | ProtocolException | MalformedURLException | JsonParseException | JsonMappingException e) {
             return Status.EXCEPTION;
         } catch (IOException e) {
             return Status.NEW;
