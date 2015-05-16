@@ -376,7 +376,7 @@ public class HomeController {
 
     private void setIdle() {
         status.setText("Idle");
-        status.textFillProperty().setValue(Paint.valueOf("#00008f"));
+        status.textFillProperty().setValue(Paint.valueOf("#0099DA"));
     }
 
     private void setMaintenance() {
@@ -386,7 +386,7 @@ public class HomeController {
 
     private void setUploading() {
         status.setText("Uploading");
-        status.textFillProperty().setValue(Paint.valueOf("#008f00"));
+        status.textFillProperty().setValue(Paint.valueOf("#00B000"));
     }
 
     private void setError() {
