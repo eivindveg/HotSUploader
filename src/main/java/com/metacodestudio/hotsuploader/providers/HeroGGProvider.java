@@ -7,6 +7,8 @@ import org.json.*;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -29,9 +31,15 @@ public class HeroGGProvider extends Provider {
         String contentType = "multipart/form-data; boundary=" + boundary;
         byte[] fileData = getFileData(replayFile, boundary);
 
+        URL url;
         try {
-            URL url = new URL(uri);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            url = new URL(uri);
+        } catch (MalformedURLException e) {
+            return Status.EXCEPTION;
+        }
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", contentType);
@@ -43,10 +51,11 @@ public class HeroGGProvider extends Provider {
             requestStream.write(fileData, 0, fileData.length);
             requestStream.close();
 
-            InputStream responseStream = connection.getInputStream();
-            byte[] b = new byte[responseStream.available()];
-            responseStream.read(b);
-            responseStream.close();
+            byte[] b;
+            try (InputStream responseStream = connection.getInputStream()) {
+                b = new byte[responseStream.available()];
+                responseStream.read(b);
+            }
 
             String result = new String(b, Charset.defaultCharset());
             JSONObject resultObj = new JSONObject(result);
@@ -57,8 +66,14 @@ public class HeroGGProvider extends Provider {
             else
                 return Status.EXCEPTION;
 
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException | ProtocolException | MalformedURLException | JSONException e) {
             return Status.EXCEPTION;
+        } catch (IOException e) {
+            return Status.NEW;
+        } finally {
+            if(connection != null) {
+                connection.disconnect();
+            }
         }
 
     }
