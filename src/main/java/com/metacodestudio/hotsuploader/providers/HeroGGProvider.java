@@ -58,7 +58,7 @@ public class HeroGGProvider extends Provider {
                 responseStream.read(b);
             }
 
-            String result = new String(b, Charset.defaultCharset());
+            String result = new String(b, Charset.forName(ENCODING));
             JSONObject resultObj = new JSONObject(result);
             String status = resultObj.getString("success");
 
