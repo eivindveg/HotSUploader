@@ -3,7 +3,8 @@ package com.metacodestudio.hotsuploader.providers;
 import com.metacodestudio.hotsuploader.models.ReplayFile;
 import com.metacodestudio.hotsuploader.models.Status;
 import org.apache.commons.codec.binary.Base64;
-import org.json.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -61,17 +62,18 @@ public class HeroGGProvider extends Provider {
             JSONObject resultObj = new JSONObject(result);
             String status = resultObj.getString("success");
 
-            if (status == "true")
+            if ("true".equals(status)) {
                 return Status.UPLOADED;
-            else
+            } else {
                 return Status.EXCEPTION;
+            }
 
         } catch (UnsupportedEncodingException | ProtocolException | MalformedURLException | JSONException e) {
             return Status.EXCEPTION;
         } catch (IOException e) {
             return Status.NEW;
         } finally {
-            if(connection != null) {
+            if (connection != null) {
                 connection.disconnect();
             }
         }
