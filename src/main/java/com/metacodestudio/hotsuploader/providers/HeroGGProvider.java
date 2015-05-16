@@ -112,15 +112,13 @@ public class HeroGGProvider extends Provider {
 
     private String getContentString(String boundary, String key, String value) {
         Object[] params = new Object[]{boundary, key, value};
-        String s = String.format("--%1$s\r\nContent-Disposition: form-data; name=\"%2$s\"\r\n\r\n%3$s", params);
 
-        return s;
+        return String.format("--%1$s\r\nContent-Disposition: form-data; name=\"%2$s\"\r\n\r\n%3$s", params);
     }
 
     private String getContentString(String boundary, String key, File value) {
         Object[] params = new Object[]{boundary, key, value.getName(), "application/x-www-form-urlencoded"};
-        String s = String.format("--%1$s\r\nContent-Disposition: form-data; name=\"%2$s\"; filename=\"%3$s\"\r\nContent-Type: %4$s\r\n\r\n", params);
 
-        return s;
+        return String.format("--%1$s\r\nContent-Disposition: form-data; name=\"%2$s\"; filename=\"%3$s\"\r\nContent-Type: %4$s\r\n\r\n", params);
     }
 }
