@@ -93,7 +93,7 @@
                 </ImageView>
             </left>
             <right>
-                <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                <VBox prefWidth="100.0" BorderPane.alignment="CENTER">
                     <children>
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="textwhite" text="Status" textFill="WHITE">
                             <font>
@@ -108,6 +108,9 @@
                     </children>
                 </VBox>
             </right>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
         </BorderPane>
     </top>
    <right>
