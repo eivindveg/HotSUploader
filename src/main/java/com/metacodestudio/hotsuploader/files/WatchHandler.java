@@ -66,7 +66,6 @@ public class WatchHandler implements Runnable {
                         throw new RuntimeException(new IOException("Could not delete file"));
                     }
                 }
-                System.out.println(replayFile.getStatus());
                 Platform.runLater(() -> fileMap.get(Status.NEW).add(replayFile));
                 uploadQueue.add(replayFile);
 
@@ -123,7 +122,6 @@ public class WatchHandler implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("New file: " + getTarget().toString());
             File file = new File(getTarget().toString());
             return new ReplayFile(file);
         }
@@ -133,21 +131,14 @@ public class WatchHandler implements Runnable {
 
         public ModificationHandler(File target) {
             super(target);
-            System.out.println("Modify handler");
         }
 
         @Override
         public ReplayFile getFile() {
-            long stamp = 0;
             try {
                 do {
-                    System.out.println("Waiting");
-                    System.out.println(getTarget().getName());
-
                     Thread.sleep(10000L);
-                    System.out.println(stamp);
-                    System.out.println(System.currentTimeMillis() - 20000L);
-                } while ((stamp = getTarget().lastModified()) > System.currentTimeMillis() - 20000L);
+                } while (getTarget().lastModified() > System.currentTimeMillis() - 20000L);
                 return new ReplayFile(new File(getTarget().toString()));
             } catch (InterruptedException e) {
                 return null;
