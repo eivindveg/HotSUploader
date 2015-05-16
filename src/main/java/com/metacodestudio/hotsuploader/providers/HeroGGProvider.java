@@ -31,6 +31,9 @@ public class HeroGGProvider extends Provider {
         String boundary = String.format("----------%s", UUID.randomUUID().toString().replaceAll("-", ""));
         String contentType = "multipart/form-data; boundary=" + boundary;
         byte[] fileData = getFileData(replayFile, boundary);
+        if(fileData == null) {
+            return Status.EXCEPTION;
+        }
 
         URL url;
         try {
