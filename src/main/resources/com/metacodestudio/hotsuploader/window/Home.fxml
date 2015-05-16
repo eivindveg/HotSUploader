@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.*?>
 <?import java.lang.*?>
-<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.*?>
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" styleClass="header" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <center>
@@ -41,23 +41,25 @@
                             <children>
                                 <VBox layoutX="9.600000381469727" layoutY="9.600000381469727" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
-                              <BorderPane>
-                                 <left>
+                                        <BorderPane>
+                                            <left>
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="These replays have failed to upload for various reasons" textFill="WHITE" BorderPane.alignment="CENTER">
-                                       <BorderPane.margin>
-                                          <Insets />
-                                       </BorderPane.margin></Label>
-                                 </left>
-                                 <right>
+                                                    <BorderPane.margin>
+                                                        <Insets />
+                                                    </BorderPane.margin>
+                                                </Label>
+                                            </left>
+                                            <right>
                                                 <Button fx:id="invalidateExceptions" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Click to retry" BorderPane.alignment="CENTER">
-                                       <BorderPane.margin>
-                                          <Insets />
-                                       </BorderPane.margin></Button>
-                                 </right>
-                                 <VBox.margin>
-                                    <Insets bottom="5.0" />
-                                 </VBox.margin>
-                              </BorderPane>
+                                                    <BorderPane.margin>
+                                                        <Insets />
+                                                    </BorderPane.margin>
+                                                </Button>
+                                            </right>
+                                            <VBox.margin>
+                                                <Insets bottom="5.0" />
+                                            </VBox.margin>
+                                        </BorderPane>
                                         <ListView fx:id="exceptionReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                     </children>
                                 </VBox>
@@ -84,12 +86,12 @@
                     <image>
                         <Image url="@../../../../images/hotslogs-large.png" />
                     </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <effect>
-                  <Bloom threshold="0.95" />
-               </effect>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                    <effect>
+                        <Bloom threshold="0.95" />
+                    </effect>
                 </ImageView>
             </left>
             <right>
@@ -100,7 +102,7 @@
                                 <Font name="System Bold" size="18.0" />
                             </font>
                         </Label>
-                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#008f00">
+                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="textgreen" text="Uploading" textFill="#00b000">
                             <font>
                                 <Font name="Calibri Bold" size="14.0" />
                             </font>
@@ -108,120 +110,120 @@
                     </children>
                 </VBox>
             </right>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
         </BorderPane>
     </top>
-   <right>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <top>
-            <BorderPane BorderPane.alignment="CENTER">
-               <top>
-                  <Label alignment="CENTER" text="Players" textFill="WHITE" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Label>
-               </top>
-               <center>
-                  <BorderPane BorderPane.alignment="CENTER">
-                     <left>
-                        <ChoiceBox fx:id="accountSelect" prefWidth="150.0" BorderPane.alignment="CENTER">
-                           <BorderPane.margin>
-                              <Insets top="10.0" />
-                           </BorderPane.margin>
-                        </ChoiceBox>
-                     </left>
-                  </BorderPane>
-               </center>
-               <right>
-                  <Button fx:id="viewProfile" disable="true" mnemonicParsing="false" text="Open Profile" BorderPane.alignment="CENTER">
-                     <BorderPane.margin>
-                        <Insets top="10.0" />
-                     </BorderPane.margin>
-                  </Button>
-               </right>
-               <BorderPane.margin>
-                  <Insets />
-               </BorderPane.margin>
-            </BorderPane>
-         </top>
-         <center>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
-               <children>
-                  <BorderPane>
-                     <left>
-                        <Label text="Team League MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
-                     </left>
-                     <right>
-                        <Label fx:id="tlMmr" text="N/A" textFill="#008f00" BorderPane.alignment="CENTER" />
-                     </right>
-                  </BorderPane>
-                  <BorderPane>
-                     <left>
-                        <Label text="Hero League MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
-                     </left>
-                     <right>
-                        <Label fx:id="hlMmr" text="N/A" textFill="#008f00" BorderPane.alignment="CENTER" />
-                     </right>
-                  </BorderPane>
-                  <BorderPane>
-                     <left>
-                        <Label text="Quick Match MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
-                     </left>
-                     <right>
-                        <Label fx:id="qmMmr" text="N/A" textFill="#008f00" BorderPane.alignment="CENTER" />
-                     </right>
-                  </BorderPane>
-               </children>
-               <padding>
-                  <Insets left="5.0" right="5.0" top="10.0" />
-               </padding>
-            </VBox>
-         </center>
-         <BorderPane.margin>
-            <Insets left="5.0" />
-         </BorderPane.margin>
-         <bottom>
-            <VBox spacing="25.0">
-               <children>
-                  <BorderPane BorderPane.alignment="CENTER">
-                     <top>
-                        <Label text="Lookup Player" textFill="WHITE" BorderPane.alignment="CENTER">
-                           <font>
-                              <Font name="System Bold" size="14.0" />
-                           </font>
+    <right>
+        <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <top>
+                <BorderPane BorderPane.alignment="CENTER">
+                    <top>
+                        <Label alignment="CENTER" text="Players" textFill="WHITE" BorderPane.alignment="CENTER">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
                         </Label>
-                     </top>
-                     <right>
-                        <Button fx:id="playerSearch" mnemonicParsing="false" text="Search" BorderPane.alignment="CENTER" />
-                     </right>
-                     <center>
-                        <TextField fx:id="playerSearchInput" maxWidth="1.7976931348623157E308" promptText="Enter Player Name" BorderPane.alignment="CENTER" />
-                     </center>
-                  </BorderPane>
-                  <BorderPane>
-                     <top>
-                        <Label text="Lookup Hero Details" textFill="WHITE" BorderPane.alignment="CENTER">
-                           <font>
-                              <Font name="System Bold" size="14.0" />
-                           </font>
-                        </Label>
-                     </top>
-                     <center>
-                        <ComboBox fx:id="heroName" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
-                     </center>
-                     <right>
-                        <Button fx:id="lookupHero" mnemonicParsing="false" text="View" BorderPane.alignment="CENTER" />
-                     </right>
-                  </BorderPane>
-               </children>
-            </VBox>
-         </bottom>
-      </BorderPane>
-   </right>
-   <padding>
-      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-   </padding>
+                    </top>
+                    <center>
+                        <BorderPane BorderPane.alignment="CENTER">
+                            <left>
+                                <ChoiceBox fx:id="accountSelect" prefWidth="150.0" BorderPane.alignment="CENTER">
+                                    <BorderPane.margin>
+                                        <Insets top="10.0" />
+                                    </BorderPane.margin>
+                                </ChoiceBox>
+                            </left>
+                        </BorderPane>
+                    </center>
+                    <right>
+                        <Button fx:id="viewProfile" disable="true" mnemonicParsing="false" text="Open Profile" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets top="10.0" />
+                            </BorderPane.margin>
+                        </Button>
+                    </right>
+                    <BorderPane.margin>
+                        <Insets />
+                    </BorderPane.margin>
+                </BorderPane>
+            </top>
+            <center>
+                <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <BorderPane>
+                            <left>
+                                <Label text="Team League MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
+                            </left>
+                            <right>
+                                <Label fx:id="tlMmr" text="N/A" textFill="#00b000" BorderPane.alignment="CENTER" />
+                            </right>
+                        </BorderPane>
+                        <BorderPane>
+                            <left>
+                                <Label text="Hero League MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
+                            </left>
+                            <right>
+                                <Label fx:id="hlMmr" text="N/A" textFill="#00b000" BorderPane.alignment="CENTER" />
+                            </right>
+                        </BorderPane>
+                        <BorderPane>
+                            <left>
+                                <Label text="Quick Match MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
+                            </left>
+                            <right>
+                                <Label fx:id="qmMmr" text="N/A" textFill="#00b000" BorderPane.alignment="CENTER" />
+                            </right>
+                        </BorderPane>
+                    </children>
+                    <padding>
+                        <Insets left="5.0" right="5.0" top="10.0" />
+                    </padding>
+                </VBox>
+            </center>
+            <BorderPane.margin>
+                <Insets left="5.0" />
+            </BorderPane.margin>
+            <bottom>
+                <VBox spacing="25.0">
+                    <children>
+                        <BorderPane BorderPane.alignment="CENTER">
+                            <top>
+                                <Label text="Lookup Player" textFill="WHITE" BorderPane.alignment="CENTER">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                            </top>
+                            <right>
+                                <Button fx:id="playerSearch" mnemonicParsing="false" text="Search" BorderPane.alignment="CENTER" />
+                            </right>
+                            <center>
+                                <TextField fx:id="playerSearchInput" maxWidth="1.7976931348623157E308" promptText="Enter Player Name" BorderPane.alignment="CENTER" />
+                            </center>
+                        </BorderPane>
+                        <BorderPane>
+                            <top>
+                                <Label text="Lookup Hero Details" textFill="WHITE" BorderPane.alignment="CENTER">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                            </top>
+                            <center>
+                                <ComboBox fx:id="heroName" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
+                            </center>
+                            <right>
+                                <Button fx:id="lookupHero" mnemonicParsing="false" text="View" BorderPane.alignment="CENTER" />
+                            </right>
+                        </BorderPane>
+                    </children>
+                </VBox>
+            </bottom>
+        </BorderPane>
+    </right>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
 </BorderPane>
