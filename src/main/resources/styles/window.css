@@ -7,3 +7,8 @@
 .tabs {
     -fx-background-color: #8ea3b9;
 }
+.status {
+    -fx-border-style: dashed;
+    -fx-border-color: #404040;
+    -fx-background-color: #484848;
+}

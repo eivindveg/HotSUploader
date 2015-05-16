@@ -95,14 +95,14 @@
                 </ImageView>
             </left>
             <right>
-                <VBox prefWidth="100.0" BorderPane.alignment="CENTER">
+                <VBox alignment="CENTER" prefWidth="225.0" styleClass="status">
                     <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="textwhite" text="Status" textFill="WHITE">
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" styleClass="textwhite" text="Status" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="18.0" />
                             </font>
                         </Label>
-                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="textgreen" text="Uploading" textFill="#00b000">
+                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" styleClass="textgreen" text="Uploading" textFill="#00b000">
                             <font>
                                 <Font name="Calibri Bold" size="14.0" />
                             </font>
