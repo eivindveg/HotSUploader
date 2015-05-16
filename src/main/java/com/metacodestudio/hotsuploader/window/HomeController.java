@@ -137,26 +137,35 @@ public class HomeController {
 
     private void checkNewVersion() {
         ReleaseManager releaseManager = new ReleaseManager(httpClient);
-        try {
-            GitHubRelease newerVersionIfAny = releaseManager.getNewerVersionIfAny();
-            if(newerVersionIfAny != null) {
-                displayVersionPrompt(newerVersionIfAny);
+        Task<GitHubRelease> task = new Task<GitHubRelease>() {
+            @Override
+            protected GitHubRelease call() throws Exception {
+                return releaseManager.getNewerVersionIfAny();
             }
-        } catch (IOException ignored) {
-            ignored.printStackTrace();
-        }
+        };
+        task.setOnSucceeded(event -> {
+            GitHubRelease newerVersionIfAny = task.getValue();
+            if (newerVersionIfAny != null) {
+                try {
+                    displayVersionPrompt(newerVersionIfAny);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        new Thread(task).start();
     }
 
     private void displayVersionPrompt(final GitHubRelease newerVersionIfAny) throws IOException {
         String version = newerVersionIfAny.getTagName();
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "A new version of the client is available: "
                 + version + "!\n"
-        + "Do you wish to go to the download page?",
+                + "Do you wish to go to the download page?",
                 ButtonType.YES, ButtonType.NO);
         alert.setHeaderText("New version");
 
         Optional<ButtonType> buttonType = alert.showAndWait();
-        if(buttonType.isPresent() && buttonType.get() == ButtonType.YES) {
+        if (buttonType.isPresent() && buttonType.get() == ButtonType.YES) {
             desktop.browse(SimpleHttpClient.encode(newerVersionIfAny.getHtmlUrl()));
         }
     }
