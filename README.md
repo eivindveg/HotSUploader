@@ -10,4 +10,5 @@ mvn compile package
 # Linux
 
 You need to install the Java 1.8 JDK
-See http://wiki.ubuntuusers.de/Java/Installation/Oracle_Java/Java_8
+
+http://wiki.ubuntuusers.de/Java/Installation/Oracle_Java/Java_8
