@@ -9,7 +9,7 @@ public class DesktopWrapper {
     private Desktop desktop;
 
     public DesktopWrapper() {
-        if (Desktop.isDesktopSupported()) {
+        if (Desktop.isDesktopSupported() && !StormHandler.isLinux()) {
             desktop = Desktop.getDesktop();
         }
     }
