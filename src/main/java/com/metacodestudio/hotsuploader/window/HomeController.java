@@ -6,6 +6,7 @@ import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.models.*;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotsLogsProvider;
+import com.metacodestudio.hotsuploader.utils.DesktopWrapper;
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
 import com.metacodestudio.hotsuploader.utils.StormHandler;
 import com.metacodestudio.hotsuploader.versions.GitHubRelease;
@@ -22,9 +23,6 @@ import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Paint;
@@ -32,7 +30,6 @@ import javafx.util.Duration;
 import javafx.util.StringConverter;
 
 import javax.annotation.PostConstruct;
-import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -111,12 +108,12 @@ public class HomeController {
     private Button invalidateExceptions;
 
     private FileHandler fileHandler;
-    private Desktop desktop;
+    private DesktopWrapper desktop;
     private StormHandler stormHandler;
 
     @PostConstruct
     public void init() {
-        desktop = Desktop.getDesktop();
+        desktop = new DesktopWrapper();
         stormHandler = viewFlowContext.getRegisteredObject(StormHandler.class);
         httpClient = viewFlowContext.getRegisteredObject(SimpleHttpClient.class);
         fileHandler = viewFlowContext.getRegisteredObject(FileHandler.class);
