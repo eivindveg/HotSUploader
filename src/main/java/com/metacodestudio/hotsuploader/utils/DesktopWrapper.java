@@ -8,6 +8,9 @@ public class DesktopWrapper {
 
     private Desktop desktop;
 
+    /**
+     * Sets up a desktop wrapper object to support {@link Desktop} actions that differ between platforms.
+     */
     public DesktopWrapper() {
         if (Desktop.isDesktopSupported() && !StormHandler.isLinux()) {
             desktop = Desktop.getDesktop();
