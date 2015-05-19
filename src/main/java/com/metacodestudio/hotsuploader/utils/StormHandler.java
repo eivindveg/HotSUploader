@@ -84,7 +84,7 @@ public class StormHandler {
             System.out.println("Attention! Linux is experimental and not official supported!");
             builder.append("/Heroes of the Storm/Accounts/");
         } else {
-            throw new UnsupportedOperationException("This application requires Windows or Macintosh OSX to run");
+            throw new UnsupportedOperationException("This application requires Windows, OSX or GNU/Linux to run");
         }
         return new File(builder.toString());
     }
