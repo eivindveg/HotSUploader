@@ -82,6 +82,7 @@ public class Client extends Application {
             popup.add(item);
 
             TrayIcon trayIcon = new TrayIcon(image, StormHandler.getApplicationName(), popup);
+            trayIcon.setImageAutoSize(true);
 
             trayIcon.addActionListener(event -> Platform.runLater(primaryStage::show));
             item.addActionListener(event -> {
