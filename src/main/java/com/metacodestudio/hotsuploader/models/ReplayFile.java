@@ -9,19 +9,17 @@ import java.util.List;
 
 public class ReplayFile implements Serializable {
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     private static final long serialVersionUID = 1L;
-
     private final File file;
-
     private final List<UploadStatus> uploadStatuses;
 
     public ReplayFile(final File file) {
         uploadStatuses = new ArrayList<>();
         this.file = file;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public static List<ReplayFile> fromDirectory(File file) {

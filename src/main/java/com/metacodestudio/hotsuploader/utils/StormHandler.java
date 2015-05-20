@@ -49,7 +49,7 @@ public class StormHandler {
             builder.append("\\Documents\\" + APPLICATION_DIRECTORY_NAME);
         } else if (isMacintosh()) {
             builder.append(OSX_LIBRARY + "MetaCode Studio/").append(APPLICATION_DIRECTORY_NAME);
-        } else if (isLinux()){
+        } else if (isLinux()) {
             builder.append(APPLICATION_DIRECTORY_NAME);
         }
         return new File(builder.append(SEPARATOR).toString());
@@ -80,7 +80,7 @@ public class StormHandler {
             builder.append("\\Documents\\Heroes of the Storm\\Accounts\\");
         } else if (isMacintosh()) {
             builder.append(OSX_LIBRARY + "Blizzard/Heroes of the Storm/Accounts/");
-        } else if (isLinux()){
+        } else if (isLinux()) {
             System.out.println("Attention! Linux is experimental and not official supported!");
             builder.append("/Heroes of the Storm/Accounts/");
         } else {

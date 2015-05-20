@@ -59,5 +59,5 @@ public class Hero {
     public void setImageURL(final String imageURL) {
         this.imageURL = imageURL;
     }
-    
+
 }
