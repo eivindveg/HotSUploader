@@ -17,7 +17,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URL;
 
@@ -37,13 +38,13 @@ public class Client extends Application {
         primaryStage.getIcons().add(image);
         primaryStage.setResizable(false);
         primaryStage.setTitle("HotSLogs UploaderFX");
-        addToTray(logo, primaryStage);
+        StormHandler stormHandler = new StormHandler();
+        addToTray(logo, primaryStage, stormHandler);
 
         Flow flow = new Flow(HomeController.class);
         FlowHandler flowHandler = flow.createHandler(new ViewFlowContext());
         ViewFlowContext flowContext = flowHandler.getFlowContext();
 
-        StormHandler stormHandler = new StormHandler();
         SimpleHttpClient httpClient = new SimpleHttpClient();
         ReleaseManager releaseManager = new ReleaseManager(httpClient);
 
@@ -71,7 +72,7 @@ public class Client extends Application {
         }
     }
 
-    private void addToTray(final URL imageURL, Stage primaryStage) {
+    private void addToTray(final URL imageURL, Stage primaryStage, final StormHandler stormHandler) {
         if (SystemTray.isSupported()) {
             Platform.setImplicitExit(false);
             primaryStage.setOnCloseRequest(value -> {
@@ -84,20 +85,18 @@ public class Client extends Application {
             MenuItem showItem = new MenuItem("Show");
             MenuItem exitItem = new MenuItem("Exit");
 
+            Runnable openAction = () -> Platform.runLater(() -> {
+                primaryStage.show();
+                primaryStage.toFront();
+            });
             popup.add(showItem);
             popup.add(exitItem);
 
             TrayIcon trayIcon = new TrayIcon(image, StormHandler.getApplicationName(), popup);
             trayIcon.setImageAutoSize(true);
 
-            ActionListener showListener = event -> Platform.runLater(() -> {
-                primaryStage.show();
-                primaryStage.toFront();
-            });
-
-
-            trayIcon.addActionListener(showListener);
-            showItem.addActionListener(showListener);
+            trayIcon.addMouseListener(mouseListener(openAction));
+            showItem.addActionListener(e -> openAction.run());
             exitItem.addActionListener(event -> {
                 Platform.exit();
                 System.exit(0);
@@ -111,5 +110,35 @@ public class Client extends Application {
         }
     }
 
+    private MouseListener mouseListener(final Runnable result) {
+        return new MouseListener() {
+            @Override
+            public void mouseClicked(final MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    result.run();
+                }
+            }
+
+            @Override
+            public void mousePressed(final MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(final MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(final MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(final MouseEvent e) {
+
+            }
+        };
+    }
 
 }
