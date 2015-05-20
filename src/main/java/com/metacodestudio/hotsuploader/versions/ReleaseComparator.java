@@ -4,6 +4,12 @@ import java.util.Comparator;
 
 public class ReleaseComparator implements Comparator<GitHubRelease> {
 
+    /**
+     *
+     * @param release1 The first {@link GitHubRelease}
+     * @param release2 The second {@link GitHubRelease}
+     * @return 1 if the second release is considered newer than the first
+     */
     public int compare(final GitHubRelease release1, final GitHubRelease release2) {
         if (release1.isPrerelease() && !release2.isPrerelease()) {
             return 1;
