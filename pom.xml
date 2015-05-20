@@ -6,9 +6,10 @@
 
     <groupId>com.metacodestudio</groupId>
     <artifactId>hots-uploader-fx</artifactId>
-    <version>1.1-RELEASE-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 
     <properties>
+        <releaseVersion>1.1</releaseVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.mainClass>com.metacodestudio.hotsuploader.Client</project.mainClass>
         <project.organization.name>MetaCode Studio</project.organization.name>
@@ -32,12 +33,25 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${project.mainClass}</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>${project.build.finalName}-${releaseVersion}</finalName>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>default-jar</id>
-                        <phase>none</phase>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -47,7 +61,7 @@
                 <version>8.1.2</version>
                 <configuration>
                     <mainClass>${project.mainClass}</mainClass>
-                    <nativeReleaseVersion>1.1</nativeReleaseVersion>
+                    <nativeReleaseVersion>${releaseVersion}</nativeReleaseVersion>
                     <identifier>${project.build.finalName}</identifier>
                     <css2bin>true</css2bin>
                 </configuration>
