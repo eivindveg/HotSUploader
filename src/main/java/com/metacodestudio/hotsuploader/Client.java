@@ -46,10 +46,7 @@ public class Client extends Application {
         SimpleHttpClient httpClient = new SimpleHttpClient();
         ReleaseManager releaseManager = new ReleaseManager(httpClient);
 
-        flowContext.register(stormHandler);
-        flowContext.register(releaseManager);
-        flowContext.register(setupFileHandler(stormHandler));
-        flowContext.register(httpClient);
+        registerInContext(flowContext, stormHandler, releaseManager, setupFileHandler(stormHandler), httpClient);
 
         DefaultFlowContainer container = new DefaultFlowContainer();
 
@@ -65,6 +62,12 @@ public class Client extends Application {
         fileHandler.cleanup();
         fileHandler.registerInitial();
         return fileHandler;
+    }
+
+    private void registerInContext(ViewFlowContext context, Object... itemsToAdd) {
+        for (final Object itemToAdd : itemsToAdd) {
+            context.register(itemToAdd);
+        }
     }
 
     private void addToTray(final URL imageURL, Stage primaryStage) {
