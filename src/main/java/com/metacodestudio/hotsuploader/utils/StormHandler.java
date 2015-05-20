@@ -124,7 +124,7 @@ public class StormHandler {
         return hotsAccountFilter;
     }
 
-    public String getApplicationName() {
+    public static String getApplicationName() {
         return APPLICATION_DIRECTORY_NAME;
     }
 }
