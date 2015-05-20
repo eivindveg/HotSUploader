@@ -17,6 +17,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 
@@ -80,15 +81,24 @@ public class Client extends Application {
             SystemTray tray = SystemTray.getSystemTray();
             java.awt.Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
             PopupMenu popup = new PopupMenu();
-            MenuItem item = new MenuItem("Exit");
+            MenuItem exitItem = new MenuItem("Exit");
+            MenuItem showItem = new MenuItem("Show");
 
-            popup.add(item);
+            popup.add(exitItem);
+            popup.add(showItem);
 
             TrayIcon trayIcon = new TrayIcon(image, StormHandler.getApplicationName(), popup);
             trayIcon.setImageAutoSize(true);
 
-            trayIcon.addActionListener(event -> Platform.runLater(primaryStage::show));
-            item.addActionListener(event -> {
+            ActionListener showListener = event -> Platform.runLater(() -> {
+                primaryStage.show();
+                primaryStage.toFront();
+            });
+
+
+            trayIcon.addActionListener(showListener);
+            showItem.addActionListener(showListener);
+            exitItem.addActionListener(event -> {
                 Platform.exit();
                 System.exit(0);
             });
