@@ -25,6 +25,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -45,6 +46,13 @@ public class HomeController {
 
     @FXML
     private Accordion accordion;
+
+    @FXML
+    private BorderPane updatePane;
+    @FXML
+    private Label newVersionLabel;
+    @FXML
+    private Hyperlink updateLink;
 
     @FXML
     private TitledPane newReplaysTitlePane;
@@ -111,6 +119,7 @@ public class HomeController {
     private DesktopWrapper desktop;
     private StormHandler stormHandler;
 
+
     @PostConstruct
     public void init() {
         desktop = new DesktopWrapper();
@@ -145,28 +154,22 @@ public class HomeController {
         task.setOnSucceeded(event -> {
             GitHubRelease newerVersionIfAny = task.getValue();
             if (newerVersionIfAny != null) {
-                try {
-                    displayVersionPrompt(newerVersionIfAny);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                displayUpdateMessage(newerVersionIfAny);
             }
         });
         new Thread(task).start();
     }
 
-    private void displayVersionPrompt(final GitHubRelease newerVersionIfAny) throws IOException {
-        String version = newerVersionIfAny.getTagName();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "A new version of the client is available: "
-                + version + "!\n"
-                + "Do you wish to go to the download page?",
-                ButtonType.YES, ButtonType.NO);
-        alert.setHeaderText("New version");
-
-        Optional<ButtonType> buttonType = alert.showAndWait();
-        if (buttonType.isPresent() && buttonType.get() == ButtonType.YES) {
-            desktop.browse(SimpleHttpClient.encode(newerVersionIfAny.getHtmlUrl()));
-        }
+    private void displayUpdateMessage(final GitHubRelease newerVersionIfAny) {
+        newVersionLabel.setText(newerVersionIfAny.getTagName());
+        updateLink.setOnMouseClicked(value -> {
+            try {
+                desktop.browse(SimpleHttpClient.encode(newerVersionIfAny.getHtmlUrl()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        updatePane.setVisible(true);
     }
 
     private void fetchHeroNames() {
