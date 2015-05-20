@@ -26,9 +26,10 @@ public class GitHubRelease {
     public GitHubRelease() {
     }
 
-    public GitHubRelease(final String tagName, final String htmlUrl) {
+    public GitHubRelease(final String tagName, final String htmlUrl, final boolean prerelease) {
         this.tagName = tagName;
         this.htmlUrl = htmlUrl;
+        this.prerelease = prerelease;
     }
 
     @Override
@@ -76,7 +77,7 @@ public class GitHubRelease {
 
     public boolean isPrerelease() {
         if (prerelease == null) {
-            return true;
+            return false;
         }
         return prerelease;
     }
