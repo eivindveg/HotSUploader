@@ -35,7 +35,7 @@ public class ReleaseManager {
 
     private GitHubRelease buildCurrentRelease() {
         String htmlUrl = getCurrentReleaseString();
-        return new GitHubRelease(CURRENT_VERSION, htmlUrl);
+        return new GitHubRelease(CURRENT_VERSION, htmlUrl, false);
     }
 
     public GitHubRelease getNewerVersionIfAny() {
@@ -50,7 +50,8 @@ public class ReleaseManager {
         latest.sort(releaseComparator);
 
         GitHubRelease latestRelease = latest.get(0);
-        if (latest.size() > 0 && releaseComparator.compare(currentRelease, latestRelease) < 0) {
+        int compare = releaseComparator.compare(currentRelease, latestRelease);
+        if (latest.size() > 0 && compare > 0) {
             return latestRelease;
         }
 
@@ -81,12 +82,12 @@ public class ReleaseManager {
         try {
             File file = new File(stormHandler.getApplicationHome(), "model_version");
             Long modelVersion;
-            if(file.exists()) {
+            if (file.exists()) {
                 System.out.println("Reading model version");
                 String fileContent = FileUtils.readFileToString(file);
                 modelVersion = Long.valueOf(fileContent);
 
-                if(modelVersion < ReplayFile.getSerialVersionUID()) {
+                if (modelVersion < ReplayFile.getSerialVersionUID()) {
                     // TODO IMPLEMENT MIGRATION
 
                     FileUtils.writeStringToFile(file, String.valueOf(modelVersion));
