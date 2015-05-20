@@ -10,8 +10,8 @@ This is a Maven project. To build native artifacts for your platform in addition
 ``mvn clean package``
 
 ## Maintainers
-eivindveg - Windows and general development
+[eivindveg](/../../../../eivindveg) - Windows and general development
 
-FredrickB - OSX
+[FredrickB](/../../../../FredrickB) - OSX
 
-TheCherry - Linux
+[TheCherry](/../../../../TheCherry) - Linux
