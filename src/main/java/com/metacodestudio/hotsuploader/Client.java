@@ -39,7 +39,7 @@ public class Client extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("HotSLogs UploaderFX");
         StormHandler stormHandler = new StormHandler();
-        addToTray(logo, primaryStage, stormHandler);
+        addToTray(logo, primaryStage);
 
         Flow flow = new Flow(HomeController.class);
         FlowHandler flowHandler = flow.createHandler(new ViewFlowContext());
