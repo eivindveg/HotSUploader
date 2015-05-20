@@ -72,18 +72,19 @@ public class Client extends Application {
         }
     }
 
-    private void addToTray(final URL imageURL, Stage primaryStage, final StormHandler stormHandler) {
+    private void addToTray(final URL imageURL, final Stage primaryStage) {
         if (SystemTray.isSupported()) {
+            final SystemTray tray = SystemTray.getSystemTray();
+            final java.awt.Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
+            final PopupMenu popup = new PopupMenu();
+            final MenuItem showItem = new MenuItem("Show");
+            final MenuItem exitItem = new MenuItem("Exit");
+
             Platform.setImplicitExit(false);
             primaryStage.setOnCloseRequest(value -> {
                 primaryStage.hide();
                 value.consume();
             });
-            SystemTray tray = SystemTray.getSystemTray();
-            java.awt.Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
-            PopupMenu popup = new PopupMenu();
-            MenuItem showItem = new MenuItem("Show");
-            MenuItem exitItem = new MenuItem("Exit");
 
             Runnable openAction = () -> Platform.runLater(() -> {
                 primaryStage.show();
@@ -92,7 +93,7 @@ public class Client extends Application {
             popup.add(showItem);
             popup.add(exitItem);
 
-            TrayIcon trayIcon = new TrayIcon(image, StormHandler.getApplicationName(), popup);
+            final TrayIcon trayIcon = new TrayIcon(image, StormHandler.getApplicationName(), popup);
             trayIcon.setImageAutoSize(true);
 
             trayIcon.addMouseListener(mouseListener(openAction));
