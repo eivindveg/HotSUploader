@@ -80,12 +80,14 @@ public class Client extends Application {
             final MenuItem showItem = new MenuItem("Show");
             final MenuItem exitItem = new MenuItem("Exit");
 
+            // Deal with window events
             Platform.setImplicitExit(false);
             primaryStage.setOnCloseRequest(value -> {
                 primaryStage.hide();
                 value.consume();
             });
 
+            // Declare shared action for showItem and trayicon click
             Runnable openAction = () -> Platform.runLater(() -> {
                 primaryStage.show();
                 primaryStage.toFront();
@@ -96,6 +98,7 @@ public class Client extends Application {
             final TrayIcon trayIcon = new TrayIcon(image, StormHandler.getApplicationName(), popup);
             trayIcon.setImageAutoSize(true);
 
+            // Add listeners
             trayIcon.addMouseListener(mouseListener(openAction));
             showItem.addActionListener(e -> openAction.run());
             exitItem.addActionListener(event -> {
