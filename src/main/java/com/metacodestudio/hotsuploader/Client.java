@@ -81,11 +81,11 @@ public class Client extends Application {
             SystemTray tray = SystemTray.getSystemTray();
             java.awt.Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
             PopupMenu popup = new PopupMenu();
-            MenuItem exitItem = new MenuItem("Exit");
             MenuItem showItem = new MenuItem("Show");
+            MenuItem exitItem = new MenuItem("Exit");
 
-            popup.add(exitItem);
             popup.add(showItem);
+            popup.add(exitItem);
 
             TrayIcon trayIcon = new TrayIcon(image, StormHandler.getApplicationName(), popup);
             trayIcon.setImageAutoSize(true);
