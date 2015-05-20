@@ -138,7 +138,7 @@ public class HomeController {
     }
 
     private void checkNewVersion() {
-        ReleaseManager releaseManager = new ReleaseManager(httpClient);
+        ReleaseManager releaseManager = viewFlowContext.getRegisteredObject(ReleaseManager.class);
         Task<GitHubRelease> task = new Task<GitHubRelease>() {
             @Override
             protected GitHubRelease call() throws Exception {

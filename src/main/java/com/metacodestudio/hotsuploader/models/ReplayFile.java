@@ -3,10 +3,17 @@ package com.metacodestudio.hotsuploader.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReplayFile {
+public class ReplayFile implements Serializable {
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    private static final long serialVersionUID = 1L;
 
     private final File file;
 

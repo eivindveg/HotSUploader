@@ -3,6 +3,7 @@ package com.metacodestudio.hotsuploader;
 import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
 import com.metacodestudio.hotsuploader.utils.StormHandler;
+import com.metacodestudio.hotsuploader.versions.ReleaseManager;
 import com.metacodestudio.hotsuploader.window.HomeController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowHandler;
@@ -36,11 +37,20 @@ public class Client extends Application {
         Flow flow = new Flow(HomeController.class);
         FlowHandler flowHandler = flow.createHandler(new ViewFlowContext());
         ViewFlowContext flowContext = flowHandler.getFlowContext();
+
         StormHandler stormHandler = new StormHandler();
+        SimpleHttpClient httpClient = new SimpleHttpClient();
+        ReleaseManager releaseManager = new ReleaseManager(httpClient);
+
         flowContext.register(stormHandler);
+        flowContext.register(releaseManager);
         flowContext.register(setupFileHandler(stormHandler));
-        flowContext.register(new SimpleHttpClient());
+        flowContext.register(httpClient);
+
         DefaultFlowContainer container = new DefaultFlowContainer();
+
+        releaseManager.verifyLocalVersion(stormHandler);
+
         StackPane pane = flowHandler.start(container);
         primaryStage.setScene(new Scene(pane));
         primaryStage.setOnCloseRequest(event -> System.exit(0));
