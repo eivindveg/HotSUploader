@@ -90,7 +90,7 @@ public class Client extends Application {
                 System.exit(0);
             });
 
-            try{
+            try {
                 tray.add(trayIcon);
             } catch (AWTException e) {
                 e.printStackTrace();
