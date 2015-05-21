@@ -5,6 +5,7 @@ import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
 import com.metacodestudio.hotsuploader.utils.StormHandler;
 import com.metacodestudio.hotsuploader.versions.ReleaseManager;
 import com.metacodestudio.hotsuploader.window.HomeController;
+import com.sun.javafx.application.PlatformImpl;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowHandler;
 import io.datafx.controller.flow.container.DefaultFlowContainer;
@@ -26,6 +27,9 @@ import java.net.URL;
 public class Client extends Application {
 
     public static void main(String[] args) {
+        if(StormHandler.isMacintosh()) {
+            PlatformImpl.setTaskbarApplication(false);
+        }
         Application.launch(Client.class, args);
     }
 
