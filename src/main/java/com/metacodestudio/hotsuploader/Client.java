@@ -82,7 +82,7 @@ public class Client extends Application {
 
             // Deal with window events
             Platform.setImplicitExit(false);
-            primaryStage.setOnCloseRequest(value -> {
+            primaryStage.setOnHiding(value -> {
                 primaryStage.hide();
                 value.consume();
             });
