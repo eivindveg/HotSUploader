@@ -73,7 +73,10 @@ public class Client extends Application {
     }
 
     private void addToTray(final URL imageURL, final Stage primaryStage) {
-        if (SystemTray.isSupported()) {
+        // TODO FIND A WAY TO MAKE THIS SWEET ON OSX
+        boolean support = SystemTray.isSupported() && StormHandler.isWindows();
+
+        if (support) {
             final SystemTray tray = SystemTray.getSystemTray();
             final java.awt.Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
             final PopupMenu popup = new PopupMenu();
