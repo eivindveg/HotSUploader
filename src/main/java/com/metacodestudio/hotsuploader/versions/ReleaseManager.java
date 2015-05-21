@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ReleaseManager {
 
-    protected static final String CURRENT_VERSION = "1.0-RELEASE";
+    protected static final String CURRENT_VERSION = "1.1";
     protected static final String GITHUB_MAINTAINER = "eivindveg";
     protected static final String GITHUB_REPOSITORY = "HotSUploader";
     protected static final String GITHUB_RELEASES_ALL

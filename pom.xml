@@ -6,10 +6,10 @@
 
     <groupId>com.metacodestudio</groupId>
     <artifactId>hots-uploader-fx</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
 
     <properties>
-        <releaseVersion>1.1</releaseVersion>
+        <releaseVersion>${project.version}</releaseVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.mainClass>com.metacodestudio.hotsuploader.Client</project.mainClass>
         <project.organization.name>MetaCode Studio</project.organization.name>
