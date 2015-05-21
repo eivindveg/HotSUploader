@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -78,6 +79,7 @@ public class Client extends Application {
 
     private void addToTray(final URL imageURL, final Stage primaryStage) {
         if (SystemTray.isSupported()) {
+            primaryStage.initStyle(StageStyle.UTILITY);
             final SystemTray tray = SystemTray.getSystemTray();
             final java.awt.Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
             final PopupMenu popup = new PopupMenu();
