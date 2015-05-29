@@ -282,22 +282,19 @@ public class HomeController {
     }
 
     private void updateAccountView(final Account account) {
+        final String ifNotPresent = "N/A";
         if (account == null) {
             return;
         }
 
-        Optional<Integer> quickMatchMmr = readMmr(account.getLeaderboardRankings(), "QuickMatch");
-        if (quickMatchMmr.isPresent()) {
-            qmMmr.setText(String.valueOf(quickMatchMmr.get()));
-        }
-        Optional<Integer> heroLeagueMmr = readMmr(account.getLeaderboardRankings(), "HeroLeague");
-        if (heroLeagueMmr.isPresent()) {
-            hlMmr.setText(String.valueOf(heroLeagueMmr.get()));
-        }
-        Optional<Integer> teamLeagueMmr = readMmr(account.getLeaderboardRankings(), "TeamLeague");
-        if (teamLeagueMmr.isPresent()) {
-            tlMmr.setText(String.valueOf(teamLeagueMmr.get()));
-        }
+        final Optional<Integer> quickMatchMmr = readMmr(account.getLeaderboardRankings(), "QuickMatch");
+        applyToLabel(quickMatchMmr, qmMmr, ifNotPresent);
+
+        final Optional<Integer> heroLeagueMmr = readMmr(account.getLeaderboardRankings(), "HeroLeague");
+        applyToLabel(heroLeagueMmr, hlMmr, ifNotPresent);
+
+        final Optional<Integer> teamLeagueMmr = readMmr(account.getLeaderboardRankings(), "TeamLeague");
+        applyToLabel(teamLeagueMmr, tlMmr, ifNotPresent);
     }
 
     private Optional<Integer> readMmr(final List<LeaderboardRanking> leaderboardRankings, final String mode) {
@@ -305,6 +302,14 @@ public class HomeController {
                 .filter(ranking -> ranking.getGameMode().equals(mode))
                 .map(LeaderboardRanking::getCurrentMmr)
                 .findAny();
+    }
+
+    private void applyToLabel(final Optional<?> value, final Label applyTo, final String ifNotPresent) {
+        if (value.isPresent()) {
+            applyTo.setText(String.valueOf(value.get()));
+        } else {
+            applyTo.setText(ifNotPresent);
+        }
     }
 
     private void updatePlayers(final List<Account> newAccounts) {
@@ -326,7 +331,6 @@ public class HomeController {
         } else if (!newAccounts.isEmpty()) {
             accountSelect.setValue(newAccounts.get(0));
         }
-
     }
 
 
