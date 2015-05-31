@@ -114,6 +114,8 @@ public class Client extends Application {
             } catch (AWTException e) {
                 e.printStackTrace();
             }
+        }else{
+            primaryStage.setOnCloseRequest(event -> System.exit(0));
         }
     }
 
