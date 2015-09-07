@@ -34,23 +34,26 @@ public class FXUtils {
 
             @Override
             public void handle(KeyEvent event) {
-                if (KeyCode.UP == event.getCode()) {
-                    caretPos = -1;
-                    moveCaret(comboBox.getEditor().getText().length());
-                    return;
-                } else if (KeyCode.DOWN == event.getCode()) {
-                    if (!comboBox.isShowing()) {
-                        comboBox.show();
-                    }
-                    caretPos = -1;
-                    moveCaret(comboBox.getEditor().getText().length());
-                    return;
-                } else if (KeyCode.BACK_SPACE == event.getCode()) {
-                    moveCaretToPos = true;
-                    caretPos = comboBox.getEditor().getCaretPosition();
-                } else if (KeyCode.DELETE == event.getCode()) {
-                    moveCaretToPos = true;
-                    caretPos = comboBox.getEditor().getCaretPosition();
+                switch (event.getCode()) {
+                    case UP:
+                        caretPos = -1;
+                        moveCaret(comboBox.getEditor().getText().length());
+                        return;
+                    case DOWN:
+                        if (!comboBox.isShowing()) {
+                            comboBox.show();
+                        }
+                        caretPos = -1;
+                        moveCaret(comboBox.getEditor().getText().length());
+                        return;
+                    case BACK_SPACE:
+                        moveCaretToPos = true;
+                        caretPos = comboBox.getEditor().getCaretPosition();
+                        break;
+                    case DELETE:
+                        moveCaretToPos = true;
+                        caretPos = comboBox.getEditor().getCaretPosition();
+                        break;
                 }
 
                 if (KeyCode.RIGHT == event.getCode() || KeyCode.LEFT == event.getCode()
