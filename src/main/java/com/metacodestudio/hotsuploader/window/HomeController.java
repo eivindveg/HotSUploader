@@ -1,7 +1,7 @@
 package com.metacodestudio.hotsuploader.window;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.metacodestudio.hotsuploader.AccountService;
+import com.metacodestudio.hotsuploader.concurrent.tasks.HeroListTask;
 import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.models.*;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
@@ -174,14 +174,7 @@ public class HomeController {
 
     private void fetchHeroNames() {
         heroName.converterProperty().setValue(new HeroConverter());
-        Task<List<Hero>> task = new Task<List<Hero>>() {
-            @Override
-            protected List<Hero> call() throws Exception {
-                final String result = httpClient.simpleRequest("https://www.hotslogs.com/API/Data/Heroes");
-                final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
-                return Arrays.asList(heroes);
-            }
-        };
+        Task<List<Hero>> task = new HeroListTask(httpClient);
         task.setOnSucceeded(event -> heroName.getItems().setAll(task.getValue()));
 
         new Thread(task).start();
