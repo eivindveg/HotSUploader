@@ -35,21 +35,15 @@ public class FXUtils {
             @Override
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {
-                    case UP:
-                        caretPos = -1;
-                        moveCaret(comboBox.getEditor().getText().length());
-                        return;
                     case DOWN:
                         if (!comboBox.isShowing()) {
                             comboBox.show();
                         }
+                    case UP:
                         caretPos = -1;
                         moveCaret(comboBox.getEditor().getText().length());
                         return;
                     case BACK_SPACE:
-                        moveCaretToPos = true;
-                        caretPos = comboBox.getEditor().getCaretPosition();
-                        break;
                     case DELETE:
                         moveCaretToPos = true;
                         caretPos = comboBox.getEditor().getCaretPosition();
