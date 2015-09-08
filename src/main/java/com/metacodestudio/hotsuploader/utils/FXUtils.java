@@ -58,9 +58,7 @@ public class FXUtils {
 
                 ObservableList<T> list = FXCollections.observableArrayList();
                 for (T aData : data) {
-                    if (mode.equals(AutoCompleteMode.STARTS_WITH) && aData.toString().toLowerCase().startsWith(comboBox.getEditor().getText().toLowerCase())) {
-                        list.add(aData);
-                    } else if (mode.equals(AutoCompleteMode.CONTAINING) && aData.toString().toLowerCase().contains(comboBox.getEditor().getText().toLowerCase())) {
+                    if (shouldDataBeAddedToInput(aData)) {
                         list.add(aData);
                     }
                 }
@@ -75,6 +73,23 @@ public class FXUtils {
                 if (!list.isEmpty()) {
                     comboBox.show();
                 }
+            }
+
+            private boolean shouldDataBeAddedToInput(T aData) {
+                return mode.equals(AutoCompleteMode.STARTS_WITH) && inputStartsWith(aData)
+                        || mode.equals(AutoCompleteMode.CONTAINING) && inputContains(aData);
+            }
+
+            private boolean inputStartsWith(T aData) {
+                String dataValue = aData.toString().toLowerCase();
+                String inputValue = comboBox.getEditor().getText().toLowerCase();
+                return dataValue.startsWith(inputValue);
+            }
+
+            private boolean inputContains(T aData) {
+                String dataValue = aData.toString().toLowerCase();
+                String inputValue = comboBox.getEditor().getText().toLowerCase();
+                return dataValue.contains(inputValue);
             }
 
             private void moveCaret(int textLength) {
