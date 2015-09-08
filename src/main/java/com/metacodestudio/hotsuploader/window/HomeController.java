@@ -7,6 +7,7 @@ import com.metacodestudio.hotsuploader.models.*;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotsLogsProvider;
 import com.metacodestudio.hotsuploader.utils.DesktopWrapper;
+import com.metacodestudio.hotsuploader.utils.FXUtils;
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
 import com.metacodestudio.hotsuploader.utils.StormHandler;
 import com.metacodestudio.hotsuploader.versions.GitHubRelease;
@@ -178,6 +179,7 @@ public class HomeController {
         task.setOnSucceeded(event -> heroName.getItems().setAll(task.getValue()));
 
         new Thread(task).start();
+        FXUtils.autoCompleteComboBox(heroName, FXUtils.AutoCompleteMode.STARTS_WITH);
     }
 
     private void doOpenHotsLogs() {
