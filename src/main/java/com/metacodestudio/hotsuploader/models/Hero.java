@@ -19,10 +19,7 @@ public class Hero {
 
     @Override
     public String toString() {
-        return "Hero{" +
-                "primaryName='" + primaryName + '\'' +
-                ", imageURL='" + imageURL + '\'' +
-                '}';
+        return primaryName;
     }
 
     @Override
