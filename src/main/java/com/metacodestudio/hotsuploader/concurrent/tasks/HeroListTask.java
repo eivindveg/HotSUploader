@@ -19,6 +19,7 @@ import com.metacodestudio.hotsuploader.models.Hero;
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
 import javafx.concurrent.Task;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,8 +35,13 @@ public class HeroListTask extends Task<List<Hero>> {
 
     @Override
     protected List<Hero> call() throws Exception {
-        final String result = httpClient.simpleRequest("https://www.hotslogs.com/API/Data/Heroes");
-        final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
-        return Arrays.asList(heroes);
+        try {
+            final String result = httpClient.simpleRequest("https://www.hotslogs.com/API/Data/Heroes");
+            final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
+            return Arrays.asList(heroes);
+        } catch(IOException e) {
+            Thread.sleep(10_000);
+            return call();
+        }
     }
 }
