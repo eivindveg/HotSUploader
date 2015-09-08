@@ -37,7 +37,6 @@ public class Client extends Application {
         Image image = new Image(logo.toString());
         primaryStage.getIcons().add(image);
         primaryStage.setResizable(false);
-        primaryStage.setTitle("HotSLogs UploaderFX");
         StormHandler stormHandler = new StormHandler();
         addToTray(logo, primaryStage);
 
@@ -47,6 +46,10 @@ public class Client extends Application {
 
         SimpleHttpClient httpClient = new SimpleHttpClient();
         ReleaseManager releaseManager = new ReleaseManager(httpClient);
+
+        // Set window title
+        String windowTitle = "HotSLogs UploaderFX v" + releaseManager.getCurrentVersion();
+        primaryStage.setTitle(windowTitle);
 
         registerInContext(flowContext, stormHandler, releaseManager, setupFileHandler(stormHandler), httpClient);
 

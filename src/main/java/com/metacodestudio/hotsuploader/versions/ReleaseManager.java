@@ -102,4 +102,8 @@ public class ReleaseManager {
             e.printStackTrace();
         }
     }
+
+    public String getCurrentVersion() {
+        return CURRENT_VERSION;
+    }
 }
