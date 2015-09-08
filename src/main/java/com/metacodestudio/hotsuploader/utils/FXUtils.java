@@ -102,12 +102,4 @@ public class FXUtils {
             }
         });
     }
-
-    public static<T> T getComboBoxValue(ComboBox<T> comboBox){
-        if (0 > comboBox.getSelectionModel().getSelectedIndex()) {
-            return null;
-        } else {
-            return comboBox.getItems().get(comboBox.getSelectionModel().getSelectedIndex());
-        }
-    }
 }
