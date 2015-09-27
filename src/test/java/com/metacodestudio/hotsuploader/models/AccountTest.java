@@ -1,6 +1,10 @@
 package com.metacodestudio.hotsuploader.models;
 
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -9,18 +13,19 @@ import org.junit.Test;
 import com.metacodestudio.testutils.DataObjectTester;
 
 /**
- * @author emillh
+ * @author ehatle
  *
  */
 public class AccountTest {
-
 	private Account account;
+	private Long pid = 1234L;
+	private String n = "Eivind";
 
 	@Before
 	public void setup() {
 		account = new Account();
-		account.setPlayerId(1234L);
-		account.setName("TestUser");
+		account.setPlayerId(pid);
+		account.setName(n);
 	}
 
 	@After
@@ -46,7 +51,7 @@ public class AccountTest {
 	 */
 	@Test
 	public void testGetPlayerId() {
-		fail("Not yet implemented"); // TODO
+		assertEquals(account.getPlayerId(), pid);
 	}
 
 	/**
@@ -54,7 +59,7 @@ public class AccountTest {
 	 */
 	@Test
 	public void testSetPlayerId() {
-		fail("Not yet implemented"); // TODO
+		account.setPlayerId(4321L);
 	}
 
 	/**
@@ -62,7 +67,7 @@ public class AccountTest {
 	 */
 	@Test
 	public void testGetName() {
-		fail("Not yet implemented"); // TODO
+		assertEquals(account.getName(), n);
 	}
 
 	/**
@@ -70,7 +75,7 @@ public class AccountTest {
 	 */
 	@Test
 	public void testSetName() {
-		fail("Not yet implemented"); // TODO
+		account.setName("testUser");
 	}
 
 	/**
@@ -78,7 +83,7 @@ public class AccountTest {
 	 */
 	@Test
 	public void testGetLeaderboardRankings() {
-		fail("Not yet implemented"); // TODO
+		assertNotNull(account.getLeaderboardRankings());
 	}
 
 	/**
@@ -86,7 +91,6 @@ public class AccountTest {
 	 */
 	@Test
 	public void testSetLeaderboardRankings() {
-		fail("Not yet implemented"); // TODO
+		account.setLeaderboardRankings(new ArrayList<LeaderboardRanking>());
 	}
-
 }

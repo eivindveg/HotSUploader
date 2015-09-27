@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.metacodestudio.testutils.DataObjectTester;
 
 /**
- * @author emillh
+ * @author ehatle
  *
  */
 public class LeaderboardRankingTest {
