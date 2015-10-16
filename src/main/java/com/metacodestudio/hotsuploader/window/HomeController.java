@@ -19,10 +19,14 @@ import io.datafx.controller.flow.action.ActionTrigger;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -140,6 +144,7 @@ public class HomeController {
             setIdle();
         }
 
+
         setupAccounts();
 
         checkNewVersion();
@@ -176,20 +181,15 @@ public class HomeController {
     }
 
     private void fetchHeroNames() {
+        heroName.converterProperty().setValue(new HeroConverter());
+        FXUtils.autoCompleteComboBox(heroName, FXUtils.AutoCompleteMode.STARTS_WITH);
         HeroService heroService = new HeroService(httpClient);
-        heroService.setBackoffStrategy(param -> {
-            Duration period = param.getPeriod();
-            if (period.greaterThan(Duration.minutes(5))) {
-                return Duration.minutes(5);
-            } else {
-                return period.multiply(1.25);
+        heroService.setOnSucceeded(event -> {
+            if (null != heroService.getValue()) {
+                heroName.getItems().setAll(heroService.getValue());
             }
         });
         heroService.start();
-        heroService.setOnSucceeded(event -> {
-            heroService.setPeriod(Duration.hours(2));
-            FXUtils.autoCompleteComboBox(heroName, FXUtils.AutoCompleteMode.STARTS_WITH);
-        });
     }
 
     private void doOpenHotsLogs() {
