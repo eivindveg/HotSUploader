@@ -21,6 +21,7 @@ import javafx.concurrent.Task;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -38,6 +39,8 @@ public class HeroListTask extends Task<List<Hero>> {
     protected List<Hero> call() throws Exception {
         final String result = httpClient.simpleRequest(API_ROUTE);
         final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
-        return Arrays.asList(heroes);
+        List<Hero> heroList = Arrays.asList(heroes);
+        heroList.sort((o1, o2) -> o1.getPrimaryName().compareTo(o2.getPrimaryName()));
+        return heroList;
     }
 }
