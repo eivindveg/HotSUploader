@@ -27,6 +27,7 @@ import java.util.List;
  * @author Eivind Vegsundvåg
  */
 public class HeroListTask extends Task<List<Hero>> {
+    public static final String API_ROUTE = "https://www.hotslogs.com/API/Data/Heroes";
     private final SimpleHttpClient httpClient;
 
     public HeroListTask(SimpleHttpClient httpClient) {
@@ -35,7 +36,7 @@ public class HeroListTask extends Task<List<Hero>> {
 
     @Override
     protected List<Hero> call() throws Exception {
-        final String result = httpClient.simpleRequest("https://www.hotslogs.com/API/Data/Heroes");
+        final String result = httpClient.simpleRequest(API_ROUTE);
         final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
         return Arrays.asList(heroes);
     }

@@ -6,6 +6,7 @@ import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -23,4 +24,6 @@ public class HeroService extends ScheduledService<List<Hero>> {
     protected Task<List<Hero>> createTask() {
         return new HeroListTask(httpClient);
     }
+
+
 }
