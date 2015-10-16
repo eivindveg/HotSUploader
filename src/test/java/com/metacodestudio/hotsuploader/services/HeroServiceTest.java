@@ -2,6 +2,7 @@ package com.metacodestudio.hotsuploader.services;
 
 import com.metacodestudio.hotsuploader.concurrent.tasks.HeroListTask;
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
+import com.metacodestudio.utils.SimpleHttpClientTestUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.junit.After;
@@ -32,10 +33,10 @@ public class HeroServiceTest {
     @Rule
     public JavaFXThreadingRule javaFXThreadingRule = new JavaFXThreadingRule();
 
-    private SimpleHttpClient simpleHttpClient = mock(SimpleHttpClient.class);
+    private final SimpleHttpClient simpleHttpClient = SimpleHttpClientTestUtils.getBaseMock();
+    private final ObjectProperty<Exception> throwable = new SimpleObjectProperty<>();
     private HeroService service;
     private CountDownLatch latch;
-    private ObjectProperty<Exception> throwable = new SimpleObjectProperty<>();
 
     @Before
     public void setUp() {
@@ -64,7 +65,7 @@ public class HeroServiceTest {
         });
         latch.await(1, TimeUnit.SECONDS);
         Exception exception = throwable.get();
-        if(null != exception) {
+        if (null != exception) {
             throw exception;
         }
 
