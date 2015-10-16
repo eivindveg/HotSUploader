@@ -21,12 +21,14 @@ import javafx.concurrent.Task;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * @author Eivind Vegsundvåg
  */
 public class HeroListTask extends Task<List<Hero>> {
+    public static final String API_ROUTE = "https://www.hotslogs.com/API/Data/Heroes";
     private final SimpleHttpClient httpClient;
 
     public HeroListTask(SimpleHttpClient httpClient) {
@@ -35,13 +37,10 @@ public class HeroListTask extends Task<List<Hero>> {
 
     @Override
     protected List<Hero> call() throws Exception {
-        try {
-            final String result = httpClient.simpleRequest("https://www.hotslogs.com/API/Data/Heroes");
-            final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
-            return Arrays.asList(heroes);
-        } catch(IOException e) {
-            Thread.sleep(10_000);
-            return call();
-        }
+        final String result = httpClient.simpleRequest(API_ROUTE);
+        final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
+        List<Hero> heroList = Arrays.asList(heroes);
+        heroList.sort((o1, o2) -> o1.getPrimaryName().compareTo(o2.getPrimaryName()));
+        return heroList;
     }
 }

@@ -6,6 +6,7 @@ import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.models.*;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotsLogsProvider;
+import com.metacodestudio.hotsuploader.services.HeroService;
 import com.metacodestudio.hotsuploader.utils.DesktopWrapper;
 import com.metacodestudio.hotsuploader.utils.FXUtils;
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
@@ -18,16 +19,21 @@ import io.datafx.controller.flow.action.ActionTrigger;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
@@ -138,6 +144,7 @@ public class HomeController {
             setIdle();
         }
 
+
         setupAccounts();
 
         checkNewVersion();
@@ -175,11 +182,14 @@ public class HomeController {
 
     private void fetchHeroNames() {
         heroName.converterProperty().setValue(new HeroConverter());
-        Task<List<Hero>> task = new HeroListTask(httpClient);
-        task.setOnSucceeded(event -> heroName.getItems().setAll(task.getValue()));
-
-        new Thread(task).start();
         FXUtils.autoCompleteComboBox(heroName, FXUtils.AutoCompleteMode.STARTS_WITH);
+        HeroService heroService = new HeroService(httpClient);
+        heroService.setOnSucceeded(event -> {
+            if (null != heroService.getValue()) {
+                heroName.getItems().setAll(heroService.getValue());
+            }
+        });
+        heroService.start();
     }
 
     private void doOpenHotsLogs() {
