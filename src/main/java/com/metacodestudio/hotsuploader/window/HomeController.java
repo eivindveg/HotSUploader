@@ -6,6 +6,7 @@ import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.models.*;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotsLogsProvider;
+import com.metacodestudio.hotsuploader.services.HeroService;
 import com.metacodestudio.hotsuploader.utils.DesktopWrapper;
 import com.metacodestudio.hotsuploader.utils.FXUtils;
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
@@ -28,6 +29,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
@@ -174,12 +176,20 @@ public class HomeController {
     }
 
     private void fetchHeroNames() {
-        heroName.converterProperty().setValue(new HeroConverter());
-        Task<List<Hero>> task = new HeroListTask(httpClient);
-        task.setOnSucceeded(event -> heroName.getItems().setAll(task.getValue()));
-
-        new Thread(task).start();
-        FXUtils.autoCompleteComboBox(heroName, FXUtils.AutoCompleteMode.STARTS_WITH);
+        HeroService heroService = new HeroService(httpClient);
+        heroService.setBackoffStrategy(param -> {
+            Duration period = param.getPeriod();
+            if (period.greaterThan(Duration.minutes(5))) {
+                return Duration.minutes(5);
+            } else {
+                return period.multiply(1.25);
+            }
+        });
+        heroService.start();
+        heroService.setOnSucceeded(event -> {
+            heroService.setPeriod(Duration.hours(2));
+            FXUtils.autoCompleteComboBox(heroName, FXUtils.AutoCompleteMode.STARTS_WITH);
+        });
     }
 
     private void doOpenHotsLogs() {
