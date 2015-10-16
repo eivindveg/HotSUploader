@@ -35,13 +35,8 @@ public class HeroListTask extends Task<List<Hero>> {
 
     @Override
     protected List<Hero> call() throws Exception {
-        try {
-            final String result = httpClient.simpleRequest("https://www.hotslogs.com/API/Data/Heroes");
-            final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
-            return Arrays.asList(heroes);
-        } catch(IOException e) {
-            Thread.sleep(10_000);
-            return call();
-        }
+        final String result = httpClient.simpleRequest("https://www.hotslogs.com/API/Data/Heroes");
+        final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
+        return Arrays.asList(heroes);
     }
 }
