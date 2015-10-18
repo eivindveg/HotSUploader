@@ -8,6 +8,9 @@ import com.metacodestudio.hotsuploader.providers.Provider;
 import com.metacodestudio.hotsuploader.utils.FileUtils;
 import com.metacodestudio.hotsuploader.utils.StormHandler;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
@@ -31,8 +34,10 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     private Map<Status, ObservableList<ReplayFile>> fileMap;
     private List<Provider> providers = Provider.getAll();
     private BlockingQueue<ReplayFile> uploadQueue;
+    private final StringProperty uploadedCount;
 
     public FileHandler(final StormHandler stormHandler) throws IOException {
+        uploadedCount = new SimpleStringProperty();
         watchDirectories = new HashSet<>();
         this.stormHandler = stormHandler;
         mapper = new ObjectMapper();
@@ -100,6 +105,13 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                 fileMap.put(key, FXCollections.observableArrayList());
             }
         }
+        if(fileMap.containsKey(Status.UPLOADED)) {
+            int size = fileMap.get(Status.UPLOADED).size();
+            uploadedCount.setValue(String.valueOf(size));
+            fileMap.remove(Status.UPLOADED);
+        } else {
+            uploadedCount.setValue(String.valueOf(0));
+        }
     }
 
     public void updateFile(ReplayFile file) throws IOException {
@@ -131,8 +143,14 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                     if (status == oldStatus) {
                         return;
                     }
+                    if(status == Status.UPLOADED) {
+                        int oldCount = Integer.valueOf(uploadedCount.getValue());
+                        int newCount = oldCount + 1;
+                        uploadedCount.setValue(String.valueOf(newCount));
+                    } else {
+                        fileMap.get(status).add(replayFile);
+                    }
                     fileMap.get(oldStatus).remove(replayFile);
-                    fileMap.get(status).add(replayFile);
                     updateFile(replayFile);
                 } catch (InterruptedException | ExecutionException | IOException e) {
                     e.printStackTrace();
@@ -165,5 +183,9 @@ public class FileHandler extends ScheduledService<ReplayFile> {
             replayFiles.clear();
         });
         restart();
+    }
+
+    public StringProperty getUploadedCount() {
+        return uploadedCount;
     }
 }

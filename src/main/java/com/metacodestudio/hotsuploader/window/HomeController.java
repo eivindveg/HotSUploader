@@ -74,13 +74,7 @@ public class HomeController {
     private ListView<ReplayFile> newReplaysView;
 
     @FXML
-    private ListView<ReplayFile> uploadedReplaysView;
-
-    @FXML
     private ListView<ReplayFile> exceptionReplaysView;
-
-    @FXML
-    private ListView<ReplayFile> botReplaysView;
 
     @FXML
     private Label status;
@@ -125,6 +119,8 @@ public class HomeController {
     private FileHandler fileHandler;
     private DesktopWrapper desktop;
     private StormHandler stormHandler;
+    @FXML
+    private Label uploadedReplays;
 
 
     @PostConstruct
@@ -368,26 +364,15 @@ public class HomeController {
         newReplays.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(newReplaysTitlePane, newReplaysTitle, newReplays));
         newReplaysView.setItems(newReplays);
 
-        final String uploadedReplaysTitle = uploadedReplaysTitlePane.textProperty().get();
-        final ObservableList<ReplayFile> uploadedReplays = fileMap.get(Status.UPLOADED);
-        uploadedReplays.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(uploadedReplaysTitlePane, uploadedReplaysTitle, uploadedReplays));
-        uploadedReplaysView.setItems(uploadedReplays);
+        uploadedReplays.textProperty().bind(fileHandler.getUploadedCount());
 
         final String exceptionReplaysTitle = exceptionReplaysTitlePane.textProperty().get();
         final ObservableList<ReplayFile> exceptionReplays = fileMap.get(Status.EXCEPTION);
         exceptionReplays.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(exceptionReplaysTitlePane, exceptionReplaysTitle, exceptionReplays));
         exceptionReplaysView.setItems(exceptionReplays);
 
-        final String botReplaysTitle = botReplaysTitlePane.textProperty().get();
-        final ObservableList<ReplayFile> botReplays = fileMap.get(Status.UNSUPPORTED_GAME_MODE);
-        botReplays.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(botReplaysTitlePane, botReplaysTitle, botReplays));
-        botReplaysView.setItems(botReplays);
-
-
         updatePaneTitle(newReplaysTitlePane, newReplaysTitle, newReplays);
-        updatePaneTitle(uploadedReplaysTitlePane, uploadedReplaysTitle, uploadedReplays);
         updatePaneTitle(exceptionReplaysTitlePane, exceptionReplaysTitle, exceptionReplays);
-        updatePaneTitle(botReplaysTitlePane, botReplaysTitle, botReplays);
     }
 
     private void updatePaneTitle(final TitledPane pane, final String baseTitle, final ObservableList<ReplayFile> list) {
