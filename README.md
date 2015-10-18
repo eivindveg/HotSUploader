@@ -12,6 +12,10 @@ This is a Maven project. You must have the Java 8 SDK installed in order to buil
 
 ``mvn clean package``
 
+## Attributions
+Refresh icon made by [Icon Works](http://icon-works.com) from [Flaticon](www.flaticon.com) is licensed under [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
+Delete icon made by [Google](http://Google.com) from [Flaticon](www.flaticon.com) is licensed under [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
+
 ## Maintainers
 [eivindveg](/../../../../eivindveg) - Windows, Linux and general development
 

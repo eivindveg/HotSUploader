@@ -13,71 +13,50 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" styleClass="header" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" styleClass="header" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
     <center>
-        <Accordion fx:id="accordion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
-            <panes>
-                <TitledPane fx:id="newReplaysTitlePane" text="New Replays">
-                    <content>
-                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header">
-                            <children>
-                                <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </TitledPane>
-                <TitledPane fx:id="uploadedReplaysTitlePane" text="Uploaded Replays">
-                    <content>
-                        <AnchorPane styleClass="header">
-                            <children>
-                                <ListView fx:id="uploadedReplaysView" layoutX="9.6" prefHeight="200.0" prefWidth="591.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </TitledPane>
-                <TitledPane fx:id="exceptionReplaysTitlePane" text="Failed Uploads">
-                    <content>
-                        <AnchorPane styleClass="header">
-                            <children>
-                                <VBox layoutX="9.600000381469727" layoutY="9.600000381469727" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                    <children>
-                                        <BorderPane>
-                                            <left>
-                                                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="These replays have failed to upload for various reasons" textFill="WHITE" BorderPane.alignment="CENTER">
-                                                    <BorderPane.margin>
-                                                        <Insets />
-                                                    </BorderPane.margin>
-                                                </Label>
-                                            </left>
-                                            <right>
-                                                <Button fx:id="invalidateExceptions" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Click to retry" BorderPane.alignment="CENTER">
-                                                    <BorderPane.margin>
-                                                        <Insets />
-                                                    </BorderPane.margin>
-                                                </Button>
-                                            </right>
-                                            <VBox.margin>
-                                                <Insets bottom="5.0" />
-                                            </VBox.margin>
-                                        </BorderPane>
+      <BorderPane BorderPane.alignment="CENTER">
+         <center>
+              <Accordion fx:id="accordion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                  <panes>
+                      <TitledPane fx:id="newReplaysTitlePane" text="New Replays">
+                          <content>
+                              <AnchorPane styleClass="header">
+                                  <children>
+                                      <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="590.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                  </children>
+                              </AnchorPane>
+                          </content>
+                      </TitledPane>
+                      <TitledPane fx:id="exceptionReplaysTitlePane" text="Failed Uploads">
+                          <content>
+                              <AnchorPane styleClass="header">
+                                  <children>
                                         <ListView fx:id="exceptionReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                    </children>
-                                </VBox>
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </TitledPane>
-                <TitledPane fx:id="botReplaysTitlePane" text="Unsupported Game Mode">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" styleClass="header">
-                            <children>
-                                <ListView fx:id="botReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </TitledPane>
-            </panes>
-        </Accordion>
+                                  </children>
+                              </AnchorPane>
+                          </content>
+                      </TitledPane>
+                  </panes>
+              </Accordion>
+         </center>
+         <top>
+            <HBox BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Uploaded Replays: " textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="uploadedReplays" styleClass="textgreen" text="N/A" textFill="#00b000">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </top>
+      </BorderPane>
     </center>
     <top>
         <BorderPane prefHeight="75.0" prefWidth="338.0" styleClass="header" BorderPane.alignment="CENTER">
@@ -114,7 +93,7 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
          <center>
-            <BorderPane fx:id="updatePane" BorderPane.alignment="CENTER" visible="false">
+            <BorderPane fx:id="updatePane" visible="false" BorderPane.alignment="CENTER">
                <center>
                   <Label text="An update is available:" textFill="#00b800" BorderPane.alignment="CENTER" />
                </center>

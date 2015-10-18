@@ -4,6 +4,9 @@
 .textwhite {
     color: #fff;
 }
+.textgreen {
+    color: #00B000;
+}
 .tabs {
     -fx-background-color: #8ea3b9;
 }
