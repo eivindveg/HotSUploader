@@ -3,54 +3,52 @@ package com.metacodestudio.hotsuploader.scene.control;
 import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.models.ReplayFile;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 /**
  * @author Eivind Vegsundvåg
  */
 public class ExceptionListCell extends ListCell<ReplayFile> {
 
-    private final BorderPane hBox;
+    private final BorderPane content;
     private final Label label;
-    private final Button button;
-    private final Image image;
-    private FileHandler fileHandler;
+    private final ImageButton updateButton;
+    private final ImageButton deleteButton;
+    private final Image updateImage;
+    private final Image deleteImage;
+    private final FileHandler fileHandler;
 
-    protected ExceptionListCell(Image image, FileHandler fileHandler) {
+    protected ExceptionListCell(Image updateImage, Image deleteImage, FileHandler fileHandler) {
         super();
-        this.image = image;
+        this.updateImage = updateImage;
+        this.deleteImage = deleteImage;
         this.fileHandler = fileHandler;
         label = new Label();
-        button = new Button("");
+        updateButton = new ImageButton(20, 20);
+        deleteButton = new ImageButton(20, 20);
         label.setAlignment(Pos.CENTER_LEFT);
-        button.setAlignment(Pos.CENTER_RIGHT);
-        button.setBackground(Background.EMPTY);
-        hBox = new BorderPane(null, null, button, null, label);
-        hBox.setMaxWidth(Double.MAX_VALUE);
-        hBox.setPrefWidth(USE_COMPUTED_SIZE);
-
+        updateButton.setAlignment(Pos.CENTER_RIGHT);
+        HBox hBox = new HBox(updateButton, deleteButton);
+        content = new BorderPane(null, null, hBox, null, label);
+        content.setMaxWidth(Double.MAX_VALUE);
+        content.setPrefWidth(USE_COMPUTED_SIZE);
     }
 
     @Override
     public void updateSelected(boolean selected) {
         super.updateSelected(selected);
         if(selected) {
-            ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(20);
-            imageView.setFitWidth(20);
-            button.setGraphic(imageView);
+            updateButton.setGraphic(updateImage);
+            deleteButton.setGraphic(deleteImage);
         } else {
-            button.setGraphic(null);
+            updateButton.removeGraphic();
+            deleteButton.removeGraphic();
         }
     }
 
@@ -68,13 +66,14 @@ public class ExceptionListCell extends ListCell<ReplayFile> {
         } else {
             label.setText(item.getFile().getName());
 
-            setGraphic(hBox);
-            hBox.setOnMouseClicked(event -> {
+            setGraphic(content);
+            content.setOnMouseClicked(event -> {
                 if (2 == event.getClickCount()) {
                     fileHandler.invalidateReplay(item);
                 }
             });
-            button.setOnAction(event -> fileHandler.invalidateReplay(item));
+            updateButton.setOnAction(event -> fileHandler.invalidateReplay(item));
+            deleteButton.setOnAction(event -> fileHandler.deleteReplay(item));
         }
     }
 }

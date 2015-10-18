@@ -195,4 +195,14 @@ public class FileHandler extends ScheduledService<ReplayFile> {
         uploadQueue.add(item);
         fileMap.get(Status.NEW).add(item);
     }
+
+    public void deleteReplay(ReplayFile item) {
+        ObservableList<ReplayFile> replayFiles = fileMap.get(item.getStatus());
+        replayFiles.remove(item);
+
+        File file = item.getFile();
+        if(file.delete()) {
+            stormHandler.getPropertiesFile(file).delete();
+        }
+    }
 }
