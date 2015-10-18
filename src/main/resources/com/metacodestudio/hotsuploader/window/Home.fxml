@@ -32,30 +32,7 @@
                           <content>
                               <AnchorPane styleClass="header">
                                   <children>
-                                      <VBox layoutX="9.600000381469727" layoutY="9.600000381469727" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                          <children>
-                                              <BorderPane>
-                                                  <left>
-                                                      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="These replays have failed to upload for various reasons" textFill="WHITE" BorderPane.alignment="CENTER">
-                                                          <BorderPane.margin>
-                                                              <Insets />
-                                                          </BorderPane.margin>
-                                                      </Label>
-                                                  </left>
-                                                  <right>
-                                                      <Button fx:id="invalidateExceptions" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Click to retry" BorderPane.alignment="CENTER">
-                                                          <BorderPane.margin>
-                                                              <Insets />
-                                                          </BorderPane.margin>
-                                                      </Button>
-                                                  </right>
-                                                  <VBox.margin>
-                                                      <Insets bottom="5.0" />
-                                                  </VBox.margin>
-                                              </BorderPane>
-                                              <ListView fx:id="exceptionReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                          </children>
-                                      </VBox>
+                                        <ListView fx:id="exceptionReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                   </children>
                               </AnchorPane>
                           </content>
