@@ -188,4 +188,11 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     public StringProperty getUploadedCount() {
         return uploadedCount;
     }
+
+    public void invalidateReplay(ReplayFile item) {
+        ObservableList<ReplayFile> replayFiles = fileMap.get(item.getStatus());
+        replayFiles.remove(item);
+        uploadQueue.add(item);
+        fileMap.get(Status.NEW).add(item);
+    }
 }
