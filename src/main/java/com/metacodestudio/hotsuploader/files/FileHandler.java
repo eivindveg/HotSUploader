@@ -126,7 +126,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
             return new Task<ReplayFile>() {
                 @Override
                 protected ReplayFile call() throws Exception {
-                    Thread.sleep(20000);
+                    Thread.sleep(2000);
                     return null;
                 }
             };
@@ -192,6 +192,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     public void invalidateReplay(ReplayFile item) {
         ObservableList<ReplayFile> replayFiles = fileMap.get(item.getStatus());
         replayFiles.remove(item);
+        item.getUploadStatuses().forEach(uploadStatus -> uploadStatus.setStatus(Status.NEW));
         uploadQueue.add(item);
         fileMap.get(Status.NEW).add(item);
     }
