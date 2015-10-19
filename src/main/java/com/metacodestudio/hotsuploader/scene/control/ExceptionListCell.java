@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
@@ -18,8 +19,8 @@ public class ExceptionListCell extends ListCell<ReplayFile> {
 
     private final BorderPane content;
     private final Label label;
-    private final ImageButton updateButton;
-    private final ImageButton deleteButton;
+    private final ImageView updateButton;
+    private final ImageView deleteButton;
     private final Image updateImage;
     private final Image deleteImage;
     private final FileHandler fileHandler;
@@ -30,10 +31,13 @@ public class ExceptionListCell extends ListCell<ReplayFile> {
         this.deleteImage = deleteImage;
         this.fileHandler = fileHandler;
         label = new Label();
-        updateButton = new ImageButton(20, 20);
-        deleteButton = new ImageButton(20, 20);
+        updateButton = new ImageView();
+        updateButton.setFitHeight(20);
+        updateButton.setFitWidth(20);
+        deleteButton = new ImageView();
+        deleteButton.setFitHeight(20);
+        deleteButton.setFitWidth(20);
         label.setAlignment(Pos.CENTER_LEFT);
-        updateButton.setAlignment(Pos.CENTER_RIGHT);
         HBox hBox = new HBox(updateButton, deleteButton);
         content = new BorderPane(null, null, hBox, null, label);
         content.setMaxWidth(Double.MAX_VALUE);
@@ -44,12 +48,13 @@ public class ExceptionListCell extends ListCell<ReplayFile> {
     public void updateSelected(boolean selected) {
         super.updateSelected(selected);
         if(selected) {
-            updateButton.setGraphic(updateImage);
-            deleteButton.setGraphic(deleteImage);
+            updateButton.setImage(updateImage);
+            deleteButton.setImage(deleteImage);
         } else {
-            updateButton.removeGraphic();
-            deleteButton.removeGraphic();
+            updateButton.setImage(null);
+            deleteButton.setImage(null);
         }
+
     }
 
     @Override
@@ -72,8 +77,8 @@ public class ExceptionListCell extends ListCell<ReplayFile> {
                     fileHandler.invalidateReplay(item);
                 }
             });
-            updateButton.setOnAction(event -> fileHandler.invalidateReplay(item));
-            deleteButton.setOnAction(event -> fileHandler.deleteReplay(item));
+            updateButton.setOnMouseClicked(event -> fileHandler.invalidateReplay(item));
+            deleteButton.setOnMouseClicked(event -> fileHandler.deleteReplay(item));
         }
     }
 }

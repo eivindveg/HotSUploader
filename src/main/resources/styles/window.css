@@ -1,11 +1,26 @@
+* {
+    -fx-hots-primary: #fff;
+    -fx-hots-secondary: #2E7D32;
+    -fx-hots-background: #444;
+}
+
 .header {
-    -fx-background-color: #444;
+    -fx-background-color: -fx-hots-background;
 }
-.textwhite {
-    color: #fff;
+.button {
+    -fx-background-color: -fx-hots-secondary;
+    -fx-background-insets:  0.0;
+    -fx-background-radius: 0.0;
+    -fx-border-width: 0.0;
+    -fx-text-fill: -fx-hots-primary;
+    -fx-alignment: CENTER;
+    -fx-content-display: LEFT;
 }
-.textgreen {
-    color: #00B000;
+.primary {
+    color: -fx-hots-primary;
+}
+.secondary {
+    color: -fx-hots-secondary;
 }
 .tabs {
     -fx-background-color: #8ea3b9;

@@ -4,6 +4,9 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Paint;
 
 /**
  * @author Eivind Vegsundvåg
@@ -16,7 +19,7 @@ public class ImageButton extends Button {
     public ImageButton(double height, double width) {
         this.height = height;
         this.width = width;
-        setBackground(Background.EMPTY);
+        setBackground(new Background(new BackgroundFill(Paint.valueOf("#FFFFFFFF"), null, null)));
     }
 
     public void setGraphic(Image image) {

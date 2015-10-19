@@ -30,7 +30,7 @@
                         <Insets left="15.0" />
                      </padding>
                   </Label>
-                  <Label fx:id="uploadedReplays" styleClass="textgreen" text="N/A" textFill="#00b000">
+                  <Label fx:id="uploadedReplays" styleClass="secondary" text="N/A" textFill="#00b000">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -45,7 +45,7 @@
               <children>
                 <VBox alignment="CENTER" prefWidth="225.0" styleClass="status">
                     <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" styleClass="textwhite" text="Status" textFill="WHITE">
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" styleClass="primary" text="Status" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="18.0" />
                             </font>
