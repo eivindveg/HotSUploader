@@ -5,7 +5,7 @@ import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.models.*;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotsLogsProvider;
-import com.metacodestudio.hotsuploader.scene.control.ExceptionListCellFactory;
+import com.metacodestudio.hotsuploader.scene.control.CustomListCellFactory;
 import com.metacodestudio.hotsuploader.services.HeroService;
 import com.metacodestudio.hotsuploader.utils.DesktopWrapper;
 import com.metacodestudio.hotsuploader.utils.FXUtils;
@@ -35,7 +35,6 @@ import javafx.util.StringConverter;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @ViewController(value = "Home.fxml", title = "HotSLogs UploaderFX")
@@ -123,7 +122,7 @@ public class HomeController {
         stormHandler = viewFlowContext.getRegisteredObject(StormHandler.class);
         httpClient = viewFlowContext.getRegisteredObject(SimpleHttpClient.class);
         fileHandler = viewFlowContext.getRegisteredObject(FileHandler.class);
-        fileHandler.verifyMap(fileHandler.getFileMap());
+        fileHandler.verifyMap(fileHandler.getFiles());
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
         prepareAccordion();
@@ -333,13 +332,6 @@ public class HomeController {
         }
     }
 
-
-    @ActionMethod("invalidateExceptions")
-    private void doInvalidateExceptions() {
-        fileHandler.invalidateByStatus(Status.EXCEPTION);
-        setUploading();
-    }
-
     private void setupFileHandler() {
         fileHandler.setRestartOnFailure(true);
         fileHandler.setOnSucceeded(event -> {
@@ -356,23 +348,14 @@ public class HomeController {
     }
 
     private void bindLists() {
-        Map<Status, ObservableList<ReplayFile>> fileMap = fileHandler.getFileMap();
+        ObservableList<ReplayFile> files = fileHandler.getFiles();
 
         final String newReplaysTitle = newReplaysTitlePane.textProperty().get();
-        final ObservableList<ReplayFile> newReplays = fileMap.get(Status.NEW);
-        newReplays.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(newReplaysTitlePane, newReplaysTitle, newReplays));
-        newReplaysView.setItems(newReplays);
+        files.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(newReplaysTitlePane, newReplaysTitle, files));
+        newReplaysView.setItems(files);
+        newReplaysView.setCellFactory(new CustomListCellFactory(fileHandler));
 
         uploadedReplays.textProperty().bind(fileHandler.getUploadedCount());
-
-        final String exceptionReplaysTitle = exceptionReplaysTitlePane.textProperty().get();
-        final ObservableList<ReplayFile> exceptionReplays = fileMap.get(Status.EXCEPTION);
-        exceptionReplays.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(exceptionReplaysTitlePane, exceptionReplaysTitle, exceptionReplays));
-        exceptionReplaysView.setItems(exceptionReplays);
-        exceptionReplaysView.setCellFactory(new ExceptionListCellFactory(fileHandler));
-
-        updatePaneTitle(newReplaysTitlePane, newReplaysTitle, newReplays);
-        updatePaneTitle(exceptionReplaysTitlePane, exceptionReplaysTitle, exceptionReplays);
     }
 
     private void updatePaneTitle(final TitledPane pane, final String baseTitle, final ObservableList<ReplayFile> list) {

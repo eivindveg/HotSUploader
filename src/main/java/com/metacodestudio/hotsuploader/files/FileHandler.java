@@ -7,10 +7,9 @@ import com.metacodestudio.hotsuploader.models.UploadStatus;
 import com.metacodestudio.hotsuploader.providers.Provider;
 import com.metacodestudio.hotsuploader.utils.FileUtils;
 import com.metacodestudio.hotsuploader.utils.StormHandler;
-import javafx.application.Platform;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
@@ -22,8 +21,8 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class FileHandler extends ScheduledService<ReplayFile> {
@@ -31,7 +30,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     private final Set<File> watchDirectories;
     private final ObjectMapper mapper;
     private final StormHandler stormHandler;
-    private Map<Status, ObservableList<ReplayFile>> fileMap;
+    private ObservableList<ReplayFile> files;
     private List<Provider> providers = Provider.getAll();
     private BlockingQueue<ReplayFile> uploadQueue;
     private final StringProperty uploadedCount;
@@ -42,14 +41,14 @@ public class FileHandler extends ScheduledService<ReplayFile> {
         this.stormHandler = stormHandler;
         mapper = new ObjectMapper();
         uploadQueue = new ArrayBlockingQueue<>(2500);
-        fileMap = new HashMap<>();
+        files = FXCollections.observableArrayList();
         watchDirectories.addAll(stormHandler.getAccountDirectories(stormHandler.getHotSHome()));
     }
 
     public void beginWatch() {
         watchDirectories.stream().map(file -> Paths.get(file.toString())).forEach(path -> {
             try {
-                WatchHandler watchHandler = new WatchHandler(stormHandler, path, fileMap, uploadQueue);
+                WatchHandler watchHandler = new WatchHandler(stormHandler, path, files, uploadQueue);
                 new Thread(watchHandler).start();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -73,7 +72,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                 .map(ReplayFile::fromDirectory)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
-        fileMap = fileList.stream()
+        List<ReplayFile> mapped = fileList.stream()
                 .map(replay -> {
                     File propertiesFile = stormHandler.getPropertiesFile(replay.getFile());
                     try {
@@ -94,24 +93,14 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                     }
 
                     return replay;
-                }).collect(Collectors.groupingBy(ReplayFile::getStatus, ConcurrentHashMap::new,
-                        Collectors.toCollection(FXCollections::observableArrayList)));
+                }).filter(replayFile -> replayFile.getStatus() == Status.NEW || replayFile.getStatus() == Status.EXCEPTION)
+                .collect(Collectors.toList());
+        files = FXCollections.observableArrayList(mapped);
     }
 
-    public void verifyMap(Map<Status, ObservableList<ReplayFile>> fileMap) {
-        Status[] keys = Status.values();
-        for (final Status key : keys) {
-            if (!fileMap.containsKey(key)) {
-                fileMap.put(key, FXCollections.observableArrayList());
-            }
-        }
-        if(fileMap.containsKey(Status.UPLOADED)) {
-            int size = fileMap.get(Status.UPLOADED).size();
-            uploadedCount.setValue(String.valueOf(size));
-            fileMap.remove(Status.UPLOADED);
-        } else {
-            uploadedCount.setValue(String.valueOf(0));
-        }
+    public void verifyMap(List<ReplayFile> files) {
+        long uploaded = files.stream().filter(replayFile -> replayFile.getStatus() == Status.UPLOADED).count();
+        uploadedCount.setValue(String.valueOf(uploaded));
     }
 
     public void updateFile(ReplayFile file) throws IOException {
@@ -147,10 +136,8 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                         int oldCount = Integer.valueOf(uploadedCount.getValue());
                         int newCount = oldCount + 1;
                         uploadedCount.setValue(String.valueOf(newCount));
-                    } else {
-                        fileMap.get(status).add(replayFile);
                     }
-                    fileMap.get(oldStatus).remove(replayFile);
+                    files.remove(replayFile);
                     updateFile(replayFile);
                 } catch (InterruptedException | ExecutionException | IOException e) {
                     e.printStackTrace();
@@ -163,26 +150,8 @@ public class FileHandler extends ScheduledService<ReplayFile> {
         }
     }
 
-    public Map<Status, ObservableList<ReplayFile>> getFileMap() {
-        return fileMap;
-    }
-
     public boolean isIdle() {
         return uploadQueue.isEmpty();
-    }
-
-    public void invalidateByStatus(final Status status) {
-        ObservableList<ReplayFile> replayFiles = fileMap.get(status);
-        replayFiles.stream()
-                .flatMap(replayFile -> replayFile.getUploadStatuses()
-                        .stream())
-                .forEach(uploadStatus -> uploadStatus.setStatus(Status.NEW));
-        uploadQueue.addAll(replayFiles);
-        Platform.runLater(() -> {
-            fileMap.get(Status.NEW).addAll(replayFiles);
-            replayFiles.clear();
-        });
-        restart();
     }
 
     public StringProperty getUploadedCount() {
@@ -190,20 +159,20 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     }
 
     public void invalidateReplay(ReplayFile item) {
-        ObservableList<ReplayFile> replayFiles = fileMap.get(item.getStatus());
-        replayFiles.remove(item);
-        item.getUploadStatuses().forEach(uploadStatus -> uploadStatus.setStatus(Status.NEW));
         uploadQueue.add(item);
-        fileMap.get(Status.NEW).add(item);
+        files.add(item);
     }
 
     public void deleteReplay(ReplayFile item) {
-        ObservableList<ReplayFile> replayFiles = fileMap.get(item.getStatus());
-        replayFiles.remove(item);
+        files.remove(item);
 
         File file = item.getFile();
         if(file.delete()) {
             stormHandler.getPropertiesFile(file).delete();
         }
+    }
+
+    public ObservableList<ReplayFile> getFiles() {
+        return files;
     }
 }

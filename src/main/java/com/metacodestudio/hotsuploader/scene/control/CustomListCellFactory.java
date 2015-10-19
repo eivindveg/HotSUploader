@@ -12,13 +12,13 @@ import java.net.URL;
 /**
  * @author Eivind Vegsundvåg
  */
-public class ExceptionListCellFactory implements Callback<ListView<ReplayFile>, ListCell<ReplayFile>> {
+public class CustomListCellFactory implements Callback<ListView<ReplayFile>, ListCell<ReplayFile>> {
 
     private final Image updateImage;
     private final Image deleteImage;
     private final FileHandler fileHandler;
 
-    public ExceptionListCellFactory(FileHandler fileHandler) {
+    public CustomListCellFactory(FileHandler fileHandler) {
         this.fileHandler = fileHandler;
         URL updateResource = getClass().getResource("update.png");
         URL deleteResource = getClass().getResource("delete.png");

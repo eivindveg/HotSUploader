@@ -4,12 +4,11 @@ import com.metacodestudio.hotsuploader.models.ReplayFile;
 import com.metacodestudio.hotsuploader.models.Status;
 import com.metacodestudio.hotsuploader.utils.StormHandler;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.Map;
+import java.util.List;
 import java.util.Queue;
 
 import static java.nio.file.StandardWatchEventKinds.*;
@@ -18,16 +17,16 @@ public class WatchHandler implements Runnable {
 
     private final WatchService watchService;
     private final StormHandler stormHandler;
-    private Map<Status, ObservableList<ReplayFile>> fileMap;
+    private List<ReplayFile> files;
     private Queue<ReplayFile> uploadQueue;
     private Path path;
 
-    public WatchHandler(final StormHandler stormHandler, final Path path, final Map<Status, ObservableList<ReplayFile>> fileMap, final Queue<ReplayFile> uploadQueue) throws IOException {
+    public WatchHandler(final StormHandler stormHandler, final Path path, final List<ReplayFile> files, final Queue<ReplayFile> uploadQueue) throws IOException {
         this.stormHandler = stormHandler;
         this.path = path;
         watchService = FileSystems.getDefault().newWatchService();
         path.register(watchService, ENTRY_CREATE);
-        this.fileMap = fileMap;
+        this.files = files;
         this.uploadQueue = uploadQueue;
     }
 
@@ -66,7 +65,7 @@ public class WatchHandler implements Runnable {
                         throw new RuntimeException(new IOException("Could not delete file"));
                     }
                 }
-                Platform.runLater(() -> fileMap.get(Status.NEW).add(replayFile));
+                Platform.runLater(() -> files.add(replayFile));
                 uploadQueue.add(replayFile);
 
                 boolean valid = key.reset();
