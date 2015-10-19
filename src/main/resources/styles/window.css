@@ -32,6 +32,21 @@
     -fx-background-radius: 0.0 2.0 2.0 0.0;
 }
 
+.text-area , .text-field {
+    -fx-background-color: white;
+    -fx-background-insets:  0.0;
+    -fx-background-radius: 2.0;
+    -fx-padding: 0.7em;
+    -fx-border-width: 0.0;
+    -fx-prompt-text-fill: derive(-dark, 50.0%);
+    -fx-highlight-fill: rgb(94.0, 203.0, 234.0);
+}
+
+.text-area .text, .text-field > * > .text {
+    -fx-effect: null;
+    -fx-fill: -fx-hots-background;
+}
+
 .primary {
     color: -fx-hots-primary;
 }
