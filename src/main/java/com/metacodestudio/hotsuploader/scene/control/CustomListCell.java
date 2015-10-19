@@ -80,7 +80,10 @@ public class CustomListCell extends ListCell<ReplayFile> {
                     fileHandler.invalidateReplay(item);
                 }
             });
-            updateButton.setOnMouseClicked(event -> fileHandler.invalidateReplay(item));
+            updateButton.setOnMouseClicked(event -> {
+                System.out.println("Clicked");
+                fileHandler.invalidateReplay(item);
+            });
             deleteButton.setOnMouseClicked(event -> fileHandler.deleteReplay(item));
         }
     }

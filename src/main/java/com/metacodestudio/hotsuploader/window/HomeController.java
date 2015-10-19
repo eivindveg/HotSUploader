@@ -2,7 +2,10 @@ package com.metacodestudio.hotsuploader.window;
 
 import com.metacodestudio.hotsuploader.AccountService;
 import com.metacodestudio.hotsuploader.files.FileHandler;
-import com.metacodestudio.hotsuploader.models.*;
+import com.metacodestudio.hotsuploader.models.Account;
+import com.metacodestudio.hotsuploader.models.Hero;
+import com.metacodestudio.hotsuploader.models.LeaderboardRanking;
+import com.metacodestudio.hotsuploader.models.ReplayFile;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotsLogsProvider;
 import com.metacodestudio.hotsuploader.scene.control.CustomListCellFactory;
@@ -18,7 +21,6 @@ import io.datafx.controller.flow.action.ActionMethod;
 import io.datafx.controller.flow.action.ActionTrigger;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
-import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
@@ -114,6 +116,8 @@ public class HomeController {
     private StormHandler stormHandler;
     @FXML
     private Label uploadedReplays;
+    @FXML
+    private Label newReplaysCount;
 
 
     @PostConstruct
@@ -125,9 +129,8 @@ public class HomeController {
         fileHandler.verifyMap(fileHandler.getFiles());
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
-        prepareAccordion();
         setPlayerSearchActions();
-        bindLists();
+        bindList();
         setupFileHandler();
         if (fileHandler.isIdle()) {
             setIdle();
@@ -203,16 +206,6 @@ public class HomeController {
                     throw new RuntimeException(e);
                 }
             }
-        });
-    }
-
-    private void prepareAccordion() {
-        TitledPane defaultPane = newReplaysTitlePane;
-        accordion.setExpandedPane(defaultPane);
-        defaultPane.setCollapsible(false);
-        accordion.expandedPaneProperty().addListener((property, oldPane, newPane) -> {
-            if (oldPane != null) oldPane.setCollapsible(true);
-            if (newPane != null) Platform.runLater(() -> newPane.setCollapsible(false));
         });
     }
 
@@ -347,19 +340,14 @@ public class HomeController {
         fileHandler.start();
     }
 
-    private void bindLists() {
+    private void bindList() {
         ObservableList<ReplayFile> files = fileHandler.getFiles();
 
-        final String newReplaysTitle = newReplaysTitlePane.textProperty().get();
-        files.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(newReplaysTitlePane, newReplaysTitle, files));
+        files.addListener((ListChangeListener<ReplayFile>) c -> newReplaysCount.setText(String.valueOf(files.size())));
         newReplaysView.setItems(files);
         newReplaysView.setCellFactory(new CustomListCellFactory(fileHandler));
 
         uploadedReplays.textProperty().bind(fileHandler.getUploadedCount());
-    }
-
-    private void updatePaneTitle(final TitledPane pane, final String baseTitle, final ObservableList<ReplayFile> list) {
-        pane.setText(baseTitle + " (" + list.size() + ")");
     }
 
     private void setIdle() {

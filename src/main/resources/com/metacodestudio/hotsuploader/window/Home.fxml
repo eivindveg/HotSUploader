@@ -20,19 +20,16 @@
    <bottom>
       <HBox BorderPane.alignment="CENTER">
          <children>
-            <HBox>
+            <HBox styleClass="counter">
                <children>
                   <Label text="Uploaded Replays: " textFill="WHITE" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font>
-                     <padding>
-                        <Insets left="15.0" />
-                     </padding>
                   </Label>
                   <Label fx:id="uploadedReplays" styleClass="secondary" text="N/A" textFill="#00b000">
                      <font>
-                        <Font size="15.0" />
+                        <Font size="18.0" />
                      </font>
                   </Label>
                </children>
@@ -43,20 +40,6 @@
    <right>
           <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
               <children>
-                <VBox alignment="CENTER" prefWidth="225.0" styleClass="status">
-                    <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" styleClass="primary" text="Status" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="18.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" text="Uploading" textFill="#00b000">
-                            <font>
-                                <Font name="Calibri Bold" size="14.0" />
-                            </font>
-                        </Label>
-                    </children>
-                </VBox>
                   <BorderPane>
                       <left>
                           <ChoiceBox fx:id="accountSelect" prefWidth="150.0" BorderPane.alignment="CENTER">
@@ -140,82 +123,96 @@
             </VBox>
               </children>
               <padding>
-                  <Insets left="5.0" right="5.0" top="10.0" />
+                  <Insets left="5.0" right="5.0" />
               </padding>
           </VBox>
    </right>
    <left>
       <BorderPane prefHeight="362.0" prefWidth="612.0" BorderPane.alignment="CENTER">
-         <center>
-              <Accordion fx:id="accordion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                  <panes>
-                      <TitledPane fx:id="newReplaysTitlePane" text="New Replays">
-                          <content>
-                              <AnchorPane styleClass="header">
-                                  <children>
-                                      <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="590.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                  </children>
-                              </AnchorPane>
-                          </content>
-                      </TitledPane>
-                      <TitledPane fx:id="exceptionReplaysTitlePane" text="Failed Uploads">
-                          <content>
-                              <AnchorPane styleClass="header">
-                                  <children>
-                                        <ListView fx:id="exceptionReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                  </children>
-                              </AnchorPane>
-                          </content>
-                      </TitledPane>
-                  </panes>
-              </Accordion>
-         </center>
-         <top>
-            <HBox BorderPane.alignment="CENTER">
-               <BorderPane.margin>
-                  <Insets bottom="20.0" left="5.0" right="5.0" top="5.0" />
-               </BorderPane.margin>
+         <left>
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
                <children>
-                      <ImageView fx:id="logo" fitHeight="85.0" pickOnBounds="true" preserveRatio="true">
-                          <image>
-                              <Image url="@../../../../images/hotslogs-large.png" />
-                          </image>
-                          <cursor>
-                              <Cursor fx:constant="HAND" />
-                          </cursor>
-                          <effect>
-                              <Bloom threshold="0.95" />
-                          </effect>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                      </ImageView>
-                  <VBox fx:id="updatePane" alignment="CENTER" visible="false">
+                  <HBox styleClass="counter">
                      <children>
-                        <HBox alignment="CENTER">
-                           <children>
-                              <Label text="An update is available: " textFill="WHITE">
-                                 <font>
-                                    <Font name="System Bold" size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="newVersionLabel" text="N/A" textFill="#00b000">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <Hyperlink fx:id="updateLink" text="Click to open release notes or download" textAlignment="CENTER" wrapText="true">
+                        <Label styleClass=".primary" text="New Replays: " textFill="WHITE">
                            <font>
-                              <Font name="System Bold" size="12.0" />
+                              <Font name="System Bold" size="18.0" />
                            </font>
-                        </Hyperlink>
+                        </Label>
+                        <Label fx:id="newReplaysCount" text="N/A" textFill="#00b000">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
                      </children>
-                  </VBox>
+                  </HBox>
+                          <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="335.0" prefWidth="590.0">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin></ListView>
                </children>
-            </HBox>
-         </top>
+            </VBox>
+         </left>
       </BorderPane>
    </left>
+   <top>
+      <HBox BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+         <children>
+                <ImageView fx:id="logo" fitHeight="85.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../../images/hotslogs-large.png" />
+                    </image>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                    <effect>
+                        <Bloom threshold="0.95" />
+                    </effect>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+                </ImageView>
+            <VBox fx:id="updatePane" alignment="CENTER" visible="false">
+               <children>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label text="An update is available: " textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="newVersionLabel" text="N/A" textFill="#00b000">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <Hyperlink fx:id="updateLink" text="Click to open release notes or download" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Hyperlink>
+               </children>
+            </VBox>
+                <VBox alignment="CENTER_RIGHT" prefWidth="225.0" styleClass="status">
+                    <children>
+                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" styleClass="primary" text="Status" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" text="Uploading" textFill="#00b000">
+                            <font>
+                                <Font name="Calibri Bold" size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+         </children>
+      </HBox>
+   </top>
 </BorderPane>

@@ -7,10 +7,11 @@
 .header {
     -fx-background-color: -fx-hots-background;
 }
+
 .button {
     -fx-background-color: -fx-hots-secondary;
     -fx-padding: 0.7em;
-    -fx-background-insets:  0.0;
+    -fx-background-insets: 0.0;
     -fx-background-radius: 0.0;
     -fx-border-width: 0.0;
     -fx-text-fill: -fx-hots-primary;
@@ -21,7 +22,7 @@
 .combo-box-base,
 .choice-box {
     -fx-background-color: -fx-hots-primary;
-    -fx-background-insets:  0.0;
+    -fx-background-insets: 0.0;
     -fx-background-radius: 0.0;
     -fx-border-width: 0.0;
 }
@@ -32,13 +33,13 @@
     -fx-background-radius: 0.0 2.0 2.0 0.0;
 }
 
-.text-area , .text-field {
+.text-area, .text-field {
     -fx-background-color: white;
-    -fx-background-insets:  0.0;
+    -fx-background-insets: 0.0;
     -fx-background-radius: 2.0;
     -fx-padding: 0.7em;
     -fx-border-width: 0.0;
-    -fx-prompt-text-fill: derive(-dark, 50.0%);
+    -fx-prompt-text-fill: derive(-fx-hots-background, 50.0%);
     -fx-highlight-fill: rgb(94.0, 203.0, 234.0);
 }
 
@@ -50,14 +51,21 @@
 .primary {
     color: -fx-hots-primary;
 }
+
 .secondary {
     color: -fx-hots-secondary;
 }
+
 .tabs {
     -fx-background-color: #8ea3b9;
 }
+
 .status {
     -fx-border-style: dashed;
     -fx-border-color: #404040;
     -fx-background-color: #484848;
+}
+
+.counter {
+    -fx-padding: 5px 0 5px 15px;
 }

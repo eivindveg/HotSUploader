@@ -136,8 +136,8 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                         int oldCount = Integer.valueOf(uploadedCount.getValue());
                         int newCount = oldCount + 1;
                         uploadedCount.setValue(String.valueOf(newCount));
+                        files.remove(replayFile);
                     }
-                    files.remove(replayFile);
                     updateFile(replayFile);
                 } catch (InterruptedException | ExecutionException | IOException e) {
                     e.printStackTrace();
@@ -159,8 +159,11 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     }
 
     public void invalidateReplay(ReplayFile item) {
+        item.getUploadStatuses()
+                .stream()
+                .filter(status -> status.getStatus() != Status.UPLOADED)
+                .forEach(status -> status.setStatus(Status.NEW));
         uploadQueue.add(item);
-        files.add(item);
     }
 
     public void deleteReplay(ReplayFile item) {
