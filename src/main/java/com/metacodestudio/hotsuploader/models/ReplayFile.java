@@ -1,6 +1,8 @@
 package com.metacodestudio.hotsuploader.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.File;
 import java.io.Serializable;
@@ -12,6 +14,7 @@ public class ReplayFile implements Serializable {
     private static final long serialVersionUID = 1L;
     private final File file;
     private final List<UploadStatus> uploadStatuses;
+    private final BooleanProperty failedProperty = new SimpleBooleanProperty(null, "failed", false);
 
     public ReplayFile(final File file) {
         uploadStatuses = new ArrayList<>();
@@ -35,6 +38,14 @@ public class ReplayFile implements Serializable {
 
         return replayFiles;
 
+    }
+
+    public BooleanProperty getFailedProperty() {
+        return failedProperty;
+    }
+
+    public BooleanProperty failedPropertyProperty() {
+        return failedProperty;
     }
 
     @Override
@@ -78,5 +89,12 @@ public class ReplayFile implements Serializable {
 
     public List<UploadStatus> getUploadStatuses() {
         return uploadStatuses;
+    }
+
+    public boolean hasExceptions() {
+        return uploadStatuses.stream()
+                .filter(uploadStatus -> uploadStatus.getStatus() == Status.EXCEPTION)
+                .findAny()
+                .isPresent();
     }
 }

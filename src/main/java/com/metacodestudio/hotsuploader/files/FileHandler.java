@@ -7,7 +7,6 @@ import com.metacodestudio.hotsuploader.models.UploadStatus;
 import com.metacodestudio.hotsuploader.providers.Provider;
 import com.metacodestudio.hotsuploader.utils.FileUtils;
 import com.metacodestudio.hotsuploader.utils.StormHandler;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -22,7 +21,6 @@ import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class FileHandler extends ScheduledService<ReplayFile> {
@@ -79,6 +77,9 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                         if (propertiesFile.exists()) {
                             String properties = FileUtils.readFileToString(propertiesFile);
                             replay.addStatuses(Arrays.asList(mapper.readValue(properties, UploadStatus[].class)));
+                            if(replay.hasExceptions()) {
+                                replay.getFailedProperty().set(true);
+                            }
                         } else {
                             replay.addStatuses(providers.stream()
                                     .map(UploadStatus::new)
@@ -136,7 +137,10 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                         int oldCount = Integer.valueOf(uploadedCount.getValue());
                         int newCount = oldCount + 1;
                         uploadedCount.setValue(String.valueOf(newCount));
+                        replayFile.getFailedProperty().setValue(false);
                         files.remove(replayFile);
+                    } else if(status == Status.EXCEPTION) {
+                        replayFile.getFailedProperty().set(true);
                     }
                     updateFile(replayFile);
                 } catch (InterruptedException | ExecutionException | IOException e) {

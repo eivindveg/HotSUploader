@@ -43,6 +43,15 @@
     -fx-highlight-fill: rgb(94.0, 203.0, 234.0);
 }
 
+.list-cell {
+    -fx-background-color: derive(-fx-hots-background, 25.0%);
+    -fx-text-fill: derive(-fx-hots-primary, -25%);
+}
+
+.list-view:armed {
+    -fx-border-style: none;
+}
+
 .text-area .text, .text-field > * > .text {
     -fx-effect: null;
     -fx-fill: -fx-hots-background;
