@@ -153,7 +153,12 @@ public class HomeController {
         Task<GitHubRelease> task = new Task<GitHubRelease>() {
             @Override
             protected GitHubRelease call() throws Exception {
-                return releaseManager.getNewerVersionIfAny();
+                Optional<GitHubRelease> newerVersionIfAny = releaseManager.getNewerVersionIfAny();
+                if(newerVersionIfAny.isPresent()) {
+                    return newerVersionIfAny.get();
+                } else {
+                    return null;
+                }
             }
         };
         task.setOnSucceeded(event -> {

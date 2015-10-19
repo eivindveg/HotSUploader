@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class ReleaseManager {
 
@@ -38,7 +39,7 @@ public class ReleaseManager {
         return new GitHubRelease(CURRENT_VERSION, htmlUrl, false);
     }
 
-    public GitHubRelease getNewerVersionIfAny() {
+    public Optional<GitHubRelease> getNewerVersionIfAny() {
         ReleaseComparator releaseComparator = new ReleaseComparator();
         List<GitHubRelease> latest;
         try {
@@ -52,10 +53,11 @@ public class ReleaseManager {
         GitHubRelease latestRelease = latest.get(0);
         int compare = releaseComparator.compare(currentRelease, latestRelease);
         if (latest.size() > 0 && compare > 0) {
-            return latestRelease;
+            return Optional.of(latestRelease);
+        } else {
+            return Optional.empty();
         }
 
-        return null;
     }
 
     private List<GitHubRelease> getLatest() throws IOException {
