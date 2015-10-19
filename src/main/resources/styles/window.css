@@ -9,6 +9,7 @@
 }
 .button {
     -fx-background-color: -fx-hots-secondary;
+    -fx-padding: 0.7em;
     -fx-background-insets:  0.0;
     -fx-background-radius: 0.0;
     -fx-border-width: 0.0;
@@ -23,6 +24,12 @@
     -fx-background-insets:  0.0;
     -fx-background-radius: 0.0;
     -fx-border-width: 0.0;
+}
+
+.combo-box-base > .arrow-button,
+.choice-box > .open-button {
+    -fx-padding: 1.2em 0.7em 1.2em 0.5em;
+    -fx-background-radius: 0.0 2.0 2.0 0.0;
 }
 
 .primary {
