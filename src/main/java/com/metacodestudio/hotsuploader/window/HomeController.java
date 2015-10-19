@@ -342,7 +342,7 @@ public class HomeController {
 
     private void bindList() {
         ObservableList<ReplayFile> files = fileHandler.getFiles();
-
+        newReplaysCount.setText(String.valueOf(files.size()));
         files.addListener((ListChangeListener<ReplayFile>) c -> newReplaysCount.setText(String.valueOf(files.size())));
         newReplaysView.setItems(files);
         newReplaysView.setCellFactory(new CustomListCellFactory(fileHandler));

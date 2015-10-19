@@ -17,7 +17,10 @@ import javafx.concurrent.Task;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -28,10 +31,10 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     private final Set<File> watchDirectories;
     private final ObjectMapper mapper;
     private final StormHandler stormHandler;
+    private final StringProperty uploadedCount;
     private ObservableList<ReplayFile> files;
     private List<Provider> providers = Provider.getAll();
     private BlockingQueue<ReplayFile> uploadQueue;
-    private final StringProperty uploadedCount;
 
     public FileHandler(final StormHandler stormHandler) throws IOException {
         uploadedCount = new SimpleStringProperty();
@@ -70,38 +73,59 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                 .map(ReplayFile::fromDirectory)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
-        List<ReplayFile> mapped = fileList.stream()
-                .map(replay -> {
-                    File propertiesFile = stormHandler.getPropertiesFile(replay.getFile());
-                    try {
-                        if (propertiesFile.exists()) {
-                            String properties = FileUtils.readFileToString(propertiesFile);
-                            replay.addStatuses(Arrays.asList(mapper.readValue(properties, UploadStatus[].class)));
-                            if(replay.hasExceptions()) {
-                                replay.getFailedProperty().set(true);
-                            }
-                        } else {
-                            replay.addStatuses(providers.stream()
-                                    .map(UploadStatus::new)
-                                    .collect(Collectors.toList()));
-                            FileUtils.writeStringToFile(propertiesFile, mapper.writeValueAsString(replay.getUploadStatuses()));
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    if (replay.getStatus() == Status.NEW) {
-                        uploadQueue.add(replay);
-                    }
+        List<ReplayFile> mapped = mapFiles(fileList);
+        updateUploadedCount(mapped);
+        getQueuableFiles(mapped);
+    }
 
-                    return replay;
-                }).filter(replayFile -> replayFile.getStatus() == Status.NEW || replayFile.getStatus() == Status.EXCEPTION)
-                .collect(Collectors.toList());
-        files = FXCollections.observableArrayList(mapped);
+    private List<ReplayFile> mapFiles(final List<ReplayFile> fileList) {
+        return fileList.stream()
+                    .map(replay -> {
+                        File propertiesFile = stormHandler.getPropertiesFile(replay.getFile());
+                        try {
+                            if (propertiesFile.exists()) {
+                                String properties = FileUtils.readFileToString(propertiesFile);
+                                replay.addStatuses(Arrays.asList(mapper.readValue(properties, UploadStatus[].class)));
+                                if (replay.hasExceptions()) {
+                                    replay.getFailedProperty().set(true);
+                                }
+                            } else {
+                                replay.addStatuses(providers.stream()
+                                        .map(UploadStatus::new)
+                                        .collect(Collectors.toList()));
+                                FileUtils.writeStringToFile(propertiesFile, mapper.writeValueAsString(replay.getUploadStatuses()));
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        if (replay.getStatus() == Status.NEW) {
+                            uploadQueue.add(replay);
+                        }
+
+                        return replay;
+                    })
+                    .collect(Collectors.toList());
+    }
+
+    private void getQueuableFiles(final List<ReplayFile> mapped) {
+        files = FXCollections.observableArrayList(
+                mapped.stream()
+                        .filter(replayFile -> replayFile.getStatus() == Status.NEW
+                                || replayFile.getStatus() == Status.EXCEPTION)
+                        .collect(Collectors.toList()));
+    }
+
+    private void updateUploadedCount(final List<ReplayFile> mapped) {
+        uploadedCount.set(
+                String.valueOf(
+                        mapped.stream()
+                                .filter(replayFile -> replayFile.getStatus() == Status.UPLOADED)
+                                .count()
+                )
+        );
     }
 
     public void verifyMap(List<ReplayFile> files) {
-        long uploaded = files.stream().filter(replayFile -> replayFile.getStatus() == Status.UPLOADED).count();
-        uploadedCount.setValue(String.valueOf(uploaded));
     }
 
     public void updateFile(ReplayFile file) throws IOException {
@@ -133,13 +157,13 @@ public class FileHandler extends ScheduledService<ReplayFile> {
                     if (status == oldStatus) {
                         return;
                     }
-                    if(status == Status.UPLOADED) {
+                    if (status == Status.UPLOADED) {
                         int oldCount = Integer.valueOf(uploadedCount.getValue());
                         int newCount = oldCount + 1;
                         uploadedCount.setValue(String.valueOf(newCount));
                         replayFile.getFailedProperty().setValue(false);
                         files.remove(replayFile);
-                    } else if(status == Status.EXCEPTION) {
+                    } else if (status == Status.EXCEPTION) {
                         replayFile.getFailedProperty().set(true);
                     }
                     updateFile(replayFile);
@@ -174,7 +198,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
         files.remove(item);
 
         File file = item.getFile();
-        if(file.delete()) {
+        if (file.delete()) {
             stormHandler.getPropertiesFile(file).delete();
         }
     }
