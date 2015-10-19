@@ -56,7 +56,7 @@
                         </Label>
                </top>
                <right>
-                        <Button fx:id="viewProfile" disable="true" mnemonicParsing="false" text="Open Profile" BorderPane.alignment="CENTER">
+                        <Button fx:id="viewProfile" disable="true" mnemonicParsing="false" prefWidth="75.0" text="Profile" BorderPane.alignment="CENTER">
                             <BorderPane.margin>
                                 <Insets top="10.0" />
                             </BorderPane.margin>
@@ -98,11 +98,14 @@
                                 </Label>
                             </top>
                             <right>
-                                <Button fx:id="playerSearch" mnemonicParsing="false" text="Search" BorderPane.alignment="CENTER" />
+                                <Button fx:id="playerSearch" mnemonicParsing="false" prefWidth="75.0" text="Search" BorderPane.alignment="CENTER" />
                             </right>
                             <center>
                                 <TextField fx:id="playerSearchInput" maxWidth="1.7976931348623157E308" promptText="Enter Player Name" BorderPane.alignment="CENTER" />
                             </center>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                         </BorderPane>
                         <BorderPane>
                             <top>
@@ -116,8 +119,11 @@
                                 <ComboBox fx:id="heroName" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
                             </center>
                             <right>
-                                <Button fx:id="lookupHero" mnemonicParsing="false" text="View" BorderPane.alignment="CENTER" />
+                                <Button fx:id="lookupHero" mnemonicParsing="false" prefWidth="75.0" text="View" BorderPane.alignment="CENTER" />
                             </right>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                         </BorderPane>
                </children>
             </VBox>

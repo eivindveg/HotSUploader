@@ -36,8 +36,8 @@
 .text-area, .text-field {
     -fx-background-color: white;
     -fx-background-insets: 0.0;
-    -fx-background-radius: 2.0;
-    -fx-padding: 0.7em;
+    -fx-background-radius: 0.0;
+    -fx-padding: 0.7em 0 0.7em 0;
     -fx-border-width: 0.0;
     -fx-prompt-text-fill: derive(-fx-hots-background, 50.0%);
     -fx-highlight-fill: rgb(94.0, 203.0, 234.0);
@@ -48,8 +48,41 @@
     -fx-text-fill: derive(-fx-hots-primary, -25%);
 }
 
-.list-view:armed {
+.list-view:focused {
+    -fx-border-style: hidden;
+}
+
+.scroll-bar:vertical > .track-background,
+.scroll-bar:horizontal > .track-background{
+    -fx-background-color: derive(-fx-hots-primary, 50.0%);
+    -fx-background-insets: 0.0;
+}
+
+.scroll-bar:vertical > .thumb,
+.scroll-bar:horizontal > .thumb {
+    -fx-background-color: -fx-hots-secondary;
+    -fx-background-insets: 0.0;
+    -fx-background-radius: 0.0;
+}
+
+.scroll-bar > .increment-button,
+.scroll-bar > .decrement-button,
+.scroll-bar:hover > .increment-button,
+.scroll-bar:hover > .decrement-button {
+    -fx-background-color: transparent;
+}
+
+.list-view {
     -fx-border-style: none;
+}
+
+.scroll-bar > .increment-button > .increment-arrow,
+.scroll-bar > .decrement-button > .decrement-arrow {
+    -fx-background-color: white;
+}
+
+.scroll-bar > .track-background{
+    -fx-background-color:transparent;
 }
 
 .text-area .text, .text-field > * > .text {
