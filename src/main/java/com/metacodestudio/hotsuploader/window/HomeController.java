@@ -1,7 +1,6 @@
 package com.metacodestudio.hotsuploader.window;
 
 import com.metacodestudio.hotsuploader.AccountService;
-import com.metacodestudio.hotsuploader.concurrent.tasks.HeroListTask;
 import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.models.*;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
@@ -20,27 +19,21 @@ import io.datafx.controller.flow.action.ActionTrigger;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
-import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -154,7 +147,7 @@ public class HomeController {
             @Override
             protected GitHubRelease call() throws Exception {
                 Optional<GitHubRelease> newerVersionIfAny = releaseManager.getNewerVersionIfAny();
-                if(newerVersionIfAny.isPresent()) {
+                if (newerVersionIfAny.isPresent()) {
                     return newerVersionIfAny.get();
                 } else {
                     return null;
