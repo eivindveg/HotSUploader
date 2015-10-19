@@ -14,39 +14,21 @@
 <?import javafx.scene.text.*?>
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" styleClass="header" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
-    <center>
-      <BorderPane BorderPane.alignment="CENTER">
-         <center>
-              <Accordion fx:id="accordion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                  <panes>
-                      <TitledPane fx:id="newReplaysTitlePane" text="New Replays">
-                          <content>
-                              <AnchorPane styleClass="header">
-                                  <children>
-                                      <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="590.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                  </children>
-                              </AnchorPane>
-                          </content>
-                      </TitledPane>
-                      <TitledPane fx:id="exceptionReplaysTitlePane" text="Failed Uploads">
-                          <content>
-                              <AnchorPane styleClass="header">
-                                  <children>
-                                        <ListView fx:id="exceptionReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                  </children>
-                              </AnchorPane>
-                          </content>
-                      </TitledPane>
-                  </panes>
-              </Accordion>
-         </center>
-         <top>
-            <HBox BorderPane.alignment="CENTER">
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <HBox>
                <children>
-                  <Label text="Uploaded Replays: " textFill="WHITE">
+                  <Label text="Uploaded Replays: " textFill="WHITE" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
                   </Label>
                   <Label fx:id="uploadedReplays" styleClass="textgreen" text="N/A" textFill="#00b000">
                      <font>
@@ -55,25 +37,12 @@
                   </Label>
                </children>
             </HBox>
-         </top>
-      </BorderPane>
-    </center>
-    <top>
-        <BorderPane prefHeight="75.0" prefWidth="338.0" styleClass="header" BorderPane.alignment="CENTER">
-            <left>
-                <ImageView fx:id="logo" fitHeight="75.0" fitWidth="338.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
-                    <image>
-                        <Image url="@../../../../images/hotslogs-large.png" />
-                    </image>
-                    <cursor>
-                        <Cursor fx:constant="HAND" />
-                    </cursor>
-                    <effect>
-                        <Bloom threshold="0.95" />
-                    </effect>
-                </ImageView>
-            </left>
-            <right>
+         </children>
+      </HBox>
+   </bottom>
+   <right>
+          <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
+              <children>
                 <VBox alignment="CENTER" prefWidth="225.0" styleClass="status">
                     <children>
                         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" styleClass="textwhite" text="Status" textFill="WHITE">
@@ -88,106 +57,56 @@
                         </Label>
                     </children>
                 </VBox>
-            </right>
-            <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </padding>
-         <center>
-            <BorderPane fx:id="updatePane" visible="false" BorderPane.alignment="CENTER">
-               <center>
-                  <Label text="An update is available:" textFill="#00b800" BorderPane.alignment="CENTER" />
-               </center>
-               <right>
-                  <Label fx:id="newVersionLabel" text="N/A" textFill="WHITE" BorderPane.alignment="CENTER" />
-               </right>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-               <bottom>
-                  <Hyperlink fx:id="updateLink" text="Click to open release notes/download" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Hyperlink>
-               </bottom>
-            </BorderPane>
-         </center>
-        </BorderPane>
-    </top>
-    <right>
-        <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <top>
-                <BorderPane BorderPane.alignment="CENTER">
-                    <top>
+                  <BorderPane>
+                      <left>
+                          <ChoiceBox fx:id="accountSelect" prefWidth="150.0" BorderPane.alignment="CENTER">
+                              <BorderPane.margin>
+                                  <Insets top="10.0" />
+                              </BorderPane.margin>
+                          </ChoiceBox>
+                      </left>
+               <top>
                         <Label alignment="CENTER" text="Players" textFill="WHITE" BorderPane.alignment="CENTER">
                             <font>
                                 <Font name="System Bold" size="18.0" />
                             </font>
                         </Label>
-                    </top>
-                    <center>
-                        <BorderPane BorderPane.alignment="CENTER">
-                            <left>
-                                <ChoiceBox fx:id="accountSelect" prefWidth="150.0" BorderPane.alignment="CENTER">
-                                    <BorderPane.margin>
-                                        <Insets top="10.0" />
-                                    </BorderPane.margin>
-                                </ChoiceBox>
-                            </left>
-                        </BorderPane>
-                    </center>
-                    <right>
+               </top>
+               <right>
                         <Button fx:id="viewProfile" disable="true" mnemonicParsing="false" text="Open Profile" BorderPane.alignment="CENTER">
                             <BorderPane.margin>
                                 <Insets top="10.0" />
                             </BorderPane.margin>
                         </Button>
-                    </right>
-                    <BorderPane.margin>
-                        <Insets />
-                    </BorderPane.margin>
-                </BorderPane>
-            </top>
-            <center>
-                <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
-                    <children>
+               </right>
+                  </BorderPane>
+                  <BorderPane>
+                      <left>
+                          <Label text="Team League MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
+                      </left>
+                      <right>
+                          <Label fx:id="tlMmr" text="N/A" textFill="#00b000" BorderPane.alignment="CENTER" />
+                      </right>
+                  </BorderPane>
+                  <BorderPane>
+                      <left>
+                          <Label text="Hero League MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
+                      </left>
+                      <right>
+                          <Label fx:id="hlMmr" text="N/A" textFill="#00b000" BorderPane.alignment="CENTER" />
+                      </right>
+                  </BorderPane>
+                  <BorderPane>
+                      <left>
+                          <Label text="Quick Match MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
+                      </left>
+                      <right>
+                          <Label fx:id="qmMmr" text="N/A" textFill="#00b000" BorderPane.alignment="CENTER" />
+                      </right>
+                  </BorderPane>
+            <VBox alignment="BOTTOM_CENTER" VBox.vgrow="SOMETIMES">
+               <children>
                         <BorderPane>
-                            <left>
-                                <Label text="Team League MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
-                            </left>
-                            <right>
-                                <Label fx:id="tlMmr" text="N/A" textFill="#00b000" BorderPane.alignment="CENTER" />
-                            </right>
-                        </BorderPane>
-                        <BorderPane>
-                            <left>
-                                <Label text="Hero League MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
-                            </left>
-                            <right>
-                                <Label fx:id="hlMmr" text="N/A" textFill="#00b000" BorderPane.alignment="CENTER" />
-                            </right>
-                        </BorderPane>
-                        <BorderPane>
-                            <left>
-                                <Label text="Quick Match MMR: " textFill="WHITE" BorderPane.alignment="CENTER" />
-                            </left>
-                            <right>
-                                <Label fx:id="qmMmr" text="N/A" textFill="#00b000" BorderPane.alignment="CENTER" />
-                            </right>
-                        </BorderPane>
-                    </children>
-                    <padding>
-                        <Insets left="5.0" right="5.0" top="10.0" />
-                    </padding>
-                </VBox>
-            </center>
-            <BorderPane.margin>
-                <Insets left="5.0" />
-            </BorderPane.margin>
-            <bottom>
-                <VBox spacing="25.0">
-                    <children>
-                        <BorderPane BorderPane.alignment="CENTER">
                             <top>
                                 <Label text="Lookup Player" textFill="WHITE" BorderPane.alignment="CENTER">
                                     <font>
@@ -217,12 +136,86 @@
                                 <Button fx:id="lookupHero" mnemonicParsing="false" text="View" BorderPane.alignment="CENTER" />
                             </right>
                         </BorderPane>
-                    </children>
-                </VBox>
-            </bottom>
-        </BorderPane>
-    </right>
-    <padding>
-        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-    </padding>
+               </children>
+            </VBox>
+              </children>
+              <padding>
+                  <Insets left="5.0" right="5.0" top="10.0" />
+              </padding>
+          </VBox>
+   </right>
+   <left>
+      <BorderPane prefHeight="362.0" prefWidth="612.0" BorderPane.alignment="CENTER">
+         <center>
+              <Accordion fx:id="accordion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                  <panes>
+                      <TitledPane fx:id="newReplaysTitlePane" text="New Replays">
+                          <content>
+                              <AnchorPane styleClass="header">
+                                  <children>
+                                      <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="590.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                  </children>
+                              </AnchorPane>
+                          </content>
+                      </TitledPane>
+                      <TitledPane fx:id="exceptionReplaysTitlePane" text="Failed Uploads">
+                          <content>
+                              <AnchorPane styleClass="header">
+                                  <children>
+                                        <ListView fx:id="exceptionReplaysView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                  </children>
+                              </AnchorPane>
+                          </content>
+                      </TitledPane>
+                  </panes>
+              </Accordion>
+         </center>
+         <top>
+            <HBox BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets bottom="20.0" left="5.0" right="5.0" top="5.0" />
+               </BorderPane.margin>
+               <children>
+                      <ImageView fx:id="logo" fitHeight="85.0" pickOnBounds="true" preserveRatio="true">
+                          <image>
+                              <Image url="@../../../../images/hotslogs-large.png" />
+                          </image>
+                          <cursor>
+                              <Cursor fx:constant="HAND" />
+                          </cursor>
+                          <effect>
+                              <Bloom threshold="0.95" />
+                          </effect>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                      </ImageView>
+                  <VBox fx:id="updatePane" alignment="CENTER" visible="false">
+                     <children>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Label text="An update is available: " textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="newVersionLabel" text="N/A" textFill="#00b000">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <Hyperlink fx:id="updateLink" text="Click to open release notes or download" textAlignment="CENTER" wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Hyperlink>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </top>
+      </BorderPane>
+   </left>
 </BorderPane>

@@ -27,7 +27,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -49,7 +49,7 @@ public class HomeController {
     private Accordion accordion;
 
     @FXML
-    private BorderPane updatePane;
+    private VBox updatePane;
     @FXML
     private Label newVersionLabel;
     @FXML

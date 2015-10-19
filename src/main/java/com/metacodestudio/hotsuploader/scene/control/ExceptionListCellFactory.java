@@ -20,9 +20,8 @@ public class ExceptionListCellFactory implements Callback<ListView<ReplayFile>, 
 
     public ExceptionListCellFactory(FileHandler fileHandler) {
         this.fileHandler = fileHandler;
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        URL updateResource = classLoader.getResource("images/update.png");
-        URL deleteResource = classLoader.getResource("images/delete.png");
+        URL updateResource = getClass().getResource("update.png");
+        URL deleteResource = getClass().getResource("delete.png");
         assert null != updateResource;
         assert null != deleteResource;
         String updateUrl = updateResource.toExternalForm();
