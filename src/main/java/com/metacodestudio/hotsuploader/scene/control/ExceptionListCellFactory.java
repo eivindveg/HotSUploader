@@ -32,6 +32,6 @@ public class ExceptionListCellFactory implements Callback<ListView<ReplayFile>, 
     }
     @Override
     public ListCell<ReplayFile> call(ListView<ReplayFile> param) {
-        return new ExceptionListCell(updateImage, deleteImage, fileHandler);
+        return new CustomListCell(updateImage, deleteImage, fileHandler);
     }
 }

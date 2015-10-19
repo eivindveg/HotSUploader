@@ -2,6 +2,7 @@ package com.metacodestudio.hotsuploader.scene.control;
 
 import com.metacodestudio.hotsuploader.files.FileHandler;
 import com.metacodestudio.hotsuploader.models.ReplayFile;
+import com.metacodestudio.hotsuploader.models.Status;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -15,7 +16,7 @@ import javafx.scene.layout.HBox;
 /**
  * @author Eivind Vegsundvåg
  */
-public class ExceptionListCell extends ListCell<ReplayFile> {
+public class CustomListCell extends ListCell<ReplayFile> {
 
     private final BorderPane content;
     private final Label label;
@@ -24,8 +25,9 @@ public class ExceptionListCell extends ListCell<ReplayFile> {
     private final Image updateImage;
     private final Image deleteImage;
     private final FileHandler fileHandler;
+    private ReplayFile lastItem;
 
-    protected ExceptionListCell(Image updateImage, Image deleteImage, FileHandler fileHandler) {
+    protected CustomListCell(Image updateImage, Image deleteImage, FileHandler fileHandler) {
         super();
         this.updateImage = updateImage;
         this.deleteImage = deleteImage;
@@ -47,7 +49,7 @@ public class ExceptionListCell extends ListCell<ReplayFile> {
     @Override
     public void updateSelected(boolean selected) {
         super.updateSelected(selected);
-        if(selected) {
+        if(selected && lastItem != null && lastItem.getStatus() == Status.EXCEPTION) {
             updateButton.setImage(updateImage);
             deleteButton.setImage(deleteImage);
         } else {
@@ -65,6 +67,7 @@ public class ExceptionListCell extends ListCell<ReplayFile> {
     @Override
     protected void updateItem(ReplayFile item, boolean empty) {
         super.updateItem(item, empty);
+        lastItem = item;
         setText(null);
         if (empty) {
             setGraphic(null);
