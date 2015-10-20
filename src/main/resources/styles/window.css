@@ -24,6 +24,7 @@
     -fx-background-color: -fx-hots-primary;
     -fx-background-insets: 0.0;
     -fx-background-radius: 0.0;
+    -fx-border-style: none;
     -fx-border-width: 0.0;
 }
 
@@ -31,6 +32,8 @@
 .choice-box > .open-button {
     -fx-padding: 1.2em 0.7em 1.2em 0.5em;
     -fx-background-radius: 0.0 2.0 2.0 0.0;
+    -fx-background-insets: 0;
+    -fx-border-style: none;
 }
 
 .text-area, .text-field {
@@ -41,6 +44,10 @@
     -fx-border-width: 0.0;
     -fx-prompt-text-fill: derive(-fx-hots-background, 50.0%);
     -fx-highlight-fill: rgb(94.0, 203.0, 234.0);
+}
+
+.text-area:focused, .text-field:focused, .combo-box-base:focused > .arrow-button {
+    -fx-background-color: -fx-hots-secondary, derive(rgb(94.0, 203.0, 234.0), 80.0%);
 }
 
 .list-cell {
@@ -98,14 +105,24 @@
     color: -fx-hots-secondary;
 }
 
-.tabs {
-    -fx-background-color: #8ea3b9;
+.combo-box-base > .arrow-button,
+.choice-box > .open-button {
+    -fx-padding: 1.2em 0.7em 1.2em 0.5em;
+    -fx-background-radius: 0.0 2.0 2.0 0.0;
+    -fx-background-color: -fx-hots-primary;
+}
+
+.combo-box-base > .arrow-button > .arrow,
+.choice-box > .open-button > .arrow {
+    -fx-background-color: -fx-hots-background;
+    -fx-padding: 0.2em 0.3em 0.2em 0.3em;
+    -fx-effect:dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.2), 0.0, 0.0, 0.0, 1.0);
 }
 
 .status {
     -fx-border-style: dashed;
-    -fx-border-color: #404040;
-    -fx-background-color: #484848;
+    -fx-border-color: derive(-fx-hots-background, -25.0%);
+    -fx-background-color: derive(-fx-hots-background, 25.0%);
 }
 
 .counter {
