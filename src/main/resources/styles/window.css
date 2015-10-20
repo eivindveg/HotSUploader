@@ -98,11 +98,11 @@
 }
 
 .primary {
-    color: -fx-hots-primary;
+    -fx-text-fill: -fx-hots-primary;
 }
 
 .secondary {
-    color: -fx-hots-secondary;
+    -fx-text-fill: -fx-hots-secondary;
 }
 
 .combo-box-base > .arrow-button,

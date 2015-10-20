@@ -49,7 +49,7 @@
                           </ChoiceBox>
                       </left>
                <top>
-                        <Label alignment="CENTER" text="Players" BorderPane.alignment="CENTER">
+                        <Label alignment="CENTER" styleClass="primary" text="Players" BorderPane.alignment="CENTER">
                             <font>
                                 <Font name="System Bold" size="18.0" />
                             </font>
@@ -65,33 +65,33 @@
                   </BorderPane>
                   <BorderPane>
                       <left>
-                          <Label text="Team League MMR: " BorderPane.alignment="CENTER" />
+                          <Label styleClass="primary" text="Team League MMR: " BorderPane.alignment="CENTER" />
                       </left>
                       <right>
-                          <Label fx:id="tlMmr" text="N/A" BorderPane.alignment="CENTER" />
+                          <Label fx:id="tlMmr" styleClass="secondary" text="N/A" BorderPane.alignment="CENTER" />
                       </right>
                   </BorderPane>
                   <BorderPane>
                       <left>
-                          <Label text="Hero League MMR: " BorderPane.alignment="CENTER" />
+                          <Label styleClass="primary" text="Hero League MMR: " BorderPane.alignment="CENTER" />
                       </left>
                       <right>
-                          <Label fx:id="hlMmr" text="N/A" BorderPane.alignment="CENTER" />
+                          <Label fx:id="hlMmr" styleClass="secondary" text="N/A" BorderPane.alignment="CENTER" />
                       </right>
                   </BorderPane>
                   <BorderPane>
                       <left>
-                          <Label text="Quick Match MMR: " BorderPane.alignment="CENTER" />
+                          <Label styleClass="primary" text="Quick Match MMR: " BorderPane.alignment="CENTER" />
                       </left>
                       <right>
-                          <Label fx:id="qmMmr" text="N/A" BorderPane.alignment="CENTER" />
+                          <Label fx:id="qmMmr" styleClass="secondary" text="N/A" BorderPane.alignment="CENTER" />
                       </right>
                   </BorderPane>
             <VBox alignment="BOTTOM_CENTER" VBox.vgrow="SOMETIMES">
                <children>
                         <BorderPane>
                             <top>
-                                <Label text="Lookup Player" BorderPane.alignment="CENTER">
+                                <Label styleClass="primary" text="Lookup Player" BorderPane.alignment="CENTER">
                                     <font>
                                         <Font name="System Bold" size="14.0" />
                                     </font>
@@ -112,7 +112,7 @@
                         </BorderPane>
                         <BorderPane>
                             <top>
-                                <Label text="Lookup Hero Details" BorderPane.alignment="CENTER">
+                                <Label styleClass="primary" text="Lookup Hero Details" BorderPane.alignment="CENTER">
                                     <font>
                                         <Font name="System Bold" size="14.0" />
                                     </font>
@@ -188,12 +188,12 @@
                <children>
                   <HBox alignment="CENTER">
                      <children>
-                        <Label text="An update is available: ">
+                        <Label styleClass="primary" text="An update is available: ">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="newVersionLabel" text="N/A">
+                        <Label fx:id="newVersionLabel" styleClass="secondary" text="N/A">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -214,7 +214,7 @@
                                 <Font name="System Bold" size="18.0" />
                             </font>
                         </Label>
-                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" text="Uploading">
+                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" text="Uploading" textFill="#00b000">
                             <font>
                                 <Font name="Calibri Bold" size="14.0" />
                             </font>
