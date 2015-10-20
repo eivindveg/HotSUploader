@@ -12,27 +12,28 @@ import java.net.URL;
 /**
  * @author Eivind Vegsundvåg
  */
-public class ExceptionListCellFactory implements Callback<ListView<ReplayFile>, ListCell<ReplayFile>> {
+public class CustomListCellFactory implements Callback<ListView<ReplayFile>, ListCell<ReplayFile>> {
 
     private final Image updateImage;
     private final Image deleteImage;
+    private final Image failedImage;
     private final FileHandler fileHandler;
 
-    public ExceptionListCellFactory(FileHandler fileHandler) {
+    public CustomListCellFactory(FileHandler fileHandler) {
         this.fileHandler = fileHandler;
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        URL updateResource = classLoader.getResource("images/update.png");
-        URL deleteResource = classLoader.getResource("images/delete.png");
-        assert null != updateResource;
-        assert null != deleteResource;
+        URL updateResource = getClass().getResource("update.png");
+        URL deleteResource = getClass().getResource("delete.png");
+        URL failedResource = getClass().getResource("failed.png");
         String updateUrl = updateResource.toExternalForm();
         String deleteUrl = deleteResource.toExternalForm();
+        String failedUrl = failedResource.toExternalForm();
         updateImage = new Image(updateUrl);
         deleteImage = new Image(deleteUrl);
+        failedImage = new Image(failedUrl);
         ///svgPath
     }
     @Override
     public ListCell<ReplayFile> call(ListView<ReplayFile> param) {
-        return new ExceptionListCell(updateImage, deleteImage, fileHandler);
+        return new CustomListCell(updateImage, deleteImage, failedImage, fileHandler);
     }
 }

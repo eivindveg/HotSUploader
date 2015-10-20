@@ -40,10 +40,10 @@ public class HotsLogsProvider extends Provider {
             switch (result) {
                 case "Duplicate":
                 case "Success":
-                    return Status.UPLOADED;
                 case "ComputerPlayerFound":
-                case "PreAlphaWipe":
                 case "TryMeMode":
+                    return Status.UPLOADED;
+                case "PreAlphaWipe":
                     return Status.UNSUPPORTED_GAME_MODE;
                 case "Maintenance":
                     maintenance = System.currentTimeMillis();

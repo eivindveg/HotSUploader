@@ -2,10 +2,13 @@ package com.metacodestudio.hotsuploader.window;
 
 import com.metacodestudio.hotsuploader.AccountService;
 import com.metacodestudio.hotsuploader.files.FileHandler;
-import com.metacodestudio.hotsuploader.models.*;
+import com.metacodestudio.hotsuploader.models.Account;
+import com.metacodestudio.hotsuploader.models.Hero;
+import com.metacodestudio.hotsuploader.models.LeaderboardRanking;
+import com.metacodestudio.hotsuploader.models.ReplayFile;
 import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotsLogsProvider;
-import com.metacodestudio.hotsuploader.scene.control.ExceptionListCellFactory;
+import com.metacodestudio.hotsuploader.scene.control.CustomListCellFactory;
 import com.metacodestudio.hotsuploader.services.HeroService;
 import com.metacodestudio.hotsuploader.utils.DesktopWrapper;
 import com.metacodestudio.hotsuploader.utils.FXUtils;
@@ -18,7 +21,6 @@ import io.datafx.controller.flow.action.ActionMethod;
 import io.datafx.controller.flow.action.ActionTrigger;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
-import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
@@ -27,7 +29,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -35,7 +37,6 @@ import javafx.util.StringConverter;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @ViewController(value = "Home.fxml", title = "HotSLogs UploaderFX")
@@ -49,7 +50,7 @@ public class HomeController {
     private Accordion accordion;
 
     @FXML
-    private BorderPane updatePane;
+    private VBox updatePane;
     @FXML
     private Label newVersionLabel;
     @FXML
@@ -115,6 +116,8 @@ public class HomeController {
     private StormHandler stormHandler;
     @FXML
     private Label uploadedReplays;
+    @FXML
+    private Label newReplaysCount;
 
 
     @PostConstruct
@@ -123,12 +126,11 @@ public class HomeController {
         stormHandler = viewFlowContext.getRegisteredObject(StormHandler.class);
         httpClient = viewFlowContext.getRegisteredObject(SimpleHttpClient.class);
         fileHandler = viewFlowContext.getRegisteredObject(FileHandler.class);
-        fileHandler.verifyMap(fileHandler.getFileMap());
+        fileHandler.verifyMap(fileHandler.getFiles());
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
-        prepareAccordion();
         setPlayerSearchActions();
-        bindLists();
+        bindList();
         setupFileHandler();
         if (fileHandler.isIdle()) {
             setIdle();
@@ -204,16 +206,6 @@ public class HomeController {
                     throw new RuntimeException(e);
                 }
             }
-        });
-    }
-
-    private void prepareAccordion() {
-        TitledPane defaultPane = newReplaysTitlePane;
-        accordion.setExpandedPane(defaultPane);
-        defaultPane.setCollapsible(false);
-        accordion.expandedPaneProperty().addListener((property, oldPane, newPane) -> {
-            if (oldPane != null) oldPane.setCollapsible(true);
-            if (newPane != null) Platform.runLater(() -> newPane.setCollapsible(false));
         });
     }
 
@@ -333,13 +325,6 @@ public class HomeController {
         }
     }
 
-
-    @ActionMethod("invalidateExceptions")
-    private void doInvalidateExceptions() {
-        fileHandler.invalidateByStatus(Status.EXCEPTION);
-        setUploading();
-    }
-
     private void setupFileHandler() {
         fileHandler.setRestartOnFailure(true);
         fileHandler.setOnSucceeded(event -> {
@@ -355,28 +340,14 @@ public class HomeController {
         fileHandler.start();
     }
 
-    private void bindLists() {
-        Map<Status, ObservableList<ReplayFile>> fileMap = fileHandler.getFileMap();
-
-        final String newReplaysTitle = newReplaysTitlePane.textProperty().get();
-        final ObservableList<ReplayFile> newReplays = fileMap.get(Status.NEW);
-        newReplays.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(newReplaysTitlePane, newReplaysTitle, newReplays));
-        newReplaysView.setItems(newReplays);
+    private void bindList() {
+        ObservableList<ReplayFile> files = fileHandler.getFiles();
+        newReplaysCount.setText(String.valueOf(files.size()));
+        files.addListener((ListChangeListener<ReplayFile>) c -> newReplaysCount.setText(String.valueOf(files.size())));
+        newReplaysView.setItems(files);
+        newReplaysView.setCellFactory(new CustomListCellFactory(fileHandler));
 
         uploadedReplays.textProperty().bind(fileHandler.getUploadedCount());
-
-        final String exceptionReplaysTitle = exceptionReplaysTitlePane.textProperty().get();
-        final ObservableList<ReplayFile> exceptionReplays = fileMap.get(Status.EXCEPTION);
-        exceptionReplays.addListener((ListChangeListener<ReplayFile>) c -> updatePaneTitle(exceptionReplaysTitlePane, exceptionReplaysTitle, exceptionReplays));
-        exceptionReplaysView.setItems(exceptionReplays);
-        exceptionReplaysView.setCellFactory(new ExceptionListCellFactory(fileHandler));
-
-        updatePaneTitle(newReplaysTitlePane, newReplaysTitle, newReplays);
-        updatePaneTitle(exceptionReplaysTitlePane, exceptionReplaysTitle, exceptionReplays);
-    }
-
-    private void updatePaneTitle(final TitledPane pane, final String baseTitle, final ObservableList<ReplayFile> list) {
-        pane.setText(baseTitle + " (" + list.size() + ")");
     }
 
     private void setIdle() {
