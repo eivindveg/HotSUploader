@@ -6,7 +6,7 @@
 
     <groupId>com.metacodestudio</groupId>
     <artifactId>hots-uploader-fx</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.0</version>
 
     <properties>
         <releaseVersion>${project.version}</releaseVersion>
