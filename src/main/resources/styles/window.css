@@ -28,6 +28,10 @@
     -fx-border-width: 0.0;
 }
 
+.choice-box {
+    -fx-padding: 0.05em 0 0 0;
+}
+
 .combo-box-base > .arrow-button,
 .choice-box > .open-button {
     -fx-padding: 1.2em 0.7em 1.2em 0.5em;
