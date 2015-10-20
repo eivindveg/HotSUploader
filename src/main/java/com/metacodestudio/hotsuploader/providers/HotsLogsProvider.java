@@ -12,6 +12,7 @@ public class HotsLogsProvider extends Provider {
 
     private static final String ACCESS_KEY_ID = "AKIAIESBHEUH4KAAG4UA";
     private static final String SECRET_ACCESS_KEY = "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";
+    private static final String CLIENT_ID = "HotSLogsUploaderFX";
     private static long maintenance;
     private final AmazonS3Client s3Client;
 
@@ -32,7 +33,7 @@ public class HotsLogsProvider extends Provider {
         }
 
         String fileName = UUID.randomUUID() + ".StormReplay";
-        String uri = "https://www.hotslogs.com/UploadFile.aspx?FileName=" + fileName;
+        String uri = "https://www.hotslogs.com/UploadFile.aspx?Source=" + CLIENT_ID + "&FileName=" + fileName;
 
         try {
             s3Client.putObject("heroesreplays", fileName, replayFile.getFile());
