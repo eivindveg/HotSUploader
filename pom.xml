@@ -64,6 +64,10 @@
                     <nativeReleaseVersion>${releaseVersion}</nativeReleaseVersion>
                     <identifier>${project.build.finalName}</identifier>
                     <css2bin>true</css2bin>
+
+                    <jvmArgs>
+                        -Xmx100M
+                    </jvmArgs>
                 </configuration>
                 <executions>
                     <execution>
