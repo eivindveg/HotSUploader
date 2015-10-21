@@ -128,8 +128,6 @@
 }
 
 .status {
-    -fx-border-style: dashed;
-    -fx-border-color: derive(-fx-hots-background, -25.0%);
     -fx-background-color: derive(-fx-hots-background, 25.0%);
 }
 
