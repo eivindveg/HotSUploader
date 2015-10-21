@@ -59,6 +59,10 @@
     -fx-text-fill: derive(-fx-hots-primary, -25%);
 }
 
+.list-view {
+    -fx-background-color: derive(-fx-hots-background, 25.0%);
+}
+
 .list-view:focused {
     -fx-border-style: hidden;
 }
