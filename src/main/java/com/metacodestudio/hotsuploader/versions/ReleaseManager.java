@@ -41,22 +41,20 @@ public class ReleaseManager {
 
     public Optional<GitHubRelease> getNewerVersionIfAny() {
         ReleaseComparator releaseComparator = new ReleaseComparator();
-        List<GitHubRelease> latest;
         try {
-            latest = getLatest();
+            List<GitHubRelease> latest = getLatest();
+            latest.sort(releaseComparator);
+
+            GitHubRelease latestRelease = latest.get(0);
+            int compare = releaseComparator.compare(currentRelease, latestRelease);
+            if (latest.size() > 0 && compare > 0) {
+                return Optional.of(latestRelease);
+            }
         } catch (IOException e) {
             System.out.println("Unable to get latest versions");
-            return Optional.empty();
         }
-        latest.sort(releaseComparator);
+        return Optional.empty();
 
-        GitHubRelease latestRelease = latest.get(0);
-        int compare = releaseComparator.compare(currentRelease, latestRelease);
-        if (latest.size() > 0 && compare > 0) {
-            return Optional.of(latestRelease);
-        } else {
-            return Optional.empty();
-        }
 
     }
 
