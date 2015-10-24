@@ -33,8 +33,8 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     private final StormHandler stormHandler;
     private final StringProperty uploadedCount;
     private ObservableList<ReplayFile> files;
-    private List<Provider> providers = Provider.getAll();
-    private BlockingQueue<ReplayFile> uploadQueue;
+    private final List<Provider> providers = Provider.getAll();
+    private final BlockingQueue<ReplayFile> uploadQueue;
 
     public FileHandler(final StormHandler stormHandler) throws IOException {
         uploadedCount = new SimpleStringProperty();
