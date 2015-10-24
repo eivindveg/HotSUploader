@@ -125,9 +125,6 @@ public class FileHandler extends ScheduledService<ReplayFile> {
         );
     }
 
-    public void verifyMap(List<ReplayFile> files) {
-    }
-
     public void updateFile(ReplayFile file) throws IOException {
         File propertiesFile = stormHandler.getPropertiesFile(file.getFile());
         String data = mapper.writeValueAsString(file.getUploadStatuses());

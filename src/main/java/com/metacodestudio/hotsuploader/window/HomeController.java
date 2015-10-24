@@ -126,7 +126,6 @@ public class HomeController {
         stormHandler = viewFlowContext.getRegisteredObject(StormHandler.class);
         httpClient = viewFlowContext.getRegisteredObject(SimpleHttpClient.class);
         fileHandler = viewFlowContext.getRegisteredObject(FileHandler.class);
-        fileHandler.verifyMap(fileHandler.getFiles());
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
         setPlayerSearchActions();
