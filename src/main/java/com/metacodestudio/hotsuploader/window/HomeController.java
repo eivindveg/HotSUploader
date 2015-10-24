@@ -10,10 +10,7 @@ import com.metacodestudio.hotsuploader.models.stringconverters.HeroConverter;
 import com.metacodestudio.hotsuploader.providers.HotsLogsProvider;
 import com.metacodestudio.hotsuploader.scene.control.CustomListCellFactory;
 import com.metacodestudio.hotsuploader.services.HeroService;
-import com.metacodestudio.hotsuploader.utils.DesktopWrapper;
-import com.metacodestudio.hotsuploader.utils.FXUtils;
-import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
-import com.metacodestudio.hotsuploader.utils.StormHandler;
+import com.metacodestudio.hotsuploader.utils.*;
 import com.metacodestudio.hotsuploader.versions.GitHubRelease;
 import com.metacodestudio.hotsuploader.versions.ReleaseManager;
 import io.datafx.controller.ViewController;
@@ -343,7 +340,7 @@ public class HomeController {
         ObservableList<ReplayFile> files = fileHandler.getFiles();
         newReplaysCount.setText(String.valueOf(files.size()));
         files.addListener((ListChangeListener<ReplayFile>) c -> newReplaysCount.setText(String.valueOf(files.size())));
-        newReplaysView.setItems(files);
+        newReplaysView.setItems(files.sorted(new ReplayFileComparator()));
         newReplaysView.setCellFactory(new CustomListCellFactory(fileHandler));
 
         uploadedReplays.textProperty().bind(fileHandler.getUploadedCount());
