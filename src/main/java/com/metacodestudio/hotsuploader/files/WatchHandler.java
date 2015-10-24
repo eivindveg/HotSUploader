@@ -17,9 +17,9 @@ public class WatchHandler implements Runnable {
 
     private final WatchService watchService;
     private final StormHandler stormHandler;
-    private List<ReplayFile> files;
-    private Queue<ReplayFile> uploadQueue;
-    private Path path;
+    private final List<ReplayFile> files;
+    private final Queue<ReplayFile> uploadQueue;
+    private final Path path;
 
     public WatchHandler(final StormHandler stormHandler, final Path path, final List<ReplayFile> files, final Queue<ReplayFile> uploadQueue) throws IOException {
         this.stormHandler = stormHandler;

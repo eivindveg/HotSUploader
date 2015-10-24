@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class Provider {
 
     private static final SimpleHttpClient httpClient = new SimpleHttpClient();
-    private String name;
+    private final String name;
 
     public Provider(String name) {
         this.name = name;
