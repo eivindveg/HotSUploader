@@ -47,7 +47,7 @@ public class ReleaseManager {
 
             GitHubRelease latestRelease = latest.get(0);
             int compare = releaseComparator.compare(currentRelease, latestRelease);
-            if (latest.size() > 0 && compare > 0) {
+            if (!latest.isEmpty() && compare > 0) {
                 return Optional.of(latestRelease);
             }
         } catch (IOException e) {
