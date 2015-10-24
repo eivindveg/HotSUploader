@@ -44,9 +44,6 @@ public class HomeController {
     private ViewFlowContext viewFlowContext;
 
     @FXML
-    private Accordion accordion;
-
-    @FXML
     private VBox updatePane;
     @FXML
     private Label newVersionLabel;
@@ -54,19 +51,7 @@ public class HomeController {
     private Hyperlink updateLink;
 
     @FXML
-    private TitledPane newReplaysTitlePane;
-    @FXML
-    private TitledPane uploadedReplaysTitlePane;
-    @FXML
-    private TitledPane exceptionReplaysTitlePane;
-    @FXML
-    private TitledPane botReplaysTitlePane;
-
-    @FXML
     private ListView<ReplayFile> newReplaysView;
-
-    @FXML
-    private ListView<ReplayFile> exceptionReplaysView;
 
     @FXML
     private Label status;
