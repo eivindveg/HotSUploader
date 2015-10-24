@@ -46,7 +46,7 @@ public class ReleaseManager {
             latest = getLatest();
         } catch (IOException e) {
             System.out.println("Unable to get latest versions");
-            return null;
+            return Optional.empty();
         }
         latest.sort(releaseComparator);
 
