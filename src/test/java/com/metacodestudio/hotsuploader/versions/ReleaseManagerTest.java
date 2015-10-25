@@ -1,12 +1,17 @@
 package com.metacodestudio.hotsuploader.versions;
 
 import com.metacodestudio.hotsuploader.utils.SimpleHttpClient;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.Charset;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -34,5 +39,15 @@ public class ReleaseManagerTest {
 
         releaseManager.getNewerVersionIfAny();
         verify(httpClient, times(1)).simpleRequest(anyString());
+    }
+
+    @Test
+    public void testCurrentReleaseIsTheSameAsPomVersion() throws Exception {
+        String currentVersion = ReleaseManager.CURRENT_VERSION;
+
+        Document parse = Jsoup.parse(new File("pom.xml"), "UTF-8");
+        String pomVersion = parse.select("project > version").text();
+
+        assertEquals("The release manager has a version number matching the pom.xml", currentVersion, pomVersion);
     }
 }
