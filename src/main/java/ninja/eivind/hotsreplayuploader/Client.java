@@ -1,5 +1,7 @@
 package ninja.eivind.hotsreplayuploader;
 
+import com.gluonhq.ignite.DIContext;
+import com.gluonhq.ignite.guice.GuiceContext;
 import ninja.eivind.hotsreplayuploader.files.FileHandler;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
@@ -15,12 +17,14 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import ninja.eivind.hotsuploader.di.DaggerModule.GuiceModule;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 
 
 public class Client extends Application {
@@ -29,8 +33,11 @@ public class Client extends Application {
         Application.launch(Client.class, args);
     }
 
+    private DIContext context = new GuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
+
     @Override
     public void start(final Stage primaryStage) throws Exception {
+        context.init();
         ClassLoader loader = ClassLoader.getSystemClassLoader();
         URL logo = loader.getResource("images/logo-desktop.png");
         assert logo != null;
