@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@ViewController(value = "Home.fxml", title = "HotSLogs UploaderFX")
+@ViewController(value = "Home.fxml", title = "HotS Replays Uploader")
 public class HomeController {
 
     private SimpleHttpClient httpClient;
