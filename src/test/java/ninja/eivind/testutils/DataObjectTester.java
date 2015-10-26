@@ -1,6 +1,6 @@
 package ninja.eivind.testutils;
 
-import ninja.eivind.hotsuploader.models.Account;
+import ninja.eivind.hotsreplayuploader.models.Account;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
