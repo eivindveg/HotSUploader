@@ -85,12 +85,16 @@
     </build>
 
     <dependencies>
-
-        <!-- The DataFX Flow API simplifies alot of JavaFX actions. -->
+        
         <dependency>
-            <groupId>io.datafx</groupId>
-            <artifactId>flow</artifactId>
-            <version>8.0.1</version>
+            <groupId>com.gluonhq</groupId>
+            <artifactId>ignite-guice</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq</groupId>
+            <artifactId>ignite-guice</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.gluonhq</groupId>

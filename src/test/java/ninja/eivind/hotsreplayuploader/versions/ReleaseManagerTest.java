@@ -22,7 +22,8 @@ public class ReleaseManagerTest {
     @Before
     public void setup() {
         httpClient = mock(SimpleHttpClient.class);
-        releaseManager = new ReleaseManager(httpClient);
+        releaseManager = new ReleaseManager();
+        releaseManager.setHttpClient(httpClient);
     }
 
     @Test

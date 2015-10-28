@@ -1,5 +1,17 @@
 package ninja.eivind.hotsreplayuploader.window;
 
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
+import javafx.util.Duration;
+import javafx.util.StringConverter;
 import ninja.eivind.hotsreplayuploader.AccountService;
 import ninja.eivind.hotsreplayuploader.files.FileHandler;
 import ninja.eivind.hotsreplayuploader.models.Account;
@@ -13,35 +25,17 @@ import ninja.eivind.hotsreplayuploader.services.HeroService;
 import ninja.eivind.hotsreplayuploader.utils.*;
 import ninja.eivind.hotsreplayuploader.versions.GitHubRelease;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
-import io.datafx.controller.ViewController;
-import io.datafx.controller.flow.action.ActionMethod;
-import io.datafx.controller.flow.action.ActionTrigger;
-import io.datafx.controller.flow.context.FXMLViewFlowContext;
-import io.datafx.controller.flow.context.ViewFlowContext;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.concurrent.ScheduledService;
-import javafx.concurrent.Task;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
-import javafx.util.Duration;
-import javafx.util.StringConverter;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@ViewController(value = "Home.fxml", title = "HotS Replays Uploader")
 public class HomeController {
 
+    @Inject
     private SimpleHttpClient httpClient;
-    @FXMLViewFlowContext
-    private ViewFlowContext viewFlowContext;
 
     @FXML
     private VBox updatePane;
@@ -69,33 +63,31 @@ public class HomeController {
     private ImageView logo;
 
     @FXML
-    @ActionTrigger("playerSearch")
     private Button playerSearch;
 
     @FXML
     private TextField playerSearchInput;
 
     @FXML
-    @ActionTrigger("viewProfile")
     private Button viewProfile;
 
     @FXML
     private ChoiceBox<Account> accountSelect;
 
     @FXML
-    @ActionTrigger("lookupHero")
     private Button lookupHero;
 
     @FXML
     private ComboBox<Hero> heroName;
 
-    @FXML
-    @ActionTrigger("invalidateExceptions")
-    private Button invalidateExceptions;
-
+    @Inject
     private FileHandler fileHandler;
+    @Inject
     private DesktopWrapper desktop;
+    @Inject
     private StormHandler stormHandler;
+    @Inject
+    private ReleaseManager releaseManager;
     @FXML
     private Label uploadedReplays;
     @FXML
@@ -103,11 +95,7 @@ public class HomeController {
 
 
     @PostConstruct
-    public void init() {
-        desktop = new DesktopWrapper();
-        stormHandler = viewFlowContext.getRegisteredObject(StormHandler.class);
-        httpClient = viewFlowContext.getRegisteredObject(SimpleHttpClient.class);
-        fileHandler = viewFlowContext.getRegisteredObject(FileHandler.class);
+    public void initialize() {
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
         setPlayerSearchActions();
@@ -125,7 +113,6 @@ public class HomeController {
     }
 
     private void checkNewVersion() {
-        ReleaseManager releaseManager = viewFlowContext.getRegisteredObject(ReleaseManager.class);
         Task<GitHubRelease> task = new Task<GitHubRelease>() {
             @Override
             protected GitHubRelease call() throws Exception {
@@ -190,7 +177,7 @@ public class HomeController {
         });
     }
 
-    @ActionMethod("lookupHero")
+    @FXML
     private void doLookupHero() throws IOException {
         Hero hero = this.heroName.getValue();
         if (hero == null) {
@@ -205,7 +192,7 @@ public class HomeController {
         desktop.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName));
     }
 
-    @ActionMethod("playerSearch")
+    @FXML
     private void doPlayerSearch() throws IOException {
         String playerName = playerSearchInput.getText().replaceAll(" ", "");
         if (playerName.equals("")) {
@@ -216,7 +203,7 @@ public class HomeController {
         desktop.browse(SimpleHttpClient.encode("https://www.hotslogs.com/PlayerSearch?Name=" + playerName));
     }
 
-    @ActionMethod("viewProfile")
+    @FXML
     private void doViewProfile() throws IOException {
         Account account = accountSelect.getValue();
         if (account == null) {

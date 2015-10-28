@@ -14,6 +14,8 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -30,20 +32,26 @@ public class FileHandler extends ScheduledService<ReplayFile> {
 
     private final Set<File> watchDirectories;
     private final ObjectMapper mapper;
-    private final StormHandler stormHandler;
+    @Inject
+    private StormHandler stormHandler;
     private final StringProperty uploadedCount;
     private ObservableList<ReplayFile> files;
     private final List<Provider> providers = Provider.getAll();
     private final BlockingQueue<ReplayFile> uploadQueue;
 
-    public FileHandler(final StormHandler stormHandler) throws IOException {
+    public FileHandler() throws IOException {
         uploadedCount = new SimpleStringProperty();
         watchDirectories = new HashSet<>();
-        this.stormHandler = stormHandler;
         mapper = new ObjectMapper();
         uploadQueue = new ArrayBlockingQueue<>(2500);
         files = FXCollections.observableArrayList();
+    }
+
+    @PostConstruct
+    public void init() {
         watchDirectories.addAll(stormHandler.getAccountDirectories(stormHandler.getHotSHome()));
+        cleanup();
+        registerInitial();
     }
 
     public void beginWatch() {
@@ -202,5 +210,9 @@ public class FileHandler extends ScheduledService<ReplayFile> {
 
     public ObservableList<ReplayFile> getFiles() {
         return files;
+    }
+
+    public void setStormHandler(StormHandler stormHandler) {
+        this.stormHandler = stormHandler;
     }
 }

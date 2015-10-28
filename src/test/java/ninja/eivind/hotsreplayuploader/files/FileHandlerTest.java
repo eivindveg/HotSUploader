@@ -17,7 +17,8 @@ public class FileHandlerTest {
     @Before
     public void setup() throws Exception {
         stormHandlerMock = mock(StormHandler.class);
-        fileHandler = new FileHandler(stormHandlerMock);
+        fileHandler = new FileHandler();
+        fileHandler.setStormHandler(stormHandlerMock);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
