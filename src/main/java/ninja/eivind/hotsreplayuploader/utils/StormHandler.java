@@ -1,11 +1,13 @@
 package ninja.eivind.hotsreplayuploader.utils;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Singleton
 public class StormHandler {
 
     private static final String APPLICATION_DIRECTORY_NAME = "HotSLogs UploaderFX";
