@@ -2,29 +2,21 @@ package ninja.eivind.hotsreplayuploader;
 
 import com.gluonhq.ignite.DIContext;
 import com.gluonhq.ignite.guice.GuiceContext;
-import io.datafx.controller.flow.Flow;
-import io.datafx.controller.flow.FlowHandler;
-import io.datafx.controller.flow.container.DefaultFlowContainer;
-import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import ninja.eivind.hotsreplayuploader.di.GuiceModule;
-import ninja.eivind.hotsreplayuploader.files.FileHandler;
-import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
-import ninja.eivind.hotsreplayuploader.window.HomeController;
 
 import javax.inject.Inject;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 
@@ -40,6 +32,8 @@ public class Client extends Application {
     @Inject
     private FXMLLoader fxmlLoader;
 
+    @Inject ReleaseManager releaseManager;
+
     @Override
     public void start(final Stage primaryStage) throws Exception {
         context.init();
@@ -49,42 +43,19 @@ public class Client extends Application {
         Image image = new Image(logo.toString());
         primaryStage.getIcons().add(image);
         primaryStage.setResizable(false);
-        StormHandler stormHandler = new StormHandler();
         addToTray(logo, primaryStage);
-
-        Flow flow = new Flow(HomeController.class);
-        FlowHandler flowHandler = flow.createHandler(new ViewFlowContext());
-        ViewFlowContext flowContext = flowHandler.getFlowContext();
-
-        SimpleHttpClient httpClient = new SimpleHttpClient();
-        ReleaseManager releaseManager = new ReleaseManager(httpClient);
 
         // Set window title
         String windowTitle = "HotSLogs UploaderFX v" + releaseManager.getCurrentVersion();
         primaryStage.setTitle(windowTitle);
 
-        registerInContext(flowContext, stormHandler, releaseManager, setupFileHandler(stormHandler), httpClient);
+        releaseManager.verifyLocalVersion();
 
-        DefaultFlowContainer container = new DefaultFlowContainer();
+        fxmlLoader.setLocation(loader.getResource("ninja/eivind/hotsreplayuploader/window/Home.fxml"));
+        Parent root = fxmlLoader.load();
 
-        releaseManager.verifyLocalVersion(stormHandler);
-
-        StackPane pane = flowHandler.start(container);
-        primaryStage.setScene(new Scene(pane));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
-    }
-
-    private FileHandler setupFileHandler(final StormHandler stormHandler) throws IOException {
-        FileHandler fileHandler = new FileHandler(stormHandler);
-        fileHandler.cleanup();
-        fileHandler.registerInitial();
-        return fileHandler;
-    }
-
-    private void registerInContext(ViewFlowContext context, Object... itemsToAdd) {
-        for (final Object itemToAdd : itemsToAdd) {
-            context.register(itemToAdd);
-        }
     }
 
     private void addToTray(final URL imageURL, final Stage primaryStage) {

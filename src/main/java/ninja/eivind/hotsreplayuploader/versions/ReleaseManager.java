@@ -7,6 +7,7 @@ import ninja.eivind.hotsreplayuploader.utils.FileUtils;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,12 +24,15 @@ public class ReleaseManager {
             = "https://api.github.com/repos/{maintainer}/{repository}/releases";
     protected static final String GITHUB_FORMAT_VERSION
             = "http://github.com/{maintainer}/{repository}/releases/tag/{version}";
-    private final SimpleHttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final GitHubRelease currentRelease;
 
-    public ReleaseManager(SimpleHttpClient httpClient) {
-        this.httpClient = httpClient;
+    @Inject
+    private StormHandler stormHandler;
+    @Inject
+    private SimpleHttpClient httpClient;
+
+    public ReleaseManager() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JodaModule());
         currentRelease = buildCurrentRelease();
@@ -78,7 +82,7 @@ public class ReleaseManager {
                 .replace("{version}", CURRENT_VERSION);
     }
 
-    public void verifyLocalVersion(final StormHandler stormHandler) {
+    public void verifyLocalVersion() {
         try {
             File file = new File(stormHandler.getApplicationHome(), "model_version");
             Long modelVersion;
@@ -105,5 +109,9 @@ public class ReleaseManager {
 
     public String getCurrentVersion() {
         return CURRENT_VERSION;
+    }
+
+    public void setHttpClient(SimpleHttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 }

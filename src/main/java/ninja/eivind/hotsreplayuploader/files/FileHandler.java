@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -44,6 +45,12 @@ public class FileHandler extends ScheduledService<ReplayFile> {
         uploadQueue = new ArrayBlockingQueue<>(2500);
         files = FXCollections.observableArrayList();
         watchDirectories.addAll(stormHandler.getAccountDirectories(stormHandler.getHotSHome()));
+    }
+
+    @PostConstruct
+    public void init() {
+        cleanup();
+        registerInitial();
     }
 
     public void beginWatch() {
