@@ -1,13 +1,10 @@
-package ninja.eivind.hotsuploader.di.DaggerModule;
+package ninja.eivind.hotsreplayuploader.di;
 
 import com.google.inject.AbstractModule;
 
-/**
- * @author Eivind Vegsundvåg
- */
 public class GuiceModule extends AbstractModule {
     @Override
     protected void configure() {
-
+        
     }
 }

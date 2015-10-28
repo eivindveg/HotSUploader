@@ -2,6 +2,7 @@ package ninja.eivind.hotsreplayuploader;
 
 import com.gluonhq.ignite.DIContext;
 import com.gluonhq.ignite.guice.GuiceContext;
+import ninja.eivind.hotsreplayuploader.di.GuiceModule;
 import ninja.eivind.hotsreplayuploader.files.FileHandler;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
@@ -17,7 +18,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import ninja.eivind.hotsuploader.di.DaggerModule.GuiceModule;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
