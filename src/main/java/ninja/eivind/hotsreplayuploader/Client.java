@@ -2,23 +2,25 @@ package ninja.eivind.hotsreplayuploader;
 
 import com.gluonhq.ignite.DIContext;
 import com.gluonhq.ignite.guice.GuiceContext;
-import ninja.eivind.hotsreplayuploader.di.GuiceModule;
-import ninja.eivind.hotsreplayuploader.files.FileHandler;
-import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
-import ninja.eivind.hotsreplayuploader.utils.StormHandler;
-import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
-import ninja.eivind.hotsreplayuploader.window.HomeController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowHandler;
 import io.datafx.controller.flow.container.DefaultFlowContainer;
 import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import ninja.eivind.hotsreplayuploader.di.GuiceModule;
+import ninja.eivind.hotsreplayuploader.files.FileHandler;
+import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
+import ninja.eivind.hotsreplayuploader.utils.StormHandler;
+import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
+import ninja.eivind.hotsreplayuploader.window.HomeController;
 
+import javax.inject.Inject;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -34,6 +36,9 @@ public class Client extends Application {
     }
 
     private DIContext context = new GuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
+
+    @Inject
+    private FXMLLoader fxmlLoader;
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
