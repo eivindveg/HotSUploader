@@ -113,21 +113,16 @@ public class HomeController {
     }
 
     private void checkNewVersion() {
-        Task<GitHubRelease> task = new Task<GitHubRelease>() {
+        Task<Optional<GitHubRelease>> task = new Task<Optional<GitHubRelease>>() {
             @Override
-            protected GitHubRelease call() throws Exception {
-                Optional<GitHubRelease> newerVersionIfAny = releaseManager.getNewerVersionIfAny();
-                if (newerVersionIfAny.isPresent()) {
-                    return newerVersionIfAny.get();
-                } else {
-                    return null;
-                }
+            protected Optional<GitHubRelease> call() throws Exception {
+                return releaseManager.getNewerVersionIfAny();
             }
         };
         task.setOnSucceeded(event -> {
-            GitHubRelease newerVersionIfAny = task.getValue();
-            if (newerVersionIfAny != null) {
-                displayUpdateMessage(newerVersionIfAny);
+            Optional<GitHubRelease> newerVersionIfAny = task.getValue();
+            if (newerVersionIfAny.isPresent()) {
+                displayUpdateMessage(newerVersionIfAny.get());
             }
         });
         new Thread(task).start();
