@@ -14,7 +14,8 @@ public class OSXService implements PlatformService {
 
     @Override
     public File getApplicationHome() {
-        return null;
+        final String libraryPath = "/Library/Application Support";
+        return new File(USER_HOME + "/" + libraryPath + "/" + APPLICATION_DIRECTORY_NAME);
     }
 
     @Override

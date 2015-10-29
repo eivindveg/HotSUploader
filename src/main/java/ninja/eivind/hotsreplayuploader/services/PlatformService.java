@@ -8,6 +8,9 @@ import java.net.URI;
 @Singleton
 public interface PlatformService {
 
+    String USER_HOME = System.getProperty("user.home");
+    String APPLICATION_DIRECTORY_NAME = "HotSLogs UploaderFX";
+
     File getApplicationHome();
 
     File getHotSHome();

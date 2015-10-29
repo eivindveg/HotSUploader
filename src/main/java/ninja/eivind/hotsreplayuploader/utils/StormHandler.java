@@ -18,7 +18,6 @@ public class StormHandler {
     private final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
     private final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
     private final String USER_HOME = System.getProperty("user.home");
-    private final String OSX_LIBRARY = "/Library/Application Support/";
 
     private File applicationHome;
     private File hotsHome;
