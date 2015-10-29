@@ -11,7 +11,7 @@
     <properties>
         <releaseVersion>${project.version}</releaseVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.mainClass>com.metacodestudio.hotsuploader.Client</project.mainClass>
+        <mainClass>com.metacodestudio.hotsuploader.Client</mainClass>
         <project.organization.name>MetaCode Studio</project.organization.name>
     </properties>
 
@@ -37,7 +37,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>${project.mainClass}</mainClass>
+                            <mainClass>${mainClass}</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -60,7 +60,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>8.1.3</version>
                 <configuration>
-                    <mainClass>${project.mainClass}</mainClass>
+                    <mainClass>${mainClass}</mainClass>
                     <nativeReleaseVersion>${releaseVersion}</nativeReleaseVersion>
                     <identifier>${project.build.finalName}</identifier>
                     <css2bin>true</css2bin>
