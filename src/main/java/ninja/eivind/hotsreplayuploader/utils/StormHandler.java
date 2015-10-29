@@ -25,8 +25,6 @@ public class StormHandler {
     private PlatformService platformService;
 
     public StormHandler() {
-        System.out.println("Detected Heroes of the Storm profile: " + getHotSHome());
-        System.out.println("Using Uploader directory: " + getApplicationHome());
     }
 
     public File getApplicationHome() {
