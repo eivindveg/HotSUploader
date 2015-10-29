@@ -58,7 +58,6 @@ public class WindowsService implements PlatformService {
                 reader.lines().forEach(builder::append);
                 final String[] values = builder.toString().trim().split("\\s\\s+");
                 for (final String value : values) {
-                    System.out.println(value);
                     Matcher matcher = pathPattern.matcher(value);
                     if (matcher.matches()) {
                         myDocuments = matcher.group();
