@@ -6,21 +6,21 @@ import java.io.IOException;
 import java.net.URI;
 
 public class OSXService implements PlatformService {
+    private final String libraryPath = "/Library/Application Support";
     private Desktop desktop;
 
     public OSXService() {
-       desktop = Desktop.getDesktop();
+        desktop = Desktop.getDesktop();
     }
 
     @Override
     public File getApplicationHome() {
-        final String libraryPath = "/Library/Application Support";
         return new File(USER_HOME + "/" + libraryPath + "/" + APPLICATION_DIRECTORY_NAME);
     }
 
     @Override
     public File getHotSHome() {
-        return null;
+        return new File(USER_HOME + "/" + libraryPath + "/" + "Blizzard/Heroes of the Storm/Accounts/");
     }
 
     @Override
