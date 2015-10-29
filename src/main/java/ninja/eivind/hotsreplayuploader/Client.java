@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ninja.eivind.hotsreplayuploader.di.GuiceModule;
+import ninja.eivind.hotsreplayuploader.services.PlatformService;
+import ninja.eivind.hotsreplayuploader.services.WindowsService;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
 
@@ -33,6 +35,9 @@ public class Client extends Application {
     private FXMLLoader fxmlLoader;
 
     @Inject ReleaseManager releaseManager;
+
+    @Inject
+    PlatformService platformService;
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
@@ -60,7 +65,7 @@ public class Client extends Application {
 
     private void addToTray(final URL imageURL, final Stage primaryStage) {
         // TODO FIND A WAY TO MAKE THIS SWEET ON OSX
-        boolean support = SystemTray.isSupported() && StormHandler.isWindows();
+        boolean support = SystemTray.isSupported() && platformService instanceof WindowsService;
 
         if (support) {
             final SystemTray tray = SystemTray.getSystemTray();
