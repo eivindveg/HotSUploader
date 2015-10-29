@@ -11,7 +11,7 @@
     <properties>
         <releaseVersion>${project.version}</releaseVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>com.metacodestudio.hotsuploader.Client</mainClass>
+        <mainClass>ninja.eivind.hotsreplayuploader.Client</mainClass>
         <project.organization.name>MetaCode Studio</project.organization.name>
     </properties>
 

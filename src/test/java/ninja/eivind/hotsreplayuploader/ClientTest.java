@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class ClientTest {
@@ -28,7 +29,7 @@ public class ClientTest {
         Class<?> returnType = main.getReturnType();
 
         assertEquals("Client is mainClass", Client.class, mainClass);
-        assertEquals("Main method returns void", returnType, Void.class);
+        assertSame("Main method returns void", returnType, Void.TYPE);
         assertTrue("Main method is static", Modifier.isStatic(modifiers));
         assertTrue("Main method is public", Modifier.isPublic(modifiers));
     }
