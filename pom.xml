@@ -15,10 +15,10 @@
         <project.organization.name>MetaCode Studio</project.organization.name>
     </properties>
 
-    <name>Heroes of the Storm Uploader</name>
+    <name>HotS Replay Uploader</name>
 
     <build>
-        <finalName>HotSLogs UploaderFX</finalName>
+        <finalName>${project.name}</finalName>
 
         <plugins>
             <plugin>
