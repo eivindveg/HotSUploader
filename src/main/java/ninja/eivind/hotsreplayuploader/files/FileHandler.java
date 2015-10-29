@@ -34,13 +34,12 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     private final ObjectMapper mapper;
     @Inject
     private StormHandler stormHandler;
-    private final StringProperty uploadedCount;
+    private final StringProperty uploadedCount = new SimpleStringProperty("0");
     private ObservableList<ReplayFile> files;
     private final List<Provider> providers = Provider.getAll();
     private final BlockingQueue<ReplayFile> uploadQueue;
 
     public FileHandler() throws IOException {
-        uploadedCount = new SimpleStringProperty();
         watchDirectories = new HashSet<>();
         mapper = new ObjectMapper();
         uploadQueue = new ArrayBlockingQueue<>(2500);
