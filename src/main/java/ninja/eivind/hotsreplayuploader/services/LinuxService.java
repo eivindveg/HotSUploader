@@ -7,12 +7,12 @@ import java.net.URI;
 public class LinuxService implements PlatformService {
     @Override
     public File getApplicationHome() {
-        return null;
+        return new File(USER_HOME, APPLICATION_DIRECTORY_NAME);
     }
 
     @Override
     public File getHotSHome() {
-        return null;
+        return new File(USER_HOME, "Heroes of the Storm/Accounts/");
     }
 
     @Override
