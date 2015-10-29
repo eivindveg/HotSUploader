@@ -26,7 +26,24 @@ public class WindowsService implements PlatformService {
                 throw new RuntimeException(e);
             }
         }
-        return new File(documentsHome + "\\" + APPLICATION_DIRECTORY_NAME);
+        return new File(documentsHome, APPLICATION_DIRECTORY_NAME);
+    }
+
+    @Override
+    public File getHotSHome() {
+        if (documentsHome == null) {
+            try {
+                documentsHome = findMyDocuments();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return new File(documentsHome, "Heroes of the Storm\\Accounts");
+    }
+
+    @Override
+    public void browse(final URI uri) throws IOException {
+        desktop.browse(uri);
     }
 
     private File findMyDocuments() throws FileNotFoundException {
@@ -62,15 +79,5 @@ public class WindowsService implements PlatformService {
             throw new FileNotFoundException("Could not locate Documents folder");
         }
         return new File(myDocuments);
-    }
-
-    @Override
-    public File getHotSHome() {
-        return null;
-    }
-
-    @Override
-    public void browse(final URI uri) throws IOException {
-        desktop.browse(uri);
     }
 }
