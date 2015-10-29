@@ -46,8 +46,8 @@ public class FileHandler extends ScheduledService<ReplayFile> {
         files = FXCollections.observableArrayList();
     }
 
-    @PostConstruct
     public void init() {
+        System.out.println("Initializing FileHandler");
         watchDirectories.addAll(stormHandler.getAccountDirectories(stormHandler.getHotSHome()));
         cleanup();
         registerInitial();

@@ -96,6 +96,7 @@ public class HomeController {
 
     @PostConstruct
     public void initialize() {
+        fileHandler.init();
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
         setPlayerSearchActions();
