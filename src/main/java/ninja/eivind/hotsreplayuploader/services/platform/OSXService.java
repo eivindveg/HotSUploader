@@ -1,5 +1,9 @@
 package ninja.eivind.hotsreplayuploader.services.platform;
 
+import javafx.application.Platform;
+import javafx.event.EventType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -33,6 +37,12 @@ public class OSXService implements PlatformService {
 
     @Override
     public TrayIcon getTrayIcon(final URL imageURL, final Stage primaryStage) throws PlatformNotSupportedException {
+        EventType<KeyEvent> keyPressed = KeyEvent.KEY_PRESSED;
+        primaryStage.addEventHandler(keyPressed, event -> {
+            if (event.getCode() == KeyCode.Q && event.isMetaDown()) {
+                Platform.exit();
+            }
+        });
         return buildTrayIcon(imageURL, primaryStage);
     }
 }
