@@ -9,21 +9,14 @@ import java.util.List;
 
 public abstract class Provider {
 
-    private static final SimpleHttpClient httpClient = new SimpleHttpClient();
+    private final SimpleHttpClient httpClient = new SimpleHttpClient();
     private final String name;
 
     public Provider(String name) {
         this.name = name;
     }
 
-    public static List<Provider> getAll() {
-        // TODO ADD MORE PROVIDERS
-        List<Provider> providers = new ArrayList<>();
-        providers.add(new HotsLogsProvider());
-        return providers;
-    }
-
-    protected static final SimpleHttpClient getHttpClient() {
+    protected final SimpleHttpClient getHttpClient() {
         return httpClient;
     }
 
