@@ -112,7 +112,6 @@ public class HomeController {
         setupAccounts();
 
         checkNewVersion();
-        fileService.beginWatch();
     }
 
     private void checkNewVersion() {

@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
@@ -16,17 +17,16 @@ public class WatchHandler implements Runnable {
 
     private final WatchService watchService;
     private final StormHandler stormHandler;
-    private final List<ReplayFile> files;
-    private final Queue<ReplayFile> uploadQueue;
+    private final List<FileListener> fileListeners;
     private final Path path;
 
-    public WatchHandler(final StormHandler stormHandler, final Path path, final List<ReplayFile> files, final Queue<ReplayFile> uploadQueue) throws IOException {
+    public WatchHandler(final StormHandler stormHandler, final Path path) throws IOException {
+        fileListeners = new ArrayList<>();
         this.stormHandler = stormHandler;
         this.path = path;
         watchService = FileSystems.getDefault().newWatchService();
         path.register(watchService, ENTRY_CREATE);
-        this.files = files;
-        this.uploadQueue = uploadQueue;
+
     }
 
     @SuppressWarnings("unchecked")
@@ -64,9 +64,7 @@ public class WatchHandler implements Runnable {
                         throw new RuntimeException(new IOException("Could not delete file"));
                     }
                 }
-                Platform.runLater(() -> files.add(replayFile));
-                uploadQueue.add(replayFile);
-
+                Platform.runLater(() -> fileListeners.forEach(fileListener -> fileListener.handle(replayFile)));
                 boolean valid = key.reset();
                 if (!valid) {
                     break;
@@ -88,6 +86,10 @@ public class WatchHandler implements Runnable {
             handler = new CreationHandler(file);
         }
         return handler.getFile();
+    }
+
+    public void addListener(final FileListener fileListener) {
+        fileListeners.add(fileListener);
     }
 
     private abstract class Handler {

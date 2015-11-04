@@ -30,7 +30,7 @@ public class FileServiceTest {
         File fileToBeDeleted = mock(File.class);
 
         File accountFile = mock(File.class);
-        when(stormHandlerMock.getAccountDirectories(any())).thenReturn(Collections.singletonList(accountFile));
+        when(stormHandlerMock.getApplicationAccountDirectories()).thenReturn(Collections.singletonList(accountFile));
         when(accountFile.listFiles()).thenReturn(new File[]{fileNotToBeTouched, fileToBeDeleted});
 
         when(existingReplay.exists()).thenReturn(true);
