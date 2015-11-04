@@ -1,4 +1,4 @@
-package ninja.eivind.hotsreplayuploader.files;
+package ninja.eivind.hotsreplayuploader.services;
 
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import org.junit.Before;
@@ -9,16 +9,16 @@ import java.util.Collections;
 
 import static org.mockito.Mockito.*;
 
-public class FileHandlerTest {
+public class FileServiceTest {
 
-    private FileHandler fileHandler;
+    private FileService fileService;
     private StormHandler stormHandlerMock;
 
     @Before
     public void setup() throws Exception {
         stormHandlerMock = mock(StormHandler.class);
-        fileHandler = new FileHandler();
-        fileHandler.setStormHandler(stormHandlerMock);
+        fileService = new FileService();
+        fileService.setStormHandler(stormHandlerMock);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -40,7 +40,7 @@ public class FileHandlerTest {
         when(stormHandlerMock.getPropertiesFile(existingReplay)).thenReturn(fileNotToBeTouched);
         when(stormHandlerMock.getReplayFile(fileNotToBeTouched)).thenReturn(existingReplay);
 
-        fileHandler.cleanup();
+        fileService.cleanup();
         verify(accountFile, times(1)).listFiles();
         verify(fileNotToBeTouched, never()).delete();
         verify(fileToBeDeleted, times(1)).delete();

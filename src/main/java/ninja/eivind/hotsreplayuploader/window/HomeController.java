@@ -13,7 +13,7 @@ import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import ninja.eivind.hotsreplayuploader.AccountService;
-import ninja.eivind.hotsreplayuploader.files.FileHandler;
+import ninja.eivind.hotsreplayuploader.services.FileService;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.models.Hero;
 import ninja.eivind.hotsreplayuploader.models.LeaderboardRanking;
@@ -82,7 +82,7 @@ public class HomeController {
     private ComboBox<Hero> heroName;
 
     @Inject
-    private FileHandler fileHandler;
+    private FileService fileService;
 
     @Inject
     private PlatformService platformService;
@@ -98,13 +98,13 @@ public class HomeController {
 
     @PostConstruct
     public void initialize() {
-        fileHandler.init();
+        fileService.init();
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
         setPlayerSearchActions();
         bindList();
         setupFileHandler();
-        if (fileHandler.isIdle()) {
+        if (fileService.isIdle()) {
             setIdle();
         }
 
@@ -112,7 +112,7 @@ public class HomeController {
         setupAccounts();
 
         checkNewVersion();
-        fileHandler.beginWatch();
+        fileService.beginWatch();
     }
 
     private void checkNewVersion() {
@@ -292,28 +292,28 @@ public class HomeController {
     }
 
     private void setupFileHandler() {
-        fileHandler.setRestartOnFailure(true);
-        fileHandler.setOnSucceeded(event -> {
+        fileService.setRestartOnFailure(true);
+        fileService.setOnSucceeded(event -> {
             if (HotsLogsProvider.isMaintenance()) {
                 setMaintenance();
-            } else if (fileHandler.isIdle()) {
+            } else if (fileService.isIdle()) {
                 setIdle();
             } else {
                 setUploading();
             }
         });
-        fileHandler.setOnFailed(event -> setError());
-        fileHandler.start();
+        fileService.setOnFailed(event -> setError());
+        fileService.start();
     }
 
     private void bindList() {
-        ObservableList<ReplayFile> files = fileHandler.getFiles();
+        ObservableList<ReplayFile> files = fileService.getFiles();
         newReplaysCount.setText(String.valueOf(files.size()));
         files.addListener((ListChangeListener<ReplayFile>) c -> newReplaysCount.setText(String.valueOf(files.size())));
         newReplaysView.setItems(files.sorted(new ReplayFileComparator()));
-        newReplaysView.setCellFactory(new CustomListCellFactory(fileHandler));
+        newReplaysView.setCellFactory(new CustomListCellFactory(fileService));
 
-        uploadedReplays.textProperty().bind(fileHandler.getUploadedCount());
+        uploadedReplays.textProperty().bind(fileService.getUploadedCount());
     }
 
     private void setIdle() {

@@ -1,6 +1,8 @@
-package ninja.eivind.hotsreplayuploader.files;
+package ninja.eivind.hotsreplayuploader.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ninja.eivind.hotsreplayuploader.files.UploadTask;
+import ninja.eivind.hotsreplayuploader.files.WatchHandler;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
@@ -28,7 +30,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class FileHandler extends ScheduledService<ReplayFile> {
+public class FileService extends ScheduledService<ReplayFile> {
 
     private final Set<File> watchDirectories;
     private final ObjectMapper mapper;
@@ -39,7 +41,7 @@ public class FileHandler extends ScheduledService<ReplayFile> {
     private final List<Provider> providers = Provider.getAll();
     private final BlockingQueue<ReplayFile> uploadQueue;
 
-    public FileHandler() throws IOException {
+    public FileService() throws IOException {
         watchDirectories = new HashSet<>();
         mapper = new ObjectMapper();
         uploadQueue = new ArrayBlockingQueue<>(2500);
