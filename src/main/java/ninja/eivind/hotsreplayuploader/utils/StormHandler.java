@@ -61,7 +61,15 @@ public class StormHandler {
         return platformService.getHotSHome();
     }
 
-    public List<File> getAccountDirectories(final File root) {
+    public List<File> getHotSAccountDirectories() {
+        return getAccountDirectories(getHotSHome());
+    }
+
+    public List<File> getApplicationAccountDirectories() {
+        return getAccountDirectories(new File(getApplicationHome(), "Accounts"));
+    }
+
+    private List<File> getAccountDirectories(final File root) {
         List<File> hotsAccounts = new ArrayList<>();
         File[] files = root.listFiles((dir, name) -> name.matches(ACCOUNT_FOLDER_FILTER));
         if (files == null) {

@@ -6,13 +6,14 @@ import ninja.eivind.hotsreplayuploader.models.UploadStatus;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
 import javafx.concurrent.Task;
 
+import java.util.Collection;
 import java.util.List;
 
 public class UploadTask extends Task<ReplayFile> {
-    private final List<Provider> providers;
+    private final Collection<Provider> providers;
     private final ReplayFile take;
 
-    public UploadTask(final List<Provider> providers, final ReplayFile take) {
+    public UploadTask(final Collection<Provider> providers, final ReplayFile take) {
         this.providers = providers;
         this.take = take;
     }

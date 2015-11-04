@@ -2,7 +2,6 @@ package ninja.eivind.hotsreplayuploader.window;
 
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -13,7 +12,7 @@ import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import ninja.eivind.hotsreplayuploader.AccountService;
-import ninja.eivind.hotsreplayuploader.services.FileService;
+import ninja.eivind.hotsreplayuploader.services.UploaderService;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.models.Hero;
 import ninja.eivind.hotsreplayuploader.models.LeaderboardRanking;
@@ -82,29 +81,29 @@ public class HomeController {
     private ComboBox<Hero> heroName;
 
     @Inject
-    private FileService fileService;
+    private UploaderService uploaderService;
 
     @Inject
     private PlatformService platformService;
-    @Inject
-    private StormHandler stormHandler;
     @Inject
     private ReleaseManager releaseManager;
     @FXML
     private Label uploadedReplays;
     @FXML
     private Label newReplaysCount;
+    @Inject
+    private AccountService accountService;
 
 
     @PostConstruct
     public void initialize() {
-        fileService.init();
+        uploaderService.init();
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
         setPlayerSearchActions();
         bindList();
         setupFileHandler();
-        if (fileService.isIdle()) {
+        if (uploaderService.isIdle()) {
             setIdle();
         }
 
@@ -112,7 +111,6 @@ public class HomeController {
         setupAccounts();
 
         checkNewVersion();
-        fileService.beginWatch();
     }
 
     private void checkNewVersion() {
@@ -231,12 +229,9 @@ public class HomeController {
                 viewProfile.setDisable(false);
             }
         });
-        ScheduledService<List<Account>> service = new AccountService(stormHandler, httpClient);
-        service.setDelay(Duration.ZERO);
-        service.setPeriod(Duration.minutes(10));
 
-        service.setOnSucceeded(event -> updatePlayers(service.getValue()));
-        service.start();
+        accountService.setOnSucceeded(event -> updatePlayers(accountService.getValue()));
+        accountService.start();
     }
 
     private void updateAccountView(final Account account) {
@@ -292,28 +287,28 @@ public class HomeController {
     }
 
     private void setupFileHandler() {
-        fileService.setRestartOnFailure(true);
-        fileService.setOnSucceeded(event -> {
+        uploaderService.setRestartOnFailure(true);
+        uploaderService.setOnSucceeded(event -> {
             if (HotsLogsProvider.isMaintenance()) {
                 setMaintenance();
-            } else if (fileService.isIdle()) {
+            } else if (uploaderService.isIdle()) {
                 setIdle();
             } else {
                 setUploading();
             }
         });
-        fileService.setOnFailed(event -> setError());
-        fileService.start();
+        uploaderService.setOnFailed(event -> setError());
+        uploaderService.start();
     }
 
     private void bindList() {
-        ObservableList<ReplayFile> files = fileService.getFiles();
+        ObservableList<ReplayFile> files = uploaderService.getFiles();
         newReplaysCount.setText(String.valueOf(files.size()));
         files.addListener((ListChangeListener<ReplayFile>) c -> newReplaysCount.setText(String.valueOf(files.size())));
         newReplaysView.setItems(files.sorted(new ReplayFileComparator()));
-        newReplaysView.setCellFactory(new CustomListCellFactory(fileService));
+        newReplaysView.setCellFactory(new CustomListCellFactory(uploaderService));
 
-        uploadedReplays.textProperty().bind(fileService.getUploadedCount());
+        uploadedReplays.textProperty().bind(uploaderService.getUploadedCount());
     }
 
     private void setIdle() {

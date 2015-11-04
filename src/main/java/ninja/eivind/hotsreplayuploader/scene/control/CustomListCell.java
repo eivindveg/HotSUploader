@@ -1,6 +1,6 @@
 package ninja.eivind.hotsreplayuploader.scene.control;
 
-import ninja.eivind.hotsreplayuploader.services.FileService;
+import ninja.eivind.hotsreplayuploader.services.UploaderService;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import javafx.beans.property.BooleanProperty;
@@ -25,15 +25,15 @@ public class CustomListCell extends ListCell<ReplayFile> {
     private final Image updateImage;
     private final Image deleteImage;
     private final Image exceptionImage;
-    private final FileService fileService;
+    private final UploaderService uploaderService;
     private ReplayFile lastItem;
 
-    protected CustomListCell(Image updateImage, Image deleteImage, Image exceptionImage, FileService fileService) {
+    protected CustomListCell(Image updateImage, Image deleteImage, Image exceptionImage, UploaderService uploaderService) {
         super();
         this.updateImage = updateImage;
         this.deleteImage = deleteImage;
         this.exceptionImage = exceptionImage;
-        this.fileService = fileService;
+        this.uploaderService = uploaderService;
         label = new Label();
         updateImageView = new ImageView();
         updateImageView.setFitHeight(20);
@@ -85,14 +85,14 @@ public class CustomListCell extends ListCell<ReplayFile> {
             setGraphic(content);
             content.setOnMouseClicked(event -> {
                 if (2 == event.getClickCount()) {
-                    fileService.invalidateReplay(item);
+                    uploaderService.invalidateReplay(item);
                 }
             });
             updateImageView.setOnMouseClicked(event -> {
                 System.out.println("Clicked");
-                fileService.invalidateReplay(item);
+                uploaderService.invalidateReplay(item);
             });
-            deleteImageView.setOnMouseClicked(event -> fileService.deleteReplay(item));
+            deleteImageView.setOnMouseClicked(event -> uploaderService.deleteReplay(item));
         }
     }
 }

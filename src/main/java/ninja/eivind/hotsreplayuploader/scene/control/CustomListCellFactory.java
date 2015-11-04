@@ -1,6 +1,6 @@
 package ninja.eivind.hotsreplayuploader.scene.control;
 
-import ninja.eivind.hotsreplayuploader.services.FileService;
+import ninja.eivind.hotsreplayuploader.services.UploaderService;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -17,10 +17,10 @@ public class CustomListCellFactory implements Callback<ListView<ReplayFile>, Lis
     private final Image updateImage;
     private final Image deleteImage;
     private final Image failedImage;
-    private final FileService fileService;
+    private final UploaderService uploaderService;
 
-    public CustomListCellFactory(FileService fileService) {
-        this.fileService = fileService;
+    public CustomListCellFactory(UploaderService uploaderService) {
+        this.uploaderService = uploaderService;
         URL updateResource = getClass().getResource("update.png");
         URL deleteResource = getClass().getResource("delete.png");
         URL failedResource = getClass().getResource("failed.png");
@@ -34,6 +34,6 @@ public class CustomListCellFactory implements Callback<ListView<ReplayFile>, Lis
     }
     @Override
     public ListCell<ReplayFile> call(ListView<ReplayFile> param) {
-        return new CustomListCell(updateImage, deleteImage, failedImage, fileService);
+        return new CustomListCell(updateImage, deleteImage, failedImage, uploaderService);
     }
 }
