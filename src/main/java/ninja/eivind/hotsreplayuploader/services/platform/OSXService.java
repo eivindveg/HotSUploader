@@ -40,7 +40,7 @@ public class OSXService implements PlatformService {
         EventType<KeyEvent> keyPressed = KeyEvent.KEY_PRESSED;
         primaryStage.addEventHandler(keyPressed, event -> {
             if (event.getCode() == KeyCode.Q && event.isMetaDown()) {
-                Platform.exit();
+                System.exit(0);
             }
         });
         return buildTrayIcon(imageURL, primaryStage);
