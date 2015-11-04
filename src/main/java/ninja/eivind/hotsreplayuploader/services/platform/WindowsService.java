@@ -1,12 +1,8 @@
 package ninja.eivind.hotsreplayuploader.services.platform;
 
-import javafx.application.Platform;
 import javafx.stage.Stage;
-import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
