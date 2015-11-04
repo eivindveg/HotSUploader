@@ -7,6 +7,7 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
+import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
 import ninja.eivind.hotsreplayuploader.utils.FileUtils;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
@@ -33,17 +33,20 @@ import java.util.stream.Collectors;
 public class FileService extends ScheduledService<ReplayFile> {
 
     private final Set<File> watchDirectories;
-    private final ObjectMapper mapper;
+
+    @Inject
+    private ObjectMapper mapper;
     @Inject
     private StormHandler stormHandler;
     private final StringProperty uploadedCount = new SimpleStringProperty("0");
     private ObservableList<ReplayFile> files;
     private final List<Provider> providers = Provider.getAll();
     private final BlockingQueue<ReplayFile> uploadQueue;
+    @Inject
+    private FileRepository fileRepository;
 
     public FileService() throws IOException {
         watchDirectories = new HashSet<>();
-        mapper = new ObjectMapper();
         uploadQueue = new ArrayBlockingQueue<>(2500);
         files = FXCollections.observableArrayList();
     }
@@ -134,12 +137,6 @@ public class FileService extends ScheduledService<ReplayFile> {
         );
     }
 
-    public void updateFile(ReplayFile file) throws IOException {
-        File propertiesFile = stormHandler.getPropertiesFile(file.getFile());
-        String data = mapper.writeValueAsString(file.getUploadStatuses());
-        FileUtils.writeStringToFile(propertiesFile, data);
-    }
-
     @Override
     protected Task<ReplayFile> createTask() {
         if (isIdle()) {
@@ -172,8 +169,8 @@ public class FileService extends ScheduledService<ReplayFile> {
                     } else if (status == Status.EXCEPTION) {
                         replayFile.getFailedProperty().set(true);
                     }
-                    updateFile(replayFile);
-                } catch (InterruptedException | ExecutionException | IOException e) {
+                    fileRepository.updateReplay(replayFile);
+                } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
             });
@@ -203,10 +200,7 @@ public class FileService extends ScheduledService<ReplayFile> {
     public void deleteReplay(ReplayFile item) {
         files.remove(item);
 
-        File file = item.getFile();
-        if (file.delete()) {
-            stormHandler.getPropertiesFile(file).delete();
-        }
+        fileRepository.deleteReplay(item);
     }
 
     public ObservableList<ReplayFile> getFiles() {
