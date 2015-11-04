@@ -1,15 +1,14 @@
 package ninja.eivind.hotsreplayuploader.files;
 
+import javafx.application.Platform;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
-import javafx.application.Platform;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 

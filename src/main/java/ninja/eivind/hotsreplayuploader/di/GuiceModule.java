@@ -8,8 +8,6 @@ import ninja.eivind.hotsreplayuploader.repositories.SingletonListProviderReposit
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceProvider;
 
-import javax.inject.Singleton;
-
 public class GuiceModule extends AbstractModule {
     @Override
     protected void configure() {

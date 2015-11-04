@@ -1,10 +1,10 @@
 package ninja.eivind.hotsreplayuploader.files;
 
+import javafx.concurrent.Task;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
-import javafx.concurrent.Task;
 
 import java.util.Collection;
 import java.util.List;

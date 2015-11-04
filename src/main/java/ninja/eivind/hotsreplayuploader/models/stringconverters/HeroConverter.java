@@ -1,7 +1,7 @@
 package ninja.eivind.hotsreplayuploader.models.stringconverters;
 
-import ninja.eivind.hotsreplayuploader.models.Hero;
 import javafx.util.StringConverter;
+import ninja.eivind.hotsreplayuploader.models.Hero;
 
 public class HeroConverter extends StringConverter<Hero> {
 

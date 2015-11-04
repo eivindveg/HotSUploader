@@ -4,9 +4,6 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class Provider {
 
     private final SimpleHttpClient httpClient = new SimpleHttpClient();

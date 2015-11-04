@@ -1,11 +1,11 @@
 package ninja.eivind.hotsreplayuploader.services;
 
-import ninja.eivind.hotsreplayuploader.concurrent.tasks.HeroListTask;
-import ninja.eivind.hotsreplayuploader.models.Hero;
-import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
+import ninja.eivind.hotsreplayuploader.concurrent.tasks.HeroListTask;
+import ninja.eivind.hotsreplayuploader.models.Hero;
+import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 
 import java.util.List;
 

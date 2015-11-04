@@ -1,10 +1,8 @@
 package ninja.eivind.hotsreplayuploader.repositories;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
-import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
 import ninja.eivind.hotsreplayuploader.utils.FileUtils;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;

@@ -1,11 +1,11 @@
 package ninja.eivind.hotsreplayuploader.scene.control;
 
-import ninja.eivind.hotsreplayuploader.services.UploaderService;
-import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.util.Callback;
+import ninja.eivind.hotsreplayuploader.models.ReplayFile;
+import ninja.eivind.hotsreplayuploader.services.UploaderService;
 
 import java.net.URL;
 

@@ -15,9 +15,9 @@
 package ninja.eivind.hotsreplayuploader.concurrent.tasks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.concurrent.Task;
 import ninja.eivind.hotsreplayuploader.models.Hero;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
-import javafx.concurrent.Task;
 
 import java.util.Arrays;
 import java.util.List;
