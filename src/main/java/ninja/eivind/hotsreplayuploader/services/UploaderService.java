@@ -1,6 +1,5 @@
 package ninja.eivind.hotsreplayuploader.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
