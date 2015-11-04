@@ -50,48 +50,7 @@ public class WindowsService implements PlatformService {
 
     @Override
     public TrayIcon getTrayIcon(URL imageURL, Stage primaryStage) {
-        final java.awt.Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
-        final PopupMenu popup = new PopupMenu();
-        final MenuItem showItem = new MenuItem("Show");
-        final MenuItem exitItem = new MenuItem("Exit");
-
-        // Deal with window events
-        Platform.setImplicitExit(false);
-        primaryStage.setOnHiding(value -> {
-            primaryStage.hide();
-            value.consume();
-        });
-
-        // Declare shared action for showItem and trayicon click
-        Runnable openAction = () -> Platform.runLater(() -> {
-            primaryStage.show();
-            primaryStage.toFront();
-        });
-        popup.add(showItem);
-        popup.add(exitItem);
-
-        final TrayIcon trayIcon = new TrayIcon(image, StormHandler.getApplicationName(), popup);
-        trayIcon.setImageAutoSize(true);
-
-        // Add listeners
-        trayIcon.addMouseListener(mouseListener(openAction));
-        showItem.addActionListener(e -> openAction.run());
-        exitItem.addActionListener(event -> {
-            Platform.exit();
-            System.exit(0);
-        });
-        return trayIcon;
-    }
-
-    private MouseListener mouseListener(final Runnable result) {
-        return new TrayMouseListenerBase() {
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
-                    result.run();
-                }
-            }
-        };
+        return buildTrayIcon(imageURL, primaryStage);
     }
 
     @Override

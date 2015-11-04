@@ -1,9 +1,12 @@
 package ninja.eivind.hotsreplayuploader.services.platform;
 
+import javafx.stage.Stage;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 
 public class OSXService implements PlatformService {
     private final String libraryPath = "/Library/Application Support";
@@ -26,5 +29,10 @@ public class OSXService implements PlatformService {
     @Override
     public void browse(final URI uri) throws IOException {
         desktop.browse(uri);
+    }
+
+    @Override
+    public TrayIcon getTrayIcon(final URL imageURL, final Stage primaryStage) throws PlatformNotSupportedException {
+        return buildTrayIcon(imageURL, primaryStage);
     }
 }
