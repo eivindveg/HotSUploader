@@ -1,6 +1,5 @@
 package ninja.eivind.hotsreplayuploader.services.platform;
 
-import javafx.application.Platform;
 import javafx.event.EventType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;

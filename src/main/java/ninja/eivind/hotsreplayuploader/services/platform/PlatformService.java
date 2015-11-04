@@ -6,7 +6,6 @@ import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;

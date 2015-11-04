@@ -10,10 +10,11 @@ public class LinuxService implements PlatformService {
     private Desktop desktop;
 
     public LinuxService() {
-        if(Desktop.isDesktopSupported()) {
+        if (Desktop.isDesktopSupported()) {
             desktop = Desktop.getDesktop();
         }
     }
+
     @Override
     public File getApplicationHome() {
         return new File(USER_HOME, APPLICATION_DIRECTORY_NAME);
