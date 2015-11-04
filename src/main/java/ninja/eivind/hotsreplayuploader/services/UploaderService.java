@@ -13,7 +13,6 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
 import ninja.eivind.hotsreplayuploader.repositories.ProviderRepository;
-import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -23,7 +22,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class FileService extends ScheduledService<ReplayFile> {
+public class UploaderService extends ScheduledService<ReplayFile> {
 
     private final StringProperty uploadedCount = new SimpleStringProperty("0");
     private final BlockingQueue<ReplayFile> uploadQueue;
@@ -35,7 +34,7 @@ public class FileService extends ScheduledService<ReplayFile> {
     @Inject
     private ProviderRepository providerRepository;
 
-    public FileService() throws IOException {
+    public UploaderService() throws IOException {
         uploadQueue = new ArrayBlockingQueue<>(2500);
         files = FXCollections.observableArrayList();
     }

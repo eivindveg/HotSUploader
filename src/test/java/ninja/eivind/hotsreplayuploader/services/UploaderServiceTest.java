@@ -2,22 +2,18 @@ package ninja.eivind.hotsreplayuploader.services;
 
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import org.junit.Before;
-import org.junit.Test;
-
-import java.io.File;
-import java.util.Collections;
 
 import static org.mockito.Mockito.*;
 
-public class FileServiceTest {
+public class UploaderServiceTest {
 
-    private FileService fileService;
+    private UploaderService uploaderService;
     private StormHandler stormHandlerMock;
 
     @Before
     public void setup() throws Exception {
         stormHandlerMock = mock(StormHandler.class);
-        fileService = new FileService();
+        uploaderService = new UploaderService();
         //fileService.setStormHandler(stormHandlerMock);
     }
 

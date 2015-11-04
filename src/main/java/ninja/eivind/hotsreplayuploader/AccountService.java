@@ -1,25 +1,29 @@
 package ninja.eivind.hotsreplayuploader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
+import javafx.util.Duration;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
-import javafx.concurrent.ScheduledService;
-import javafx.concurrent.Task;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AccountService extends ScheduledService<List<Account>> {
 
-    private final StormHandler stormHandler;
-    private final SimpleHttpClient httpClient;
-    private final ObjectMapper mapper;
+    @Inject
+    private StormHandler stormHandler;
+    @Inject
+    private SimpleHttpClient httpClient;
+    @Inject
+    private ObjectMapper mapper;
 
-    public AccountService(final StormHandler stormHandler, final SimpleHttpClient httpClient) {
-        this.stormHandler = stormHandler;
-        this.httpClient = httpClient;
-        mapper = new ObjectMapper();
+    public AccountService() {
+        setDelay(Duration.ZERO);
+        setPeriod(Duration.minutes(10));
     }
 
     @Override
