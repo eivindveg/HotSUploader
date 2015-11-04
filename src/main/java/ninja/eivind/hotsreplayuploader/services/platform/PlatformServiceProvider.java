@@ -1,4 +1,4 @@
-package ninja.eivind.hotsreplayuploader.services;
+package ninja.eivind.hotsreplayuploader.services.platform;
 
 import com.google.inject.Provider;
 

@@ -1,4 +1,4 @@
-package ninja.eivind.hotsreplayuploader.services;
+package ninja.eivind.hotsreplayuploader.services.platform;
 
 import java.io.File;
 import java.io.IOException;

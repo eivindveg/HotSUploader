@@ -1,4 +1,4 @@
-package ninja.eivind.hotsreplayuploader.services;
+package ninja.eivind.hotsreplayuploader.services.platform;
 
 import java.awt.*;
 import java.io.File;

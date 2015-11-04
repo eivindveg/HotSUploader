@@ -1,8 +1,8 @@
 package ninja.eivind.hotsreplayuploader.di;
 
 import com.google.inject.AbstractModule;
-import ninja.eivind.hotsreplayuploader.services.PlatformService;
-import ninja.eivind.hotsreplayuploader.services.PlatformServiceProvider;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceProvider;
 
 import javax.inject.Singleton;
 

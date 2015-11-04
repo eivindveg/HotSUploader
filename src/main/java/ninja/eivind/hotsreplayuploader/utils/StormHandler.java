@@ -1,6 +1,6 @@
 package ninja.eivind.hotsreplayuploader.utils;
 
-import ninja.eivind.hotsreplayuploader.services.PlatformService;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
