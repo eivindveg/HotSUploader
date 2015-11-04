@@ -22,6 +22,7 @@ import ninja.eivind.hotsreplayuploader.models.stringconverters.HeroConverter;
 import ninja.eivind.hotsreplayuploader.providers.HotsLogsProvider;
 import ninja.eivind.hotsreplayuploader.scene.control.CustomListCellFactory;
 import ninja.eivind.hotsreplayuploader.services.HeroService;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.utils.*;
 import ninja.eivind.hotsreplayuploader.versions.GitHubRelease;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
@@ -82,8 +83,9 @@ public class HomeController {
 
     @Inject
     private FileHandler fileHandler;
+
     @Inject
-    private DesktopWrapper desktop;
+    private PlatformService platformService;
     @Inject
     private StormHandler stormHandler;
     @Inject
@@ -133,7 +135,7 @@ public class HomeController {
         newVersionLabel.setText(newerVersionIfAny.getTagName());
         updateLink.setOnMouseClicked(value -> {
             try {
-                desktop.browse(SimpleHttpClient.encode(newerVersionIfAny.getHtmlUrl()));
+                platformService.browse(SimpleHttpClient.encode(newerVersionIfAny.getHtmlUrl()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -155,7 +157,7 @@ public class HomeController {
 
     private void doOpenHotsLogs() {
         try {
-            desktop.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Default"));
+            platformService.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Default"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -185,7 +187,7 @@ public class HomeController {
         } else {
             this.heroName.setValue(null);
         }
-        desktop.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName));
+        platformService.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName));
     }
 
     @FXML
@@ -196,7 +198,7 @@ public class HomeController {
         } else {
             playerSearchInput.setText("");
         }
-        desktop.browse(SimpleHttpClient.encode("https://www.hotslogs.com/PlayerSearch?Name=" + playerName));
+        platformService.browse(SimpleHttpClient.encode("https://www.hotslogs.com/PlayerSearch?Name=" + playerName));
     }
 
     @FXML
@@ -205,7 +207,7 @@ public class HomeController {
         if (account == null) {
             return;
         }
-        desktop.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId()));
+        platformService.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId()));
     }
 
     private void setupAccounts() {
