@@ -172,7 +172,7 @@
          <children>
                 <ImageView fx:id="logo" fitHeight="85.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../../../../images/hotslogs-large.png" />
+                        <Image url="@../../../../images/hotsreplayuploader-large.png" />
                     </image>
                     <cursor>
                         <Cursor fx:constant="HAND" />
