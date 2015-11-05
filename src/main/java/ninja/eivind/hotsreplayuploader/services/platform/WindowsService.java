@@ -83,7 +83,10 @@ public class WindowsService implements PlatformService {
         }
 
         if (myDocuments == null) {
-            throw new FileNotFoundException("Could not locate Documents folder");
+            System.err.println("Could not reliably query register for My Documents folder. This usually means you have" +
+                    " a unicode name and standard location. Falling back to legacy selection:");
+            myDocuments = USER_HOME + "\\Documents";
+            System.err.println("Result: " + myDocuments);
         }
         return new File(myDocuments);
     }
