@@ -209,7 +209,7 @@
                       </ImageView>
                </children>
             </StackPane>
-            <VBox fx:id="updatePane" alignment="CENTER" styleClass="status">
+            <VBox fx:id="updatePane" alignment="CENTER" styleClass="status" visible="false">
                <children>
                   <HBox alignment="CENTER">
                      <children>
