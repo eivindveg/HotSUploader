@@ -40,6 +40,17 @@
    <right>
           <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
               <children>
+            <ImageView fx:id="logo" fitWidth="225.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../images/hotslogs-large.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <Bloom threshold="0.95" />
+               </effect>
+            </ImageView>
                   <BorderPane>
                       <left>
                           <ChoiceBox fx:id="accountSelect" prefWidth="150.0" BorderPane.alignment="CENTER">
@@ -170,12 +181,12 @@
             <Insets bottom="20.0" left="5.0" right="5.0" top="5.0" />
          </BorderPane.margin>
          <children>
-                <ImageView fx:id="logo" pickOnBounds="true" preserveRatio="true">
+                <ImageView pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../../../../images/hotsreplayuploader-large.png" />
                     </image>
                     <cursor>
-                        <Cursor fx:constant="HAND" />
+                        <Cursor fx:constant="DEFAULT" />
                     </cursor>
                <HBox.margin>
                   <Insets />
