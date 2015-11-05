@@ -314,7 +314,7 @@ public class HomeController {
 
     private void setIdle() {
         status.setText("Idle");
-        status.textFillProperty().setValue(Paint.valueOf("#0099DA"));
+        status.textFillProperty().setValue(Paint.valueOf("#38d3ff"));
     }
 
     private void setMaintenance() {
