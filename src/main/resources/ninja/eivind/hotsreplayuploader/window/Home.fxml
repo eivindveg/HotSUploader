@@ -168,25 +168,15 @@
                               </Label>
                            </children>
                         </HBox>
-                        <VBox fx:id="updatePane" alignment="CENTER" visible="false">
+                        <HBox styleClass="counter">
                            <children>
-                              <HBox alignment="CENTER">
-                                 <children>
-                                    <Label styleClass="primary" text="An update is available: ">
-                                       <font>
-                                          <Font name="System Bold" size="12.0" />
-                                       </font>
+                                    <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#00b000">
+                                        <font>
+                                            <Font name="System Bold" size="18.0" />
+                                        </font>
                                     </Label>
-                                    <Label fx:id="newVersionLabel" styleClass="secondary" text="N/A" />
-                                 </children>
-                              </HBox>
-                              <Hyperlink fx:id="updateLink" text="Click to open release notes or download" textAlignment="CENTER" wrapText="true">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Hyperlink>
                            </children>
-                        </VBox>
+                        </HBox>
                      </children>
                   </HBox>
                           <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="335.0" prefWidth="590.0">
@@ -219,20 +209,29 @@
                       </ImageView>
                </children>
             </StackPane>
-                <VBox alignment="CENTER_RIGHT" prefWidth="225.0" styleClass="status">
-                    <children>
-                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" styleClass="primary" text="Status">
-                            <font>
-                                <Font name="System Bold" size="18.0" />
-                            </font>
+            <VBox fx:id="updatePane" alignment="CENTER" styleClass="status">
+               <children>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="primary" text="An update is available: ">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
                         </Label>
-                        <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" text="Uploading" textFill="#00b000">
-                            <font>
-                                <Font name="Calibri Bold" size="14.0" />
-                            </font>
+                        <Label fx:id="newVersionLabel" styleClass="secondary" text="N/A">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
                         </Label>
-                    </children>
-                </VBox>
+                     </children>
+                  </HBox>
+                  <Hyperlink fx:id="updateLink" text="Click to open release notes or download" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Hyperlink>
+               </children>
+            </VBox>
          </children>
       </HBox>
    </top>
