@@ -49,13 +49,18 @@ public class WindowsService implements PlatformService {
 
     @Override
     public TrayIcon getTrayIcon(Stage primaryStage) {
-        URL imageURL = ClassLoader.getSystemClassLoader().getResource("images/logo-desktop.png");
+        URL imageURL = getLogoUrl();
         return buildTrayIcon(imageURL, primaryStage);
     }
 
     @Override
     public void browse(final URI uri) throws IOException {
         desktop.browse(uri);
+    }
+
+    @Override
+    public URL getLogoUrl() {
+        return ClassLoader.getSystemClassLoader().getResource("images/logo-desktop.png");
     }
 
     private File findMyDocuments() throws FileNotFoundException {

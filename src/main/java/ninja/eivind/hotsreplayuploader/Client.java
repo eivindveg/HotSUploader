@@ -43,8 +43,7 @@ public class Client extends Application {
     public void start(final Stage primaryStage) throws Exception {
         context.init();
         ClassLoader loader = ClassLoader.getSystemClassLoader();
-        URL logo = loader.getResource("images/logo-desktop.png");
-        assert logo != null;
+        URL logo = platformService.getLogoUrl();
         Image image = new Image(logo.toString());
         primaryStage.getIcons().add(image);
         primaryStage.setResizable(false);
