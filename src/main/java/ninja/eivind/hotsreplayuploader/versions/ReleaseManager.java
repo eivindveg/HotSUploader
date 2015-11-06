@@ -1,7 +1,6 @@
 package ninja.eivind.hotsreplayuploader.versions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.utils.FileUtils;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
@@ -27,7 +26,8 @@ public class ReleaseManager {
             = "https://api.github.com/repos/{maintainer}/{repository}/releases";
     protected static final String GITHUB_FORMAT_VERSION
             = "http://github.com/{maintainer}/{repository}/releases/tag/{version}";
-    private final ObjectMapper objectMapper;
+    @Inject
+    private ObjectMapper objectMapper;
     private final GitHubRelease currentRelease;
 
     private StormHandler stormHandler;
@@ -37,8 +37,6 @@ public class ReleaseManager {
     @Inject
     public ReleaseManager(StormHandler stormHandler) {
         this.stormHandler = stormHandler;
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JodaModule());
         currentRelease = buildCurrentRelease();
 
         verifyLocalVersion();
