@@ -115,7 +115,7 @@ public class HomeController {
             setIdle();
         }
 
-
+        status.textProperty().bind(statusBinder.message());
         setupAccounts();
 
         checkNewVersion();
@@ -340,28 +340,24 @@ public class HomeController {
     private void setIdle() {
         String idle = "Idle";
         statusBinder.message().setValue(idle);
-        status.setText(idle);
         status.textFillProperty().setValue(Paint.valueOf("#38d3ff"));
     }
 
     private void setMaintenance() {
         String maintenance = "Maintenance";
         statusBinder.message().setValue(maintenance);
-        status.setText(maintenance);
         status.textFillProperty().setValue(Paint.valueOf("#FF0000"));
     }
 
     private void setUploading() {
         String uploading = "Uploading";
         statusBinder.message().setValue(uploading);
-        status.setText(uploading);
         status.textFillProperty().setValue(Paint.valueOf("#00B000"));
     }
 
     private void setError() {
         String connectionError = "Connection error";
         statusBinder.message().setValue(connectionError);
-        status.setText(connectionError);
         status.textFillProperty().setValue(Paint.valueOf("#FF0000"));
     }
 
