@@ -67,7 +67,7 @@
 
                     <jvmArgs>
                         <jvmArg>
-                            -Xmx100M
+                            -Xmx25M
                         </jvmArg>
                     </jvmArgs>
                 </configuration>
