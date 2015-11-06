@@ -34,7 +34,7 @@ public class Client extends Application {
     private ReleaseManager releaseManager;
 
     @Inject
-    PlatformService platformService;
+    private PlatformService platformService;
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
