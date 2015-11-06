@@ -1,5 +1,8 @@
 package ninja.eivind.hotsreplayuploader.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -7,6 +10,7 @@ import java.net.URL;
 
 public class SimpleHttpClient {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SimpleHttpClient.class);
     public static final String SPACE = "%20";
 
     /**
@@ -30,6 +34,7 @@ public class SimpleHttpClient {
     }
 
     public String simpleRequest(final URL url) throws IOException {
+        LOG.info("Opening connection to " + url);
         InputStream inputStream = url.openStream();
         return IOUtils.readInputStream(inputStream);
     }

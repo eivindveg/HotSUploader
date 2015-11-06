@@ -1,6 +1,7 @@
 package ninja.eivind.hotsreplayuploader.versions;
 
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
+import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Before;
@@ -22,7 +23,7 @@ public class ReleaseManagerTest {
     @Before
     public void setup() {
         httpClient = mock(SimpleHttpClient.class);
-        releaseManager = new ReleaseManager();
+        releaseManager = new ReleaseManager(new StormHandler());
         releaseManager.setHttpClient(httpClient);
     }
 

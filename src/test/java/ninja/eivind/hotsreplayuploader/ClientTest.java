@@ -4,6 +4,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import static org.junit.Assert.*;
 
 public class ClientTest {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ClientTest.class);
     private static Document parse;
 
     @BeforeClass
@@ -25,7 +28,7 @@ public class ClientTest {
     public void testClientIsMainClass() throws Exception {
         String className = parse.select("project > properties > mainClass").text();
 
-        System.out.println("Loading class " + className);
+        LOG.info("Loading class " + className);
         Class<?> mainClass = Class.forName(className);
 
         Method main = mainClass.getDeclaredMethod("main", String[].class);

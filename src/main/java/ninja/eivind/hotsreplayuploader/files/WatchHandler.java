@@ -3,6 +3,8 @@ package ninja.eivind.hotsreplayuploader.files;
 import javafx.application.Platform;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 public class WatchHandler implements Runnable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(WatchHandler.class);
     private final WatchService watchService;
     private final StormHandler stormHandler;
     private final List<FileListener> fileListeners;
@@ -50,7 +53,7 @@ public class WatchHandler implements Runnable {
                 }
                 WatchEvent<Path> event = (WatchEvent<Path>) watchEvent;
                 final Path fileName = event.context();
-                System.out.println("\t" + fileName);
+                LOG.info("Received " + kind + " for path " + fileName);
 
                 File file = new File(path.toFile(), fileName.toString());
                 if (!file.getName().endsWith(".StormReplay")) {
@@ -63,7 +66,10 @@ public class WatchHandler implements Runnable {
                         throw new RuntimeException(new IOException("Could not delete file"));
                     }
                 }
-                Platform.runLater(() -> fileListeners.forEach(fileListener -> fileListener.handle(replayFile)));
+                Platform.runLater(() -> {
+                    fileListeners.forEach(fileListener -> fileListener.handle(replayFile));
+                    LOG.info("File " + replayFile + " registered with listeners.");
+                });
                 boolean valid = key.reset();
                 if (!valid) {
                     break;
@@ -111,7 +117,6 @@ public class WatchHandler implements Runnable {
 
         public CreationHandler(final File file) {
             super(file);
-            System.out.println("CreationHandler");
         }
 
         @Override
@@ -119,7 +124,7 @@ public class WatchHandler implements Runnable {
             try {
                 Thread.sleep(5000L);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOG.warn("Thread interrupted while awaiting file stabilization.", e);
             }
             File file = new File(getTarget().toString());
             return new ReplayFile(file);
@@ -140,6 +145,7 @@ public class WatchHandler implements Runnable {
                 } while (getTarget().lastModified() > System.currentTimeMillis() - 20000L);
                 return new ReplayFile(new File(getTarget().toString()));
             } catch (InterruptedException e) {
+                LOG.warn("Thread interrupted while awaiting file modification check.", e);
                 return null;
             }
         }

@@ -6,6 +6,8 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.utils.FileUtils;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -17,6 +19,7 @@ import java.util.Optional;
 
 public class ReleaseManager {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ReleaseManager.class);
     protected static final String CURRENT_VERSION = "2.0-SNAPSHOT";
     protected static final String GITHUB_MAINTAINER = "eivindveg";
     protected static final String GITHUB_REPOSITORY = "HotSUploader";
@@ -55,10 +58,13 @@ public class ReleaseManager {
             GitHubRelease latestRelease = latest.get(0);
             int compare = releaseComparator.compare(currentRelease, latestRelease);
             if (!latest.isEmpty() && compare > 0) {
+                LOG.info("Newer  release is: " + latestRelease);
                 return Optional.of(latestRelease);
+            } else {
+                LOG.info(currentRelease + " is the newest version.");
             }
         } catch (IOException e) {
-            System.out.println("Unable to get latest versions");
+            LOG.error("Unable to get latest versions", e);
         }
         return Optional.empty();
 
@@ -90,7 +96,7 @@ public class ReleaseManager {
             File file = new File(stormHandler.getApplicationHome(), "model_version");
             Long modelVersion;
             if (file.exists()) {
-                System.out.println("Reading model version");
+                LOG.info("Reading model version");
                 String fileContent = FileUtils.readFileToString(file);
                 modelVersion = Long.valueOf(fileContent);
 
@@ -101,12 +107,12 @@ public class ReleaseManager {
                 }
             } else {
                 // Assume first run
-                System.out.println("First run: assigning model version");
+                LOG.info("First run: assigning model version");
                 FileUtils.writeStringToFile(file, String.valueOf(ReplayFile.getSerialVersionUID()));
             }
         } catch (IOException e) {
             // Expect this to be first run?
-            e.printStackTrace();
+            LOG.error("Could not read model version.", e);
         }
     }
 

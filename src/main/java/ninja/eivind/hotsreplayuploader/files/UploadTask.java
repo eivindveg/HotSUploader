@@ -5,11 +5,14 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
 
 public class UploadTask extends Task<ReplayFile> {
+    private static final Logger LOG = LoggerFactory.getLogger(UploadTask.class);
     private final Collection<Provider> providers;
     private final ReplayFile take;
 
@@ -20,6 +23,7 @@ public class UploadTask extends Task<ReplayFile> {
 
     @Override
     protected ReplayFile call() throws Exception {
+        LOG.info("Uploading replay " + take);
         providers.forEach(provider -> {
             Status upload = provider.upload(take);
             if (upload == null) {

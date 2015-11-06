@@ -26,6 +26,8 @@ import ninja.eivind.hotsreplayuploader.utils.ReplayFileComparator;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.versions.GitHubRelease;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -35,6 +37,7 @@ import java.util.Optional;
 
 public class HomeController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
     @Inject
     private SimpleHttpClient httpClient;
 
@@ -133,10 +136,11 @@ public class HomeController {
     private void displayUpdateMessage(final GitHubRelease newerVersionIfAny) {
         newVersionLabel.setText(newerVersionIfAny.getTagName());
         updateLink.setOnMouseClicked(value -> {
+            String htmlUrl = newerVersionIfAny.getHtmlUrl();
             try {
-                platformService.browse(SimpleHttpClient.encode(newerVersionIfAny.getHtmlUrl()));
+                platformService.browse(SimpleHttpClient.encode(htmlUrl));
             } catch (IOException e) {
-                e.printStackTrace();
+                handleConnectionException(e, htmlUrl);
             }
         });
         updatePane.setVisible(true);
@@ -149,64 +153,81 @@ public class HomeController {
         heroService.setOnSucceeded(event -> {
             if (null != heroService.getValue()) {
                 heroName.getItems().setAll(heroService.getValue());
+                LOG.info("Replaced list of heroes.");
             }
         });
         heroService.start();
     }
 
+    private void handleConnectionException(IOException e, String url) {
+        LOG.error("Could not open " + url + " in browser.", e);
+    }
+
     private void doOpenHotsLogs() {
+        String url = "https://www.hotslogs.com/Default";
         try {
-            platformService.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Default"));
+            platformService.browse(SimpleHttpClient.encode(url));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            handleConnectionException(e, url);
         }
     }
 
     private void setPlayerSearchActions() {
         playerSearchInput.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                try {
-                    doPlayerSearch();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                doPlayerSearch();
             }
         });
     }
 
     @FXML
-    private void doLookupHero() throws IOException {
+    private void doLookupHero() {
         Hero hero = this.heroName.getValue();
         if (hero == null) {
             return;
         }
         String heroName = hero.getPrimaryName();
+        String url = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName;
         if (heroName.equals("")) {
             return;
         } else {
             this.heroName.setValue(null);
         }
-        platformService.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName));
+        try {
+            platformService.browse(SimpleHttpClient.encode(url));
+        } catch (IOException e) {
+            handleConnectionException(e, url);
+        }
     }
 
     @FXML
-    private void doPlayerSearch() throws IOException {
+    private void doPlayerSearch() {
         String playerName = playerSearchInput.getText().replaceAll(" ", "");
+        String url = "https://www.hotslogs.com/PlayerSearch?Name=" + playerName;
         if (playerName.equals("")) {
             return;
         } else {
             playerSearchInput.setText("");
         }
-        platformService.browse(SimpleHttpClient.encode("https://www.hotslogs.com/PlayerSearch?Name=" + playerName));
+        try {
+            platformService.browse(SimpleHttpClient.encode(url));
+        } catch (IOException e) {
+            handleConnectionException(e, url);
+        }
     }
 
     @FXML
-    private void doViewProfile() throws IOException {
+    private void doViewProfile() {
         Account account = accountSelect.getValue();
         if (account == null) {
             return;
         }
-        platformService.browse(SimpleHttpClient.encode("https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId()));
+        String url = "https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId();
+        try {
+            platformService.browse(SimpleHttpClient.encode(url));
+        } catch (IOException e) {
+            handleConnectionException(e, url);
+        }
     }
 
     private void setupAccounts() {
