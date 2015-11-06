@@ -38,7 +38,8 @@ public class OSXService implements PlatformService {
     }
 
     @Override
-    public TrayIcon getTrayIcon(final URL imageURL, final Stage primaryStage) throws PlatformNotSupportedException {
+    public TrayIcon getTrayIcon(final Stage primaryStage) throws PlatformNotSupportedException {
+        URL imageURL = ClassLoader.getSystemClassLoader().getResource("images/logo-desktop-black.png");
         EventType<KeyEvent> keyPressed = KeyEvent.KEY_PRESSED;
         primaryStage.addEventHandler(keyPressed, event -> {
             if (event.getCode() == KeyCode.Q && event.isMetaDown()) {

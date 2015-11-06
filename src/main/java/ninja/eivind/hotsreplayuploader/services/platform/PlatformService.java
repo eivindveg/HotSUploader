@@ -22,7 +22,7 @@ public interface PlatformService {
 
     File getHotSHome();
 
-    default TrayIcon getTrayIcon(final URL imageURL, Stage primaryStage) throws PlatformNotSupportedException {
+    default TrayIcon getTrayIcon(Stage primaryStage) throws PlatformNotSupportedException {
         throw new PlatformNotSupportedException("Not implemented in " + getClass());
     }
 

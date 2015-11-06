@@ -48,7 +48,8 @@ public class WindowsService implements PlatformService {
     }
 
     @Override
-    public TrayIcon getTrayIcon(URL imageURL, Stage primaryStage) {
+    public TrayIcon getTrayIcon(Stage primaryStage) {
+        URL imageURL = ClassLoader.getSystemClassLoader().getResource("images/logo-desktop.png");
         return buildTrayIcon(imageURL, primaryStage);
     }
 

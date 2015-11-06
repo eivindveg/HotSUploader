@@ -48,7 +48,7 @@ public class Client extends Application {
         Image image = new Image(logo.toString());
         primaryStage.getIcons().add(image);
         primaryStage.setResizable(false);
-        addToTray(logo, primaryStage);
+        addToTray(primaryStage);
 
         // Set window title
         String windowTitle = "HotSLogs UploaderFX v" + releaseManager.getCurrentVersion();
@@ -61,9 +61,9 @@ public class Client extends Application {
         primaryStage.show();
     }
 
-    private void addToTray(final URL imageURL, final Stage primaryStage) {
+    private void addToTray(final Stage primaryStage) {
         try {
-            TrayIcon trayIcon = platformService.getTrayIcon(imageURL, primaryStage);
+            TrayIcon trayIcon = platformService.getTrayIcon(primaryStage);
             SystemTray systemTray = SystemTray.getSystemTray();
             systemTray.add(trayIcon);
         }catch (PlatformNotSupportedException | AWTException e ){
