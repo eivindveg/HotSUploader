@@ -16,6 +16,7 @@ import ninja.eivind.hotsreplayuploader.models.Hero;
 import ninja.eivind.hotsreplayuploader.models.LeaderboardRanking;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.HeroConverter;
+import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.providers.HotsLogsProvider;
 import ninja.eivind.hotsreplayuploader.scene.control.CustomListCellFactory;
 import ninja.eivind.hotsreplayuploader.services.HeroService;
@@ -98,6 +99,9 @@ public class HomeController {
     @Inject
     private AccountService accountService;
 
+    @Inject
+    private StatusBinder statusBinder;
+
 
     @PostConstruct
     public void initialize() {
@@ -111,7 +115,7 @@ public class HomeController {
             setIdle();
         }
 
-
+        status.textProperty().bind(statusBinder.message());
         setupAccounts();
 
         checkNewVersion();
@@ -334,22 +338,26 @@ public class HomeController {
     }
 
     private void setIdle() {
-        status.setText("Idle");
+        String idle = "Idle";
+        statusBinder.message().setValue(idle);
         status.textFillProperty().setValue(Paint.valueOf("#38d3ff"));
     }
 
     private void setMaintenance() {
-        status.setText("Maintenance");
+        String maintenance = "Maintenance";
+        statusBinder.message().setValue(maintenance);
         status.textFillProperty().setValue(Paint.valueOf("#FF0000"));
     }
 
     private void setUploading() {
-        status.setText("Uploading");
+        String uploading = "Uploading";
+        statusBinder.message().setValue(uploading);
         status.textFillProperty().setValue(Paint.valueOf("#00B000"));
     }
 
     private void setError() {
-        status.setText("Connection error");
+        String connectionError = "Connection error";
+        statusBinder.message().setValue(connectionError);
         status.textFillProperty().setValue(Paint.valueOf("#FF0000"));
     }
 

@@ -2,7 +2,9 @@ package ninja.eivind.hotsreplayuploader.services.platform;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
+
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -20,12 +22,12 @@ public interface PlatformService {
 
     File getHotSHome();
 
-    default TrayIcon getTrayIcon(final URL imageURL, Stage primaryStage) throws PlatformNotSupportedException {
+    default TrayIcon getTrayIcon(Stage primaryStage) throws PlatformNotSupportedException {
         throw new PlatformNotSupportedException("Not implemented in " + getClass());
     }
 
     default TrayIcon buildTrayIcon(URL imageURL, Stage primaryStage) {
-        final java.awt.Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
+        final Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
         final PopupMenu popup = new PopupMenu();
         final MenuItem showItem = new MenuItem("Show");
         final MenuItem exitItem = new MenuItem("Exit");
@@ -52,7 +54,7 @@ public interface PlatformService {
         trayIcon.addMouseListener(new TrayMouseListenerBase() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
+                if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() % 2 == 0) {
                     openAction.run();
                 }
             }
@@ -67,4 +69,6 @@ public interface PlatformService {
     }
 
     void browse(URI uri) throws IOException;
+
+    URL getLogoUrl();
 }

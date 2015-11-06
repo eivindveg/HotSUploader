@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 
 public class LinuxService implements PlatformService {
 
@@ -32,5 +33,10 @@ public class LinuxService implements PlatformService {
         } else {
             Runtime.getRuntime().exec("xdg-open " + uri.toURL());
         }
+    }
+
+    @Override
+    public URL getLogoUrl() {
+        return ClassLoader.getSystemClassLoader().getResource("images/logo-desktop.png");
     }
 }
