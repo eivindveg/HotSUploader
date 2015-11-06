@@ -1,9 +1,10 @@
 package ninja.eivind.hotsreplayuploader.versions;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.joda.time.DateTime;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GitHubRelease {
@@ -19,9 +20,8 @@ public class GitHubRelease {
 
     @JsonProperty
     private Boolean prerelease;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     @JsonProperty("published_at")
-    private DateTime publishedAt;
+    private Instant publishedAt;
 
     public GitHubRelease() {
     }
@@ -43,11 +43,11 @@ public class GitHubRelease {
                 '}';
     }
 
-    public DateTime getPublishedAt() {
+    public Instant getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(final DateTime publishedAt) {
+    public void setPublishedAt(final Instant publishedAt) {
         this.publishedAt = publishedAt;
     }
 

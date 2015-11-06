@@ -1,5 +1,6 @@
 package ninja.eivind.hotsreplayuploader.di;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
 import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
 import ninja.eivind.hotsreplayuploader.repositories.JsonStoreFileRepository;
@@ -20,6 +21,7 @@ public class GuiceModule extends AbstractModule {
         bind(PlatformService.class).toProvider(new PlatformServiceProvider()).asEagerSingleton();
         bind(FileRepository.class).to(JsonStoreFileRepository.class).asEagerSingleton();
         bind(ProviderRepository.class).to(SingletonListProviderRepository.class).asEagerSingleton();
+        bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class).asEagerSingleton();
         LOG.info("IoC Container instantiated");
     }
 }

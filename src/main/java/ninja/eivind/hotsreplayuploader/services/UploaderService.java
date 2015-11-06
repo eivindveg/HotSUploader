@@ -125,7 +125,10 @@ public class UploaderService extends ScheduledService<ReplayFile> {
                     LOG.error("Could not execute task success.", e);
                 }
             });
-            uploadTask.setOnFailed(event -> uploadQueue.add(take));
+            uploadTask.setOnFailed(event -> {
+                LOG.error("UploadTask failed.", event.getSource().getException());
+                uploadQueue.add(take);
+            });
             return uploadTask;
         } catch (InterruptedException e) {
             return null;
