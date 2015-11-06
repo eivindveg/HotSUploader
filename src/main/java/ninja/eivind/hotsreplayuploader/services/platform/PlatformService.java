@@ -27,7 +27,7 @@ public interface PlatformService {
     }
 
     default TrayIcon buildTrayIcon(URL imageURL, Stage primaryStage) {
-        final java.awt.Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
+        final Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
         final PopupMenu popup = new PopupMenu();
         final MenuItem showItem = new MenuItem("Show");
         final MenuItem exitItem = new MenuItem("Exit");
