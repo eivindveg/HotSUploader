@@ -23,7 +23,7 @@ public class ReleaseManagerTest {
     @Before
     public void setup() {
         httpClient = mock(SimpleHttpClient.class);
-        releaseManager = new ReleaseManager(new StormHandler());
+        releaseManager = new ReleaseManager(mock(StormHandler.class));
         releaseManager.setHttpClient(httpClient);
     }
 
@@ -36,7 +36,7 @@ public class ReleaseManagerTest {
 
     @Test
     public void testReleaseManagerHandlesExceptionFromClient() throws Exception {
-        when(httpClient.simpleRequest(anyString())).thenThrow(new IOException("Test"));
+        when(httpClient.simpleRequest(anyString())).thenThrow(new IOException("Mock HTTP Client."));
 
         releaseManager.getNewerVersionIfAny();
         verify(httpClient, times(1)).simpleRequest(anyString());
