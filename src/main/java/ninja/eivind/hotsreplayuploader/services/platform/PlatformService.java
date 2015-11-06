@@ -2,7 +2,9 @@ package ninja.eivind.hotsreplayuploader.services.platform;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
+
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -52,7 +54,7 @@ public interface PlatformService {
         trayIcon.addMouseListener(new TrayMouseListenerBase() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
+                if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() % 2 == 0) {
                     openAction.run();
                 }
             }
