@@ -1,7 +1,7 @@
+![Travis CI](http://travis-ci.org/eivindveg/HotSUploader.svg)
+![VersionEye](https://www.versioneye.com/user/projects/563d0ed44d415e001b000073/badge.svg?style=flat)
 # HotSLogs UploaderFX
 JavaFX-based Replay Uploader for Heroes of the Storm
-
-![Travis CI](http://travis-ci.org/eivindveg/HotSUploader.svg)
 
 ## About
 HotSLogs UploaderFX is a JavaFX-based uploader for HotsLogs.com that aims to make uploading replays and looking up relevant statistics as effortless as possible. As Heroes of the Storm supports Windows and OSX, JavaFX was chosen due to the immediate simplicity of creating native installers for an event-driven cross platform application.
