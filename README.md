@@ -1,5 +1,5 @@
-![Travis CI](http://travis-ci.org/eivindveg/HotSUploader.svg)
-![VersionEye](https://www.versioneye.com/user/projects/563d0ed44d415e001b000073/badge.svg?style=flat)
+[![Travis CI](http://travis-ci.org/eivindveg/HotSUploader.svg?branch=develop)](http://travis-ci.org/eivindveg/HotSUploader)
+[![VersionEye](https://www.versioneye.com/user/projects/563d0ed44d415e001b000073/badge.svg?style=flat)](https://www.versioneye.com/user/projects/563d0ed44d415e001b000073)
 # HotSLogs UploaderFX
 JavaFX-based Replay Uploader for Heroes of the Storm
 
