@@ -1,6 +1,8 @@
 package ninja.eivind.hotsreplayuploader.services.platform;
 
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
@@ -11,6 +13,7 @@ import java.util.regex.Pattern;
 
 public class WindowsService implements PlatformService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(WindowsService.class);
     private Desktop desktop;
 
     private Pattern pathPattern = Pattern.compile("[A-Z]:(\\\\|\\w+| )+");
@@ -58,6 +61,7 @@ public class WindowsService implements PlatformService {
         Process p = null;
         String myDocuments = null;
         try {
+            LOG.info("Querying registry for Documents folder location.");
             p = Runtime.getRuntime().exec("reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders\" /v personal");
             p.waitFor();
 
@@ -83,10 +87,10 @@ public class WindowsService implements PlatformService {
         }
 
         if (myDocuments == null) {
-            System.err.println("Could not reliably query register for My Documents folder. This usually means you have" +
+            LOG.warn("Could not reliably query register for My Documents folder. This usually means you have" +
                     " a unicode name and standard location. Falling back to legacy selection:");
             myDocuments = USER_HOME + "\\Documents";
-            System.err.println("Result: " + myDocuments);
+            LOG.warn("Result: " + myDocuments);
         }
         return new File(myDocuments);
     }

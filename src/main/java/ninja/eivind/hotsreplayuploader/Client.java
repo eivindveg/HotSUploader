@@ -12,6 +12,8 @@ import ninja.eivind.hotsreplayuploader.di.GuiceModule;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -25,6 +27,7 @@ public class Client extends Application {
         Application.launch(Client.class, args);
     }
 
+    private static final Logger LOG = LoggerFactory.getLogger(Client.class);
     private DIContext context = new GuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
 
     @Inject
@@ -64,7 +67,7 @@ public class Client extends Application {
             SystemTray systemTray = SystemTray.getSystemTray();
             systemTray.add(trayIcon);
         }catch (PlatformNotSupportedException | AWTException e ){
-            e.printStackTrace();
+            LOG.warn("Could not instantiate tray icon. Reverting to default behaviour", e);
             primaryStage.setOnCloseRequest(event -> System.exit(0));
         }
     }

@@ -3,6 +3,8 @@ package ninja.eivind.hotsreplayuploader.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.Serializable;
@@ -11,6 +13,7 @@ import java.util.List;
 
 public class ReplayFile implements Serializable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ReplayFile.class);
     private static final long serialVersionUID = 1L;
     private final File file;
     private final List<UploadStatus> uploadStatuses;
@@ -73,7 +76,7 @@ public class ReplayFile implements Serializable {
     public Status getStatus() {
         // TODO MAKE MULTIPROVIDER-FRIENDLY
         if (uploadStatuses.size() < 1) {
-            System.out.println("Empty status list");
+            LOG.warn(this + " has no statuses.");
             return Status.NEW;
         }
         return uploadStatuses.get(0).getStatus();

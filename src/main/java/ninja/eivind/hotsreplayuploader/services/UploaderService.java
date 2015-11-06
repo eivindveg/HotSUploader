@@ -12,6 +12,8 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
 import ninja.eivind.hotsreplayuploader.repositories.ProviderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 
 public class UploaderService extends ScheduledService<ReplayFile> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(UploaderService.class);
     private final StringProperty uploadedCount = new SimpleStringProperty("0");
     private final BlockingQueue<ReplayFile> uploadQueue;
     @Inject
@@ -34,20 +37,24 @@ public class UploaderService extends ScheduledService<ReplayFile> {
     private ProviderRepository providerRepository;
 
     public UploaderService() throws IOException {
+        LOG.info("Instantiating " + getClass().getSimpleName());
         uploadQueue = new ArrayBlockingQueue<>(2500);
         files = FXCollections.observableArrayList();
+        LOG.info("Instantiated " + getClass().getSimpleName());
     }
 
     public void init() {
-        System.out.println("Initializing FileHandler");
+        LOG.info("Initializing " + getClass().getSimpleName());
         watcher.addFileListener(file -> {
             files.add(file);
             uploadQueue.add(file);
         });
         registerInitial();
+        LOG.info("Initialized " + getClass().getSimpleName());
     }
 
     public void registerInitial() {
+        LOG.info("Registering initial replays.");
         List<ReplayFile> fileList = fileRepository.getAll();
         uploadQueue.addAll(
                 fileList.stream()
@@ -60,6 +67,7 @@ public class UploaderService extends ScheduledService<ReplayFile> {
 
 
     private void getQueuableFiles(final List<ReplayFile> mapped) {
+        LOG.info("Registering not yet uploaded replays.");
         files = FXCollections.observableArrayList(
                 mapped.stream()
                         .filter(replayFile -> replayFile.getStatus() == Status.NEW
@@ -68,6 +76,7 @@ public class UploaderService extends ScheduledService<ReplayFile> {
     }
 
     private void updateUploadedCount(final List<ReplayFile> mapped) {
+        LOG.info("Updating counter for uploaded replays.");
         uploadedCount.set(
                 String.valueOf(
                         mapped.stream()
@@ -103,15 +112,17 @@ public class UploaderService extends ScheduledService<ReplayFile> {
                     if (status == Status.UPLOADED) {
                         int oldCount = Integer.valueOf(uploadedCount.getValue());
                         int newCount = oldCount + 1;
+                        LOG.info("Upload count updated to " + newCount);
                         uploadedCount.setValue(String.valueOf(newCount));
                         replayFile.getFailedProperty().setValue(false);
                         files.remove(replayFile);
                     } else if (status == Status.EXCEPTION) {
+                        LOG.warn("Upload failed for replay " + replayFile + ". Tagging replay.");
                         replayFile.getFailedProperty().set(true);
                     }
                     fileRepository.updateReplay(replayFile);
                 } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+                    LOG.error("Could not execute task success.", e);
                 }
             });
             uploadTask.setOnFailed(event -> uploadQueue.add(take));
@@ -135,6 +146,7 @@ public class UploaderService extends ScheduledService<ReplayFile> {
                 .filter(status -> status.getStatus() != Status.UPLOADED)
                 .forEach(status -> status.setStatus(Status.NEW));
         uploadQueue.add(item);
+        LOG.info("Replay " + item + " invalidated and marked as new.");
     }
 
     public void deleteReplay(ReplayFile item) {

@@ -1,6 +1,8 @@
 package ninja.eivind.hotsreplayuploader.files;
 
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -12,6 +14,7 @@ import java.util.stream.Stream;
 
 public class AccountDirectoryWatcher {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AccountDirectoryWatcher.class);
     private final Set<File> watchDirectories;
     private StormHandler stormHandler;
     private Set<WatchHandler> watchHandlers = new HashSet<>();
@@ -24,9 +27,10 @@ public class AccountDirectoryWatcher {
     }
 
     public void beginWatch() {
+        LOG.info("Initiating watch against directories:");
         watchDirectories.stream().map(file -> Paths.get(file.toString())).forEach(path -> {
             try {
-
+                LOG.info("\t" + path);
                 WatchHandler watchHandler = new WatchHandler(stormHandler, path);
                 watchHandlers.add(watchHandler);
                 new Thread(watchHandler).start();
@@ -34,6 +38,7 @@ public class AccountDirectoryWatcher {
                 throw new RuntimeException(e);
             }
         });
+        LOG.info("Watcher initiated.");
     }
 
     public Stream<File> getAllFiles() {
@@ -41,6 +46,7 @@ public class AccountDirectoryWatcher {
     }
 
     public void addFileListener(FileListener fileListener) {
+        LOG.info("Adding listener " + fileListener.getClass());
         for (final WatchHandler watchHandler : watchHandlers) {
             watchHandler.addListener(fileListener);
         }

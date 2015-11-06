@@ -89,7 +89,6 @@ public class CustomListCell extends ListCell<ReplayFile> {
                 }
             });
             updateImageView.setOnMouseClicked(event -> {
-                System.out.println("Clicked");
                 uploaderService.invalidateReplay(item);
             });
             deleteImageView.setOnMouseClicked(event -> uploaderService.deleteReplay(item));

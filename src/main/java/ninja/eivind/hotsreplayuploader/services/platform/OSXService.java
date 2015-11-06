@@ -4,6 +4,8 @@ import javafx.event.EventType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.File;
@@ -12,6 +14,7 @@ import java.net.URI;
 import java.net.URL;
 
 public class OSXService implements PlatformService {
+    private static final Logger LOG = LoggerFactory.getLogger(OSXService.class);
     private final String libraryPath = "/Library/Application Support";
     private Desktop desktop;
 
@@ -39,6 +42,7 @@ public class OSXService implements PlatformService {
         EventType<KeyEvent> keyPressed = KeyEvent.KEY_PRESSED;
         primaryStage.addEventHandler(keyPressed, event -> {
             if (event.getCode() == KeyCode.Q && event.isMetaDown()) {
+                LOG.info("Exiting application due to keyboard shortcut.");
                 System.exit(0);
             }
         });

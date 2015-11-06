@@ -7,6 +7,8 @@ import javafx.util.Duration;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 
 public class AccountService extends ScheduledService<List<Account>> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AccountService.class);
     @Inject
     private StormHandler stormHandler;
     @Inject

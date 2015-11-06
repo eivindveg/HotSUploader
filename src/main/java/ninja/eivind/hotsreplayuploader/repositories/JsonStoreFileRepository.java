@@ -6,6 +6,8 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
 import ninja.eivind.hotsreplayuploader.utils.FileUtils;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class JsonStoreFileRepository implements FileRepository {
 
+    private static final Logger LOG = LoggerFactory.getLogger(JsonStoreFileRepository.class);
     private StormHandler stormHandler;
     @Inject
     private ObjectMapper mapper;
@@ -34,7 +37,14 @@ public class JsonStoreFileRepository implements FileRepository {
     public void deleteReplay(final ReplayFile replayFile) {
         File file = replayFile.getFile();
         if (file.delete()) {
-            stormHandler.getPropertiesFile(file).delete();
+            LOG.info("ReplayFile " + file + " successfully deleted.");
+            if (stormHandler.getPropertiesFile(file).delete()) {
+                LOG.info("Property file for " + file + " successfully deleted.");
+            } else {
+                LOG.error("Could not delete property file for " + file);
+            }
+        } else {
+            LOG.error("ReplayFile " + file + " could not be deleted.");
         }
     }
 
@@ -46,7 +56,12 @@ public class JsonStoreFileRepository implements FileRepository {
                     return Arrays.asList(children != null ? children : new File[0]).stream();
                 }).map(stormHandler::getReplayFile)
                 .filter(file -> !file.exists())
-                .map(stormHandler::getPropertiesFile).forEach(File::delete);
+                .map(stormHandler::getPropertiesFile)
+                .forEach((file) -> {
+                    if (file.delete()) {
+                        LOG.info("Deleted property file" + file + " for non-existing replay file.");
+                    }
+                });
     }
 
     @Override
@@ -56,8 +71,9 @@ public class JsonStoreFileRepository implements FileRepository {
         try {
             data = mapper.writeValueAsString(file.getUploadStatuses());
             FileUtils.writeStringToFile(propertiesFile, data);
+            LOG.info("Property file for " + file + " updated.");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Could not update property file for replay " + file, e);
         }
     }
 
