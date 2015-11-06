@@ -30,7 +30,8 @@ public class Client extends Application {
     @Inject
     private FXMLLoader fxmlLoader;
 
-    @Inject ReleaseManager releaseManager;
+    @Inject
+    private ReleaseManager releaseManager;
 
     @Inject
     PlatformService platformService;
@@ -49,8 +50,6 @@ public class Client extends Application {
         // Set window title
         String windowTitle = "HotSLogs UploaderFX v" + releaseManager.getCurrentVersion();
         primaryStage.setTitle(windowTitle);
-
-        releaseManager.verifyLocalVersion();
 
         fxmlLoader.setLocation(loader.getResource("ninja/eivind/hotsreplayuploader/window/Home.fxml"));
         Parent root = fxmlLoader.load();

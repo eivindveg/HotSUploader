@@ -27,15 +27,18 @@ public class ReleaseManager {
     private final ObjectMapper objectMapper;
     private final GitHubRelease currentRelease;
 
-    @Inject
     private StormHandler stormHandler;
     @Inject
     private SimpleHttpClient httpClient;
 
-    public ReleaseManager() {
+    @Inject
+    public ReleaseManager(StormHandler stormHandler) {
+        this.stormHandler = stormHandler;
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JodaModule());
         currentRelease = buildCurrentRelease();
+
+        verifyLocalVersion();
     }
 
     private GitHubRelease buildCurrentRelease() {
@@ -82,7 +85,7 @@ public class ReleaseManager {
                 .replace("{version}", CURRENT_VERSION);
     }
 
-    public void verifyLocalVersion() {
+    private void verifyLocalVersion() {
         try {
             File file = new File(stormHandler.getApplicationHome(), "model_version");
             Long modelVersion;
