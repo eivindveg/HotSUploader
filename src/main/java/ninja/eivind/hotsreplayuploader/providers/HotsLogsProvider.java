@@ -5,9 +5,13 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
+import ninja.eivind.mpq.models.MpqException;
+import ninja.eivind.stormparser.StormParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 public class HotsLogsProvider extends Provider {
@@ -16,6 +20,7 @@ public class HotsLogsProvider extends Provider {
     private static final String ACCESS_KEY_ID = "AKIAIESBHEUH4KAAG4UA";
     private static final String SECRET_ACCESS_KEY = "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";
     private static final String CLIENT_ID = "HotSLogsUploaderFX";
+    public static final String BASE_URL = "https://www.hotslogs.com/UploadFile?Source=" + CLIENT_ID;
     private static long maintenance;
     private final AmazonS3Client s3Client;
 
@@ -35,12 +40,33 @@ public class HotsLogsProvider extends Provider {
             return null;
         }
 
+        File file = replayFile.getFile();
+        try {
+            boolean fileAlreadyUploaded = parseAndCheckStatus(file);
+            if(fileAlreadyUploaded) {
+                LOG.info("File already uploaded. No need to upload.");
+                return Status.UPLOADED;
+            } else {
+                LOG.info("New replay. Uploading to HotSLogs.com.");
+            }
+        } catch (IOException e) {
+            LOG.warn("Could not check status for replay: " + file, e);
+            return Status.EXCEPTION;
+        } catch (MpqException e) {
+            LOG.error("Could not parse replay. Skipping directly to upload.", e);
+        }
+
         String fileName = UUID.randomUUID() + ".StormReplay";
         LOG.info("Assigning remote file name " + fileName + " to " + replayFile);
-        String uri = "https://www.hotslogs.com/UploadFile.aspx?Source=" + CLIENT_ID + "&FileName=" + fileName;
+        String uri = BASE_URL + "&FileName=" + fileName;
 
+        return uploadFileToHotSLogs(file, fileName, uri);
+
+    }
+
+    private Status uploadFileToHotSLogs(File file, String fileName, String uri) {
         try {
-            s3Client.putObject("heroesreplays", fileName, replayFile.getFile());
+            s3Client.putObject("heroesreplays", fileName, file);
             LOG.info("File " + fileName + "uploaded to remote storage.");
             String result = getHttpClient().simpleRequest(uri);
             switch (result) {
@@ -66,6 +92,14 @@ public class HotsLogsProvider extends Provider {
             LOG.error("Could not upload file.", e);
             return Status.EXCEPTION;
         }
+    }
 
+    private boolean parseAndCheckStatus(File file) throws IOException {
+        final StormParser stormParser = new StormParser(file);
+        final String matchId = stormParser.getMatchId();
+        LOG.info("Calculated matchId to be" + matchId);
+        String uri = BASE_URL + "&ReplayHash=" + matchId;
+        String result = getHttpClient().simpleRequest(uri);
+        return result.equals("DUPLICATE");
     }
 }
