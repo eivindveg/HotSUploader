@@ -1,17 +1,20 @@
 package ninja.eivind.hotsreplayuploader.services.platform;
 
-import javafx.event.EventType;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.awt.*;
+import java.awt.Desktop;
+import java.awt.TrayIcon;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javafx.event.EventType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 public class OSXService implements PlatformService {
     private static final Logger LOG = LoggerFactory.getLogger(OSXService.class);
@@ -39,7 +42,9 @@ public class OSXService implements PlatformService {
 
     @Override
     public URL getLogoUrl() {
-        return ClassLoader.getSystemClassLoader().getResource("images/logo-desktop-black.png");
+        String logoVariant = isMacMenuBarDarkMode() ? "" : "-black";
+        return ClassLoader.getSystemClassLoader().getResource(
+                "images/logo-desktop" + logoVariant + ".png");
     }
 
     @Override
@@ -54,4 +59,29 @@ public class OSXService implements PlatformService {
         });
         return buildTrayIcon(imageURL, primaryStage);
     }
+
+    /**
+     * Checks, if the OS X dark mode is used by querying the defaults CLI.<br>
+     * This is needed for adding the correct tray icon once at the startup.
+     * @return true if <code>defaults read -g AppleInterfaceStyle</code>
+     * has an exit status of <code>0</code> (i.e. _not_ returning "key not found").
+     */
+    private boolean isMacMenuBarDarkMode() {
+        try {
+            /* check for exit status only.
+             * Once there are more modes than "dark" and "default",
+             *  we might need to analyze string contents...
+             */
+            final Process proc = Runtime.getRuntime().exec(
+                    new String[] {"defaults", "read", "-g", "AppleInterfaceStyle"});
+            proc.waitFor(100, TimeUnit.MILLISECONDS);
+            return proc.exitValue() == 0;
+        } catch (IOException | InterruptedException | IllegalThreadStateException ex) {
+            //process didn't terminate properly
+            LOG.warn("Could not determine, whether 'dark mode' is being used. "
+                    + "Falling back to default (light) mode.");
+            return false;
+        }
+    }
+
 }
