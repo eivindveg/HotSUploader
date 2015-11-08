@@ -8,6 +8,19 @@
     <artifactId>hots-replay-uploader</artifactId>
     <version>2.0-SNAPSHOT</version>
 
+    <contributors>
+        <contributor>
+            <name>Eivind Vegsundvåg</name>
+            <email>eivindveg hotmail com</email>
+            <timezone>CET</timezone>
+            <roles>
+                <role>Developer</role>
+                <role>Windows maintainer</role>
+                <role>Linux maintainer</role>
+            </roles>
+        </contributor>
+    </contributors>
+
     <properties>
         <releaseVersion>${project.version}</releaseVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
