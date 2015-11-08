@@ -1,5 +1,6 @@
 package ninja.eivind.hotsreplayuploader.providers;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.stormparser.StormParser;
@@ -16,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -27,6 +29,7 @@ public class HotSLogsProviderTest {
     private StormParser parser;
     private ReplayFile replayFile;
     private Replay parsedReplay;
+    private AmazonS3Client s3ClientMock;
 
     @Before
     public void setUp() throws IOException {
@@ -35,9 +38,11 @@ public class HotSLogsProviderTest {
         String fileName = resource.getFile();
         parsedReplay = new StormParser(new File(fileName)).parseReplay();
         provider = new HotsLogsProvider();
+        s3ClientMock = mock(AmazonS3Client.class);
         SimpleHttpClient mock = mock(SimpleHttpClient.class);
         when(mock.simpleRequest(anyString())).thenReturn("Duplicate");
         provider.setHttpClient(mock);
+        provider.setS3Client(s3ClientMock);
         replayFile = new ReplayFile(new File(fileName));
     }
 
@@ -47,6 +52,13 @@ public class HotSLogsProviderTest {
         String actual = provider.getMatchId(parsedReplay);
 
         assertEquals("Match ID is calculated as expected", expected, actual);
+    }
+
+    @Test
+    public void testProviderDoesNotTryToUploadPresentReplay() {
+        provider.upload(replayFile);
+
+        verifyZeroInteractions(s3ClientMock);
     }
 
 }

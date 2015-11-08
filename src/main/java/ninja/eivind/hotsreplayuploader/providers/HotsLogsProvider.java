@@ -28,7 +28,7 @@ public class HotsLogsProvider extends Provider {
     private static final String CLIENT_ID = "HotSLogsUploaderFX";
     public static final String BASE_URL = "https://www.hotslogs.com/UploadFile?Source=" + CLIENT_ID;
     private static long maintenance;
-    private final AmazonS3Client s3Client;
+    private AmazonS3Client s3Client;
 
     public HotsLogsProvider() {
         super("HotSLogs.com");
@@ -38,6 +38,10 @@ public class HotsLogsProvider extends Provider {
 
     public static boolean isMaintenance() {
         return maintenance + 600000L > System.currentTimeMillis();
+    }
+
+    public void setS3Client(AmazonS3Client s3Client) {
+        this.s3Client = s3Client;
     }
 
     @Override
