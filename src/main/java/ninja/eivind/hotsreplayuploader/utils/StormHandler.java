@@ -31,7 +31,6 @@ public class StormHandler {
     private static final String SEPARATOR = System.getProperty("file.separator");
     private final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
     private final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
-    private final String USER_HOME = System.getProperty("user.home");
 
     private File applicationHome;
     private File hotsHome;
