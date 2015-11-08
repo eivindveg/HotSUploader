@@ -22,9 +22,6 @@ import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author Eivind Vegsundvåg
- */
 public class HeroListTask extends Task<List<Hero>> {
     public static final String API_ROUTE = "https://www.hotslogs.com/API/Data/Heroes";
     private final SimpleHttpClient httpClient;

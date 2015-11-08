@@ -23,9 +23,6 @@ import ninja.eivind.hotsreplayuploader.services.UploaderService;
 
 import java.net.URL;
 
-/**
- * @author Eivind Vegsundvåg
- */
 public class CustomListCellFactory implements Callback<ListView<ReplayFile>, ListCell<ReplayFile>> {
 
     private final Image updateImage;

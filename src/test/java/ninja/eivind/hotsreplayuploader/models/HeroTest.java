@@ -20,9 +20,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- * @author ehatle
- */
 public class HeroTest {
     private static final String ARFAS_NAME = "Arfas", ARFAS_URL = "Frostmourn hungers... BLAH";
     // We need some mock heroes to test on. Arfas and Ufer, I choose you!

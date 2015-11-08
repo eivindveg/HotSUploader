@@ -37,7 +37,6 @@ import java.awt.*;
 import java.net.URL;
 import java.util.Collections;
 
-
 public class Client extends Application {
 
     public static void main(String[] args) {

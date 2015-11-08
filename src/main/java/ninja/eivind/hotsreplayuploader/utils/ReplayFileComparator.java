@@ -20,9 +20,6 @@ import ninja.eivind.hotsreplayuploader.models.Status;
 import java.io.File;
 import java.util.Comparator;
 
-/**
- * @author Eivind Vegsundvåg
- */
 public class ReplayFileComparator implements Comparator<ReplayFile> {
     @Override
     public int compare(ReplayFile o1, ReplayFile o2) {

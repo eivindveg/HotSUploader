@@ -21,10 +21,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-/**
- * @author Mateus Viccari
- * @author Eivind Vegsundvåg
- */
 public class FXUtils {
 
     public enum AutoCompleteMode {

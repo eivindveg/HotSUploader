@@ -26,9 +26,6 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.services.UploaderService;
 
-/**
- * @author Eivind Vegsundvåg
- */
 public class CustomListCell extends ListCell<ReplayFile> {
 
     private final BorderPane content;

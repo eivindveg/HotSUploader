@@ -22,8 +22,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Unit testing for Account class
- *
- * @author ehatle
  */
 public class AccountTest {
     private static final Long PLAYERID = 1234L;

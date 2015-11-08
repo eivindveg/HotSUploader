@@ -28,9 +28,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Eivind Vegsundvåg
- */
 public class ReplayFileComparatorTest {
 
     private ReplayFileComparator comparator;

@@ -19,9 +19,6 @@ import javafx.beans.property.StringProperty;
 
 import javax.inject.Singleton;
 
-/**
- * @author Eivind Vegsundvåg
- */
 @Singleton
 public class StatusBinder {
 

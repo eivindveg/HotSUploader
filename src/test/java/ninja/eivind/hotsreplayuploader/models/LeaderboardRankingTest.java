@@ -22,10 +22,6 @@ import org.junit.Test;
 
 import ninja.eivind.testutils.DataObjectTester;
 
-/**
- * @author ehatle
- *
- */
 public class LeaderboardRankingTest {
 	private LeaderboardRanking leaderboardRanking;
 	private final String GAMEMODE = "HeroLeague";

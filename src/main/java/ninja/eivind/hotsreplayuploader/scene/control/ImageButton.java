@@ -21,9 +21,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Paint;
 
-/**
- * @author Eivind Vegsundvåg
- */
 public class ImageButton extends Button {
 
     private final double height;
