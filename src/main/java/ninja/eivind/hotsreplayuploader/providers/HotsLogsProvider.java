@@ -68,18 +68,18 @@ public class HotsLogsProvider extends Provider {
         try {
             s3Client.putObject("heroesreplays", fileName, file);
             LOG.info("File " + fileName + "uploaded to remote storage.");
-            String result = getHttpClient().simpleRequest(uri);
+            String result = getHttpClient().simpleRequest(uri).toLowerCase();
             switch (result) {
-                case "Duplicate":
-                case "Success":
-                case "ComputerPlayerFound":
-                case "TryMeMode":
+                case "duplicate":
+                case "success":
+                case "computerplayerfound":
+                case "trymemode":
                     LOG.info("File registered with HotSLogs.com");
                     return Status.UPLOADED;
-                case "PreAlphaWipe":
+                case "prealphawipe":
                     LOG.warn("File not supported by HotSLogs.com");
                     return Status.UNSUPPORTED_GAME_MODE;
-                case "Maintenance":
+                case "maintenance":
                     LOG.error("HotSLogs.com is currently undergoing maintenance.");
                     maintenance = System.currentTimeMillis();
                     return Status.NEW;
@@ -99,7 +99,7 @@ public class HotsLogsProvider extends Provider {
         final String matchId = stormParser.getMatchId();
         LOG.info("Calculated matchId to be" + matchId);
         String uri = BASE_URL + "&ReplayHash=" + matchId;
-        String result = getHttpClient().simpleRequest(uri);
-        return result.equals("DUPLICATE");
+        String result = getHttpClient().simpleRequest(uri).toLowerCase();
+        return result.equals("duplicate");
     }
 }
