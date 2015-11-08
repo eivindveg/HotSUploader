@@ -26,7 +26,6 @@ import static org.mockito.Mockito.when;
 public class HotSLogsProviderTest {
 
     private HotsLogsProvider provider;
-    private StormParser parser;
     private ReplayFile replayFile;
     private Replay parsedReplay;
     private AmazonS3Client s3ClientMock;
