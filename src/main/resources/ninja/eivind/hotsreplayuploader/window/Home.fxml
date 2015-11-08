@@ -53,11 +53,11 @@
             </ImageView>
                   <BorderPane>
                       <left>
-                          <ChoiceBox fx:id="accountSelect" prefWidth="150.0" BorderPane.alignment="CENTER">
+                          <ComboBox fx:id="accountSelect" prefWidth="150.0" BorderPane.alignment="CENTER">
                               <BorderPane.margin>
                                   <Insets top="10.0" />
                               </BorderPane.margin>
-                          </ChoiceBox>
+                          </ComboBox>
                       </left>
                <top>
                         <Label alignment="CENTER" styleClass="primary" text="Players" BorderPane.alignment="CENTER">

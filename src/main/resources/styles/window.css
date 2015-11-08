@@ -28,6 +28,12 @@
     -fx-border-width: 0.0;
 }
 
+.combo-box .list-cell {
+    -fx-background: white;
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+}
+
 .choice-box {
     -fx-padding: 0.05em 0 0 0;
 }
