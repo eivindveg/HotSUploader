@@ -91,7 +91,7 @@ public class HomeController {
     private Button viewProfile;
 
     @FXML
-    private ChoiceBox<Account> accountSelect;
+    private ComboBox<Account> accountSelect;
 
     @FXML
     private Button lookupHero;
