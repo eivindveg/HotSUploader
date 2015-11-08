@@ -60,7 +60,7 @@
                         </Label>
                </top>
                <right>
-                        <Button fx:id="viewProfile" disable="true" mnemonicParsing="false" onAction="#doViewProfile" prefWidth="75.0" text="Profile" BorderPane.alignment="CENTER">
+                        <Button fx:id="viewProfile" disable="true" mnemonicParsing="false" onAction="#doViewProfile" prefWidth="75.0" snapToPixel="false" text="Profile" BorderPane.alignment="CENTER">
                             <BorderPane.margin>
                                 <Insets />
                             </BorderPane.margin>
