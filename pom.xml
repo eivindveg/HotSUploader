@@ -97,7 +97,7 @@
         <dependency>
             <groupId>com.github.eivindveg</groupId>
             <artifactId>HotSReplayParser</artifactId>
-            <version>3e5fc05f08</version>
+            <version>84b7cb70ec</version>
         </dependency>
 
         <dependency>
