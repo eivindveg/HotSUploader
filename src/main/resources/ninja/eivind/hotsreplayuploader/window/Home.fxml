@@ -52,13 +52,6 @@
                </effect>
             </ImageView>
                   <BorderPane>
-                      <left>
-                          <ComboBox fx:id="accountSelect" prefWidth="150.0" BorderPane.alignment="CENTER">
-                              <BorderPane.margin>
-                                  <Insets />
-                              </BorderPane.margin>
-                          </ComboBox>
-                      </left>
                <top>
                         <Label alignment="CENTER" styleClass="primary" text="Players" BorderPane.alignment="CENTER">
                             <font>
@@ -73,6 +66,13 @@
                             </BorderPane.margin>
                         </Button>
                </right>
+               <center>
+                          <ComboBox fx:id="accountSelect" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+                              <BorderPane.margin>
+                                  <Insets />
+                              </BorderPane.margin>
+                          </ComboBox>
+               </center>
                   </BorderPane>
                   <BorderPane>
                       <left>
