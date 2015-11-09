@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package ninja.eivind.hotsreplayuploader.files;
+package ninja.eivind.hotsreplayuploader.concurrent.tasks;
 
 import javafx.concurrent.Task;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
