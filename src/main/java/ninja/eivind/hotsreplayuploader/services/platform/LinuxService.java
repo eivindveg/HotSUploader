@@ -51,6 +51,6 @@ public class LinuxService implements PlatformService {
 
     @Override
     public URL getLogoUrl() {
-        return ClassLoader.getSystemClassLoader().getResource("images/logo-desktop.png");
+        return getClass().getResource("/images/logo-desktop.png");
     }
 }

@@ -74,7 +74,7 @@ public class WindowsService implements PlatformService {
 
     @Override
     public URL getLogoUrl() {
-        return ClassLoader.getSystemClassLoader().getResource("images/logo-desktop.png");
+        return getClass().getResource("/images/logo-desktop.png");
     }
 
     private File findMyDocuments() throws FileNotFoundException {
