@@ -16,8 +16,8 @@ package ninja.eivind.hotsreplayuploader.services.platform;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
+import ninja.eivind.hotsreplayuploader.utils.Constants;
 
 
 import java.awt.*;
@@ -30,7 +30,7 @@ import java.net.URL;
 public interface PlatformService {
 
     String USER_HOME = System.getProperty("user.home");
-    String APPLICATION_DIRECTORY_NAME = "HotSLogs UploaderFX";
+    String APPLICATION_DIRECTORY_NAME = Constants.APPLICATION_NAME.replaceAll(" ", "");
 
     File getApplicationHome();
 
