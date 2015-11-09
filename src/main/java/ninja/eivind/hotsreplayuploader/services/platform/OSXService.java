@@ -57,8 +57,8 @@ public class OSXService implements PlatformService {
     @Override
     public URL getLogoUrl() {
         String logoVariant = isMacMenuBarDarkMode() ? "" : "-black";
-        return ClassLoader.getSystemClassLoader().getResource(
-                "images/logo-desktop" + logoVariant + ".png");
+        return getClass().getResource(
+                "/images/logo-desktop" + logoVariant + ".png");
     }
 
     @Override

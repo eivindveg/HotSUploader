@@ -61,7 +61,6 @@ public class Client extends Application {
     @Override
     public void start(final Stage primaryStage) throws Exception {
         context.init();
-        ClassLoader loader = ClassLoader.getSystemClassLoader();
         URL logo = platformService.getLogoUrl();
         Image image = new Image(logo.toString());
         primaryStage.getIcons().add(image);
@@ -72,7 +71,7 @@ public class Client extends Application {
         String windowTitle = "HotSLogs UploaderFX v" + releaseManager.getCurrentVersion();
         primaryStage.setTitle(windowTitle);
 
-        fxmlLoader.setLocation(loader.getResource("ninja/eivind/hotsreplayuploader/window/Home.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/ninja/eivind/hotsreplayuploader/window/Home.fxml"));
         Parent root = fxmlLoader.load();
 
         primaryStage.setScene(new Scene(root));
