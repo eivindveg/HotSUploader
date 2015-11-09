@@ -21,6 +21,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * Helper class for JavaFX related problems.
+ */
 public class FXUtils {
 
     public enum AutoCompleteMode {

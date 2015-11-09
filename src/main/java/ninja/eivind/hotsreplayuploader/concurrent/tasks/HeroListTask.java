@@ -22,6 +22,10 @@ import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Asynchronous {@link Task}, which retrieves a list of
+ * all currently available {@link Hero}es from the hotslogs API.
+ */
 public class HeroListTask extends Task<List<Hero>> {
     public static final String API_ROUTE = "https://www.hotslogs.com/API/Data/Heroes";
     private final SimpleHttpClient httpClient;

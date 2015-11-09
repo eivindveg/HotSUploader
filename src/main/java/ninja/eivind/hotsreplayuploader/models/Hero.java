@@ -16,6 +16,9 @@ package ninja.eivind.hotsreplayuploader.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * API object retrieved from HotSLogs.com calls, which represents a playable hero primarily by its name.
+ */
 public class Hero {
 
     @JsonProperty("PrimaryName")

@@ -14,6 +14,9 @@
 
 package ninja.eivind.hotsreplayuploader.models;
 
+/**
+ * {@link Enum} to tag an upload status of a {@link ReplayFile}.
+ */
 public enum Status {
     NEW, UPLOADED, EXCEPTION, UNSUPPORTED_GAME_MODE
 }

@@ -22,6 +22,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
+/**
+ * Helper class for establishing simple HTTP requests.
+ */
 public class SimpleHttpClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(SimpleHttpClient.class);

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package ninja.eivind.hotsreplayuploader.files;
+package ninja.eivind.hotsreplayuploader.concurrent.tasks;
 
 import javafx.concurrent.Task;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
@@ -25,6 +25,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * {@link ScheduledService} for checking the current values of
+ * a user's {@link Account}s. Will be checked often for MMR changes.
+ */
 public class UploadTask extends Task<ReplayFile> {
     private static final Logger LOG = LoggerFactory.getLogger(UploadTask.class);
     private final Collection<Provider> providers;

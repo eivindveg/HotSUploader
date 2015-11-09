@@ -19,10 +19,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
+/**
+ * Helper class for input / output directives, e.g. stream handling.
+ */
 public class IOUtils {
     private IOUtils() {
     }
 
+    /**
+     * Convenience method for readings an {@link InputStream}, that contains UTF-8 encoded text.
+     * @param inputStream with UTF-8 encoded content
+     * @return the stream's content
+     * @throws IOException
+     */
     public static String readInputStream(final InputStream inputStream) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         try (InputStreamReader in = new InputStreamReader(inputStream, Charset.forName("UTF-8"))) {

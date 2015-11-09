@@ -16,6 +16,9 @@ package ninja.eivind.hotsreplayuploader.models;
 
 import ninja.eivind.hotsreplayuploader.providers.Provider;
 
+/**
+ * Defines a more specific upload status by adding a specific host to an {@link Status}.
+ */
 public class UploadStatus {
 
     private String host;

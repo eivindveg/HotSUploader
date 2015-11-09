@@ -26,6 +26,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Utility class, which holds several application properties like paths
+ * and provides several convencience methods like OS detection or
+ *  data mining game related information .
+ */
 @Singleton
 public class StormHandler {
 

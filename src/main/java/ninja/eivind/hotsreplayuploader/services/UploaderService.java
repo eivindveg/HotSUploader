@@ -20,10 +20,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
+import ninja.eivind.hotsreplayuploader.concurrent.tasks.UploadTask;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
-import ninja.eivind.hotsreplayuploader.files.UploadTask;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
+import ninja.eivind.hotsreplayuploader.providers.Provider;
 import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
 import ninja.eivind.hotsreplayuploader.repositories.ProviderRepository;
 import org.slf4j.Logger;
@@ -37,6 +38,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+/**
+ * {@link ScheduledService}, that is responsible for uploading {@link ReplayFile}s
+ * to {@link Provider}s. Does also take care of updating the UI in the process.
+ */
 public class UploaderService extends ScheduledService<ReplayFile> {
 
     private static final Logger LOG = LoggerFactory.getLogger(UploaderService.class);

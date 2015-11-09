@@ -17,6 +17,10 @@ package ninja.eivind.hotsreplayuploader.models.stringconverters;
 import javafx.util.StringConverter;
 import ninja.eivind.hotsreplayuploader.models.Hero;
 
+/**
+ * A {@link StringConverter} for {@link Hero} entities.<br>
+ * Resolves a {@link Hero} based on its name.
+ */
 public class HeroConverter extends StringConverter<Hero> {
 
     @Override

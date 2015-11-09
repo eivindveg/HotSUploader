@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * API object retrieved from HotSLogs.com calls
+ * API object retrieved from HotSLogs.com calls, which represents a player's battle net account.<br>
+ * Used to retrieve the player's leaderboard rankings.
  */
 public class Account {
 
