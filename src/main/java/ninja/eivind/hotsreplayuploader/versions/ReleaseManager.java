@@ -52,8 +52,6 @@ public class ReleaseManager {
     public ReleaseManager(StormHandler stormHandler) {
         this.stormHandler = stormHandler;
         currentRelease = buildCurrentRelease();
-
-        verifyLocalVersion();
     }
 
     private GitHubRelease buildCurrentRelease() {
