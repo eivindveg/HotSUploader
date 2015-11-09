@@ -17,10 +17,7 @@ package ninja.eivind.hotsreplayuploader;
 import com.gluonhq.ignite.DIContext;
 import com.gluonhq.ignite.guice.GuiceContext;
 import com.sun.javafx.application.LauncherImpl;
-import com.sun.javafx.application.PlatformImpl;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -41,24 +38,20 @@ import java.util.Collections;
 
 public class Client extends Application {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Client.class);
+    private DIContext context = new GuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
+    @Inject
+    private FXMLLoader fxmlLoader;
+    @Inject
+    private ReleaseManager releaseManager;
+    @Inject
+    private PlatformService platformService;
+    @Inject
+    private StatusBinder statusBinder;
+
     public static void main(String[] args) {
         LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
     }
-
-    private static final Logger LOG = LoggerFactory.getLogger(Client.class);
-    private DIContext context = new GuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
-
-    @Inject
-    private FXMLLoader fxmlLoader;
-
-    @Inject
-    private ReleaseManager releaseManager;
-
-    @Inject
-    private PlatformService platformService;
-
-    @Inject
-    private StatusBinder statusBinder;
 
     @Override
     public void init() {
@@ -90,11 +83,11 @@ public class Client extends Application {
             SystemTray systemTray = SystemTray.getSystemTray();
             systemTray.add(trayIcon);
             statusBinder.message().addListener((observable, oldValue, newValue) -> {
-                if(newValue != null && !newValue.isEmpty()) {
+                if (newValue != null && !newValue.isEmpty()) {
                     trayIcon.setToolTip("Status: " + newValue);
                 }
             });
-        } catch (PlatformNotSupportedException | AWTException e ){
+        } catch (PlatformNotSupportedException | AWTException e) {
             LOG.warn("Could not instantiate tray icon. Reverting to default behaviour", e);
             primaryStage.setOnCloseRequest(event -> System.exit(0));
         }
