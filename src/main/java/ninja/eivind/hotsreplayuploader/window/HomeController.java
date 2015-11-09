@@ -24,7 +24,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
-import ninja.eivind.hotsreplayuploader.AccountService;
+import ninja.eivind.hotsreplayuploader.services.AccountService;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.models.Hero;
 import ninja.eivind.hotsreplayuploader.models.LeaderboardRanking;
