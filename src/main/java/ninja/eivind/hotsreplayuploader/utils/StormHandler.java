@@ -15,6 +15,8 @@
 package ninja.eivind.hotsreplayuploader.utils;
 
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class StormHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(StormHandler.class);
     private static final String APPLICATION_DIRECTORY_NAME = "HotSLogs UploaderFX";
     private static final String SEPARATOR = System.getProperty("file.separator");
     private final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
@@ -43,6 +46,17 @@ public class StormHandler {
     public File getApplicationHome() {
         if (applicationHome == null) {
             applicationHome = buildApplicationHome();
+
+            // Migration logic; should be removed somewhere around version 2.X(not 2.0) or 3.0
+            File parentFile = applicationHome.getParentFile();
+            File oldDirectory = new File(parentFile, "HotSLogs UploaderFX");
+            if(oldDirectory.exists()) {
+                if(!oldDirectory.renameTo(applicationHome)) {
+                    if(!oldDirectory.delete()) {
+                        LOG.warn("Could not delete old replay properties folder");
+                    }
+                }
+            }
         }
         return applicationHome;
     }

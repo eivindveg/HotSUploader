@@ -30,6 +30,7 @@ import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ninja.eivind.hotsreplayuploader.utils.Constants;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -67,7 +68,7 @@ public class Client extends Application {
         addToTray(primaryStage);
 
         // Set window title
-        String windowTitle = "HotSLogs UploaderFX v" + releaseManager.getCurrentVersion();
+        String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
         primaryStage.setTitle(windowTitle);
 
         fxmlLoader.setLocation(getClass().getResource("/ninja/eivind/hotsreplayuploader/window/Home.fxml"));
