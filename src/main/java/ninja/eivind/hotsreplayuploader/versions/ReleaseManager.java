@@ -103,31 +103,6 @@ public class ReleaseManager {
                 .replace("{version}", CURRENT_VERSION);
     }
 
-    private void verifyLocalVersion() {
-        try {
-            File file = new File(stormHandler.getApplicationHome(), "model_version");
-            Long modelVersion;
-            if (file.exists()) {
-                LOG.info("Reading model version");
-                String fileContent = FileUtils.readFileToString(file);
-                modelVersion = Long.valueOf(fileContent);
-
-                if (modelVersion < ReplayFile.getSerialVersionUID()) {
-                    // TODO IMPLEMENT MIGRATION
-
-                    FileUtils.writeStringToFile(file, String.valueOf(modelVersion));
-                }
-            } else {
-                // Assume first run
-                LOG.info("First run: assigning model version");
-                FileUtils.writeStringToFile(file, String.valueOf(ReplayFile.getSerialVersionUID()));
-            }
-        } catch (IOException e) {
-            // Expect this to be first run?
-            LOG.error("Could not read model version.", e);
-        }
-    }
-
     public String getCurrentVersion() {
         return CURRENT_VERSION;
     }
