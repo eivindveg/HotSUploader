@@ -20,6 +20,11 @@ import ninja.eivind.hotsreplayuploader.models.Status;
 import java.io.File;
 import java.util.Comparator;
 
+/**
+ * {@link Comparator} for comparing two {@link ReplayFile}s.<br>
+ * Will order by {@link Status}, thus showing failed Uploads first.
+ * After that, sort by newest files first.
+ */
 public class ReplayFileComparator implements Comparator<ReplayFile> {
     @Override
     public int compare(ReplayFile o1, ReplayFile o2) {

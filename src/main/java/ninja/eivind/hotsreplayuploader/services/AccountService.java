@@ -28,6 +28,10 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link ScheduledService} for checking the current values of
+ * a user's {@link Account}s. Will be checked often for MMR changes.
+ */
 public class AccountService extends ScheduledService<List<Account>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountService.class);

@@ -17,8 +17,17 @@ package ninja.eivind.hotsreplayuploader.utils;
 import java.io.*;
 import java.nio.charset.Charset;
 
+/**
+ * Helper class for reading and writing to files.
+ */
 public class FileUtils {
 
+    /**
+     * Writes a {@link String} to a specified {@link File} with UTF-8 encoding.
+     * @param file where to write the content
+     * @param content non-null {@link String}
+     * @throws IOException
+     */
     public static void writeStringToFile(final File file, final String content) throws IOException {
         if (content == null) {
             throw new UnsupportedOperationException("Cannot write null to file. Consider deleting it instead");
@@ -61,6 +70,12 @@ public class FileUtils {
         return new FileInputStream(file);
     }
 
+    /**
+     * Reads a {@link String} from a specified {@link File} with UTF-8 encoding.
+     * @param file where to read the content from
+     * @return the file's content
+     * @throws IOException
+     */
     public static String readFileToString(final File file) throws IOException {
         try (FileInputStream inputStream = openInputStream(file)) {
             return IOUtils.readInputStream(inputStream);

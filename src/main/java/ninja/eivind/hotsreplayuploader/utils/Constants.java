@@ -14,6 +14,9 @@
 
 package ninja.eivind.hotsreplayuploader.utils;
 
+/**
+ * Utility class for collecting application constants.
+ */
 public final class Constants {
 
     public static final String APPLICATION_NAME = "HotS Replay Uploader";

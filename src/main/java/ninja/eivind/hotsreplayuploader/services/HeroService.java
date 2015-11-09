@@ -25,6 +25,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * {@link ScheduledService} for checking the current list of available {@link Hero}es periodically.
+ */
 public class HeroService extends ScheduledService<List<Hero>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(HeroService.class);

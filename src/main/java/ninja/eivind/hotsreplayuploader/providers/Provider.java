@@ -18,6 +18,10 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 
+/**
+ * Defines an interface for uploading a {@link ReplayFile}
+ * to a provider like hotslogs.com.
+ */
 public abstract class Provider {
 
     private final String name;

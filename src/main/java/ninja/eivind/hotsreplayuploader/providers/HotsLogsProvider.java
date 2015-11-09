@@ -34,6 +34,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Implements a {@link Provider} to upload replays to hotslogs.com.<br>
+ * Uses the Amazon AWS S3 data store to save the file
+ * and an HTTP request to hotslogs.com to submit it to the site.
+ */
 public class HotsLogsProvider extends Provider {
 
     private static final Logger LOG = LoggerFactory.getLogger(HotsLogsProvider.class);
