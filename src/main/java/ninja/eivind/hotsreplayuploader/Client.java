@@ -16,6 +16,8 @@ package ninja.eivind.hotsreplayuploader;
 
 import com.gluonhq.ignite.DIContext;
 import com.gluonhq.ignite.guice.GuiceContext;
+import com.sun.javafx.application.LauncherImpl;
+import com.sun.javafx.application.PlatformImpl;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -40,7 +42,7 @@ import java.util.Collections;
 public class Client extends Application {
 
     public static void main(String[] args) {
-        Application.launch(Client.class, args);
+        LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(Client.class);
@@ -59,8 +61,12 @@ public class Client extends Application {
     private StatusBinder statusBinder;
 
     @Override
-    public void start(final Stage primaryStage) throws Exception {
+    public void init() {
         context.init();
+    }
+
+    @Override
+    public void start(final Stage primaryStage) throws Exception {
         URL logo = platformService.getLogoUrl();
         Image image = new Image(logo.toString());
         primaryStage.getIcons().add(image);
