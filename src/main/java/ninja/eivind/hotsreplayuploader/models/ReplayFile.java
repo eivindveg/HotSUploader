@@ -17,6 +17,8 @@ package ninja.eivind.hotsreplayuploader.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import ninja.eivind.hotsreplayuploader.providers.Provider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +27,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repesents a physical replay file, which can be parsed and uploaded to {@link Provider}s.<br>
+ * Also keeps track of this file's {@link UploadStatus}.
+ */
 public class ReplayFile implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReplayFile.class);

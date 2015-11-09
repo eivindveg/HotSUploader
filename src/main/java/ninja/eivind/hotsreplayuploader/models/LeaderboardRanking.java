@@ -16,6 +16,10 @@ package ninja.eivind.hotsreplayuploader.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * API object retrieved from HotSLogs.com calls, included in a {@link Account} object.<br>
+ * Can represent several rankings, that may describe player skill, like MMR, league and rank.
+ */
 public class LeaderboardRanking {
 
     @JsonProperty("GameMode")
