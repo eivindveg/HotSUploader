@@ -58,7 +58,7 @@ public class ReleaseManagerTest {
 
     @Test
     public void testCurrentReleaseIsTheSameAsPomVersion() throws Exception {
-        String currentVersion = ReleaseManager.CURRENT_VERSION;
+        String currentVersion = releaseManager.getCurrentVersion();
 
         Document parse = Jsoup.parse(new File("pom.xml"), "UTF-8");
         String pomVersion = parse.select("project > version").text();
