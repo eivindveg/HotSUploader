@@ -28,14 +28,6 @@
         <project.organization.name>MetaCode Studio</project.organization.name>
     </properties>
 
-
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-
     <name>HotS Replay Uploader</name>
 
     <build>
@@ -109,9 +101,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>ninja.eivind</groupId>
-            <artifactId>HotSReplayParser</artifactId>
-            <version>0.1.0</version>
+            <groupId>ninja.eivind.hots</groupId>
+            <artifactId>storm-parser</artifactId>
+            <version>0.1.1</version>
         </dependency>
 
         <dependency>
