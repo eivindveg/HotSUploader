@@ -8,8 +8,8 @@
     <artifactId>hots-replay-uploader</artifactId>
     <version>2.0-SNAPSHOT</version>
 
-    <contributors>
-        <contributor>
+    <developers>
+        <developer>
             <name>Eivind Vegsundvåg</name>
             <email>eivindveg hotmail com</email>
             <timezone>CET</timezone>
@@ -18,7 +18,11 @@
                 <role>Windows maintainer</role>
                 <role>Linux maintainer</role>
             </roles>
-        </contributor>
+        </developer>
+    </developers>
+
+    <contributors>
+
     </contributors>
 
     <properties>
