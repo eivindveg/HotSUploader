@@ -17,21 +17,37 @@ package ninja.eivind.hotsreplayuploader.scene.control;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.paint.Paint;
 
+/**
+ * {@link Button}, which has a transparent background and shows an {@link Image} as icon.<br>
+ * Provides a visual feedback, when clicked, by setting a minimal padding.
+ */
 public class ImageButton extends Button {
+
+    private final String STYLE_NORMAL = "-fx-background-color: transparent; -fx-padding: 0;";
+    private final String STYLE_PRESSED = "-fx-background-color: transparent; -fx-padding: 1 -1 -1 1;";
 
     private final double height;
     private final double width;
 
+    /**
+     * Create an {@link ImageButton} with the specified height and width.
+     * @param height
+     * @param width
+     */
     public ImageButton(double height, double width) {
         this.height = height;
         this.width = width;
-        setBackground(new Background(new BackgroundFill(Paint.valueOf("#FFFFFFFF"), null, null)));
+
+        setStyle(STYLE_NORMAL);
+
+        setOnMousePressed((event) -> setStyle(STYLE_PRESSED));
+        setOnMouseReleased((event) -> setStyle(STYLE_NORMAL));
     }
 
+    /**
+     * Set an icon for this {@link Button} to a specified {@link Image}.
+     */
     public void setGraphic(Image image) {
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(height);
@@ -39,6 +55,9 @@ public class ImageButton extends Button {
         super.setGraphic(imageView);
     }
 
+    /**
+     * Removes the icon of this {@link Button}.
+     */
     public void removeGraphic() {
         super.setGraphic(null);
     }
