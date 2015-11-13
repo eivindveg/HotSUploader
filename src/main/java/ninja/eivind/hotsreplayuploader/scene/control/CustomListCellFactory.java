@@ -23,6 +23,10 @@ import ninja.eivind.hotsreplayuploader.services.UploaderService;
 
 import java.net.URL;
 
+/**
+ * CellFactory for {@link CustomListCell}, which loads needed {@link Image}
+ * resources and serves a {@link UploaderService} reference.
+ */
 public class CustomListCellFactory implements Callback<ListView<ReplayFile>, ListCell<ReplayFile>> {
 
     private final Image updateImage;

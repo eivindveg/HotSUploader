@@ -26,12 +26,17 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.services.UploaderService;
 
+/**
+ * {@link ListCell} for a list of {@link ReplayFile}s.<br>
+ * Shows, if exceptions occured on the upload and provides
+ * controls for retrying failed uploads and deleting replay files.
+ */
 public class CustomListCell extends ListCell<ReplayFile> {
 
     private final BorderPane content;
     private final Label label;
-    private final ImageView updateImageView;
-    private final ImageView deleteImageView;
+    private final ImageButton updateImageView;
+    private final ImageButton deleteImageView;
     private final ImageView exceptionImageView;
     private final Image updateImage;
     private final Image deleteImage;
@@ -39,23 +44,23 @@ public class CustomListCell extends ListCell<ReplayFile> {
     private final UploaderService uploaderService;
     private ReplayFile lastItem;
 
-    protected CustomListCell(Image updateImage, Image deleteImage, Image exceptionImage, UploaderService uploaderService) {
+    protected CustomListCell(Image updateImage, Image deleteImage,
+            Image exceptionImage, UploaderService uploaderService) {
         super();
         this.updateImage = updateImage;
         this.deleteImage = deleteImage;
         this.exceptionImage = exceptionImage;
         this.uploaderService = uploaderService;
+
         label = new Label();
-        updateImageView = new ImageView();
-        updateImageView.setFitHeight(20);
-        updateImageView.setFitWidth(20);
-        deleteImageView = new ImageView();
-        deleteImageView.setFitHeight(20);
-        deleteImageView.setFitWidth(20);
+        label.setAlignment(Pos.CENTER_LEFT);
+
+        updateImageView = new ImageButton(20, 20);
+        deleteImageView = new ImageButton(20, 20);
         exceptionImageView = new ImageView();
         exceptionImageView.setFitHeight(20);
         exceptionImageView.setFitWidth(20);
-        label.setAlignment(Pos.CENTER_LEFT);
+
         HBox hBox = new HBox(updateImageView, deleteImageView);
         content = new BorderPane(null, null, hBox, null, label);
         content.setMaxWidth(Double.MAX_VALUE);
@@ -66,11 +71,11 @@ public class CustomListCell extends ListCell<ReplayFile> {
     public void updateSelected(boolean selected) {
         super.updateSelected(selected);
         if(selected && lastItem != null && lastItem.getStatus() == Status.EXCEPTION) {
-            updateImageView.setImage(updateImage);
-            deleteImageView.setImage(deleteImage);
+            updateImageView.setGraphic(updateImage);
+            deleteImageView.setGraphic(deleteImage);
         } else {
-            updateImageView.setImage(null);
-            deleteImageView.setImage(null);
+            updateImageView.removeGraphic();
+            deleteImageView.removeGraphic();
         }
 
     }
@@ -99,9 +104,7 @@ public class CustomListCell extends ListCell<ReplayFile> {
                     uploaderService.invalidateReplay(item);
                 }
             });
-            updateImageView.setOnMouseClicked(event -> {
-                uploaderService.invalidateReplay(item);
-            });
+            updateImageView.setOnMouseClicked(event -> uploaderService.invalidateReplay(item));
             deleteImageView.setOnMouseClicked(event -> uploaderService.deleteReplay(item));
         }
     }
