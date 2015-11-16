@@ -82,6 +82,9 @@ public class UploaderService extends ScheduledService<ReplayFile> {
         );
         updateUploadedCount(fileList);
         getQueuableFiles(fileList);
+        if(uploadQueue.size() != files.size()) {
+            throw new IllegalStateException("Not all replays tagged for upload are present in list");
+        }
     }
 
 
