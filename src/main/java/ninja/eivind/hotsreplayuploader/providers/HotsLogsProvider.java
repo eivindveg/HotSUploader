@@ -126,6 +126,11 @@ public class HotsLogsProvider extends Provider {
     private boolean parseAndCheckStatus(File file) throws IOException {
         final StormParser stormParser = new StormParser(file);
         Replay replay = stormParser.parseReplay();
+
+        // Temporary fix for computer players found until the parser supports this
+        if(replayHasComputerPlayers(replay)) {
+            return true;
+        }
         try {
             String matchId = getMatchId(replay);
             LOG.info("Calculated matchId to be" + matchId);
@@ -136,6 +141,14 @@ public class HotsLogsProvider extends Provider {
             LOG.warn("Platform does not support MD5; cannot proceed with parsing", e);
             return false;
         }
+    }
+
+    private boolean replayHasComputerPlayers(Replay replay) {
+        return replay.getReplayDetails()
+                .getPlayers()
+                .stream()
+                .map(Player::getShortName)
+                .anyMatch(name -> name.contains(" "));
     }
 
     protected String getMatchId(Replay replay) throws NoSuchAlgorithmException {
