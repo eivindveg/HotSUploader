@@ -47,9 +47,9 @@ public class UploaderService extends ScheduledService<ReplayFile> {
     private static final Logger LOG = LoggerFactory.getLogger(UploaderService.class);
     private final StringProperty uploadedCount = new SimpleStringProperty("0");
     private final BlockingQueue<ReplayFile> uploadQueue;
+    private final ObservableList<ReplayFile> files;
     @Inject
     private AccountDirectoryWatcher watcher;
-    private ObservableList<ReplayFile> files;
     @Inject
     private FileRepository fileRepository;
     @Inject
@@ -87,7 +87,7 @@ public class UploaderService extends ScheduledService<ReplayFile> {
 
     private void getQueuableFiles(final List<ReplayFile> mapped) {
         LOG.info("Registering not yet uploaded replays.");
-        files = FXCollections.observableArrayList(
+        files.addAll(
                 mapped.stream()
                         .filter(replayFile -> replayFile.getStatus() == Status.NEW
                                 || replayFile.getStatus() == Status.EXCEPTION)
