@@ -28,15 +28,18 @@ import java.util.Comparator;
 public class ReplayFileComparator implements Comparator<ReplayFile> {
     @Override
     public int compare(ReplayFile o1, ReplayFile o2) {
-        if(o1.getStatus() == Status.EXCEPTION && o2.getStatus() != Status.EXCEPTION) {
-            return 1;
-        } else if(o2.getStatus() == Status.EXCEPTION && o1.getStatus() != Status.EXCEPTION) {
-            return -1;
+        if(o1 == o2) {
+            return 0;
         }
 
         File file1 = o1.getFile();
         File file2 = o2.getFile();
 
-        return -Long.compare(file1.lastModified(), file2.lastModified());
+        int modified = -Long.compare(file1.lastModified(), file2.lastModified());
+        if(modified != 0) {
+            return modified;
+        }
+
+        throw new IllegalStateException("No two different replays can be equal.");
     }
 }
