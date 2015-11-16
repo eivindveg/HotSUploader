@@ -129,6 +129,7 @@ public class HotsLogsProvider extends Provider {
 
         // Temporary fix for computer players found until the parser supports this
         if(replayHasComputerPlayers(replay)) {
+            LOG.info("Computer players for found for " + file + ", tagging as uploaded.");
             return true;
         }
         try {
