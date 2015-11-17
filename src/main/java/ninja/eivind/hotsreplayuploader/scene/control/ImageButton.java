@@ -48,7 +48,7 @@ public class ImageButton extends Button {
     /**
      * Set an icon for this {@link Button} to a specified {@link Image}.
      */
-    public void setGraphic(Image image) {
+    protected void setGraphic(Image image) {
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(height);
         imageView.setFitWidth(width);
@@ -58,7 +58,7 @@ public class ImageButton extends Button {
     /**
      * Removes the icon of this {@link Button}.
      */
-    public void removeGraphic() {
+    protected void removeGraphic() {
         super.setGraphic(null);
     }
 }
