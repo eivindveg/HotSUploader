@@ -1,8 +1,7 @@
-package ninja.eivind.hotsreplayuploader.providers;
+package ninja.eivind.hotsreplayuploader.providers.hotslogs;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
-import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotsLogsProvider;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.stormparser.StormParser;
 import ninja.eivind.stormparser.models.Replay;

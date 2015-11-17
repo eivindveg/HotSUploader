@@ -71,20 +71,6 @@ public class HotsLogsProvider extends Provider {
         }
 
         File file = replayFile.getFile();
-        try {
-            boolean fileAlreadyUploaded = parseAndCheckStatus(file);
-            if (fileAlreadyUploaded) {
-                LOG.info("File already uploaded. No need to upload.");
-                return Status.UPLOADED;
-            } else {
-                LOG.info("New replay. Uploading to HotSLogs.com.");
-            }
-        } catch (IOException e) {
-            LOG.warn("Could not check status for replay: " + file, e);
-            return Status.EXCEPTION;
-        } catch (MpqException e) {
-            LOG.error("Could not parse replay. Skipping directly to upload.", e);
-        }
 
         String fileName = UUID.randomUUID() + ".StormReplay";
         LOG.info("Assigning remote file name " + fileName + " to " + replayFile);
@@ -92,6 +78,30 @@ public class HotsLogsProvider extends Provider {
 
         return uploadFileToHotSLogs(file, fileName, uri);
 
+    }
+
+    @Override
+    public Status getPreStatus(final Replay replay) {
+
+        // Temporary fix for computer players found until the parser supports this
+        if(replayHasComputerPlayers(replay)) {
+            LOG.info("Computer players for found for replay, tagging as uploaded.");
+            return Status.UNSUPPORTED_GAME_MODE;
+        }
+        try {
+            String matchId = getMatchId(replay);
+            LOG.info("Calculated matchId to be" + matchId);
+            String uri = BASE_URL + "&ReplayHash=" + matchId;
+            String result = getHttpClient().simpleRequest(uri).toLowerCase();
+            if(result.equals("duplicate")) {
+                return Status.UPLOADED;
+            }
+        } catch (NoSuchAlgorithmException e) {
+            LOG.warn("Platform does not support MD5; cannot proceed with parsing", e);
+        } catch (IOException e) {
+            return Status.EXCEPTION;
+        }
+        return Status.NEW;
     }
 
     private Status uploadFileToHotSLogs(File file, String fileName, String uri) {
@@ -121,27 +131,6 @@ public class HotsLogsProvider extends Provider {
         } catch (Exception e) {
             LOG.error("Could not upload file.", e);
             return Status.EXCEPTION;
-        }
-    }
-
-    private boolean parseAndCheckStatus(File file) throws IOException {
-        final StormParser stormParser = new StormParser(file);
-        Replay replay = stormParser.parseReplay();
-
-        // Temporary fix for computer players found until the parser supports this
-        if(replayHasComputerPlayers(replay)) {
-            LOG.info("Computer players for found for " + file + ", tagging as uploaded.");
-            return true;
-        }
-        try {
-            String matchId = getMatchId(replay);
-            LOG.info("Calculated matchId to be" + matchId);
-            String uri = BASE_URL + "&ReplayHash=" + matchId;
-            String result = getHttpClient().simpleRequest(uri).toLowerCase();
-            return result.equals("duplicate");
-        } catch (NoSuchAlgorithmException e) {
-            LOG.warn("Platform does not support MD5; cannot proceed with parsing", e);
-            return false;
         }
     }
 
