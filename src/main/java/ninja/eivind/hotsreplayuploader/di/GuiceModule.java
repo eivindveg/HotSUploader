@@ -23,10 +23,7 @@ import com.google.inject.matcher.AbstractMatcher;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
-import ninja.eivind.hotsreplayuploader.repositories.JsonStoreFileRepository;
-import ninja.eivind.hotsreplayuploader.repositories.ProviderRepository;
-import ninja.eivind.hotsreplayuploader.repositories.SingletonListProviderRepository;
+import ninja.eivind.hotsreplayuploader.repositories.*;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceProvider;
 import org.slf4j.Logger;
@@ -40,7 +37,7 @@ public class GuiceModule extends AbstractModule {
     protected void configure() {
         LOG.info("Instantiating IoC Container");
         bind(PlatformService.class).toProvider(new PlatformServiceProvider()).asEagerSingleton();
-        bind(FileRepository.class).to(JsonStoreFileRepository.class).asEagerSingleton();
+        bind(FileRepository.class).to(OrmLiteFileRepository.class).asEagerSingleton();
         bind(ProviderRepository.class).to(SingletonListProviderRepository.class).asEagerSingleton();
         bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class).asEagerSingleton();
         LOG.info("IoC Container instantiated");
