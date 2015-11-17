@@ -26,15 +26,17 @@ public class UploadStatus {
 
     @DatabaseField(generatedId = true)
     private Long id;
-    @DatabaseField
+    @DatabaseField(width = 15)
     private String host;
     @DatabaseField
     private Status status;
     @DatabaseField(foreign = true)
     private ReplayFile replayFile;
+
     public UploadStatus() {
 
     }
+
     public UploadStatus(final Provider host) {
         this.host = host.getName();
         this.status = Status.NEW;

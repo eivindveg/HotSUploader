@@ -24,9 +24,9 @@ public class ConnectionSourceProvider implements Provider<ConnectionSource> {
             if (releaseManager == null || releaseManager.getCurrentVersion().equals("Development")) {
                 return new JdbcConnectionSource("jdbc:h2:mem:", new H2DatabaseType());
             } else {
-                final File applicationHome = platformService.getApplicationHome();
+                final File database = new File(platformService.getApplicationHome(), "database");
                 return new JdbcConnectionSource(
-                        "jdbc:h2:" + applicationHome.getAbsolutePath(),
+                        "jdbc:h2:" + database.toString(),
                         new H2DatabaseType()
                 );
             }

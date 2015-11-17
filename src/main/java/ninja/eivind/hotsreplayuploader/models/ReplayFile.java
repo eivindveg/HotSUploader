@@ -43,7 +43,7 @@ public class ReplayFile implements Serializable {
     @DatabaseField(generatedId = true)
     private Long id;
     private File file;
-    @DatabaseField
+    @DatabaseField(width = 1023)
     private String fileName;
 
     @ForeignCollectionField
@@ -143,5 +143,9 @@ public class ReplayFile implements Serializable {
                 .filter(uploadStatus -> uploadStatus.getStatus() == Status.EXCEPTION)
                 .findAny()
                 .isPresent();
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 }
