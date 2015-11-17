@@ -130,16 +130,21 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
                     if (status == oldStatus) {
                         return;
                     }
-                    if (status == Status.UPLOADED) {
-                        int oldCount = Integer.valueOf(uploadedCount.getValue());
-                        int newCount = oldCount + 1;
-                        LOG.info("Upload count updated to " + newCount);
-                        uploadedCount.setValue(String.valueOf(newCount));
-                        replayFile.getFailedProperty().setValue(false);
-                        files.remove(replayFile);
-                    } else if (status == Status.EXCEPTION) {
-                        LOG.warn("Upload failed for replay " + replayFile + ". Tagging replay.");
-                        replayFile.getFailedProperty().set(true);
+                    switch (status) {
+                        case UPLOADED:
+                            int oldCount = Integer.valueOf(uploadedCount.getValue());
+                            int newCount = oldCount + 1;
+                            LOG.info("Upload count updated to " + newCount);
+                            uploadedCount.setValue(String.valueOf(newCount));
+                        case UNSUPPORTED_GAME_MODE:
+                            replayFile.getFailedProperty().setValue(false);
+                            files.remove(replayFile);
+                            break;
+                        case EXCEPTION:
+                        case NEW:
+                            LOG.warn("Upload failed for replay " + replayFile + ". Tagging replay.");
+                            replayFile.getFailedProperty().set(true);
+                            break;
                     }
                     fileRepository.updateReplay(replayFile);
                 } catch (InterruptedException | ExecutionException e) {

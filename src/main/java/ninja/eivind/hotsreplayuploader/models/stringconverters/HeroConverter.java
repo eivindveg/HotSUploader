@@ -15,16 +15,16 @@
 package ninja.eivind.hotsreplayuploader.models.stringconverters;
 
 import javafx.util.StringConverter;
-import ninja.eivind.hotsreplayuploader.models.Hero;
+import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 
 /**
- * A {@link StringConverter} for {@link Hero} entities.<br>
- * Resolves a {@link Hero} based on its name.
+ * A {@link StringConverter} for {@link HotSLogsHero} entities.<br>
+ * Resolves a {@link HotSLogsHero} based on its name.
  */
-public class HeroConverter extends StringConverter<Hero> {
+public class HeroConverter extends StringConverter<HotSLogsHero> {
 
     @Override
-    public String toString(final Hero hero) {
+    public String toString(final HotSLogsHero hero) {
         if (hero == null) {
             return "";
         }
@@ -32,12 +32,12 @@ public class HeroConverter extends StringConverter<Hero> {
     }
 
     @Override
-    public Hero fromString(final String primaryName) {
+    public HotSLogsHero fromString(final String primaryName) {
         final String imageURL = primaryName.replaceAll("[\\W_]", "");
         if (imageURL.equals("")) {
             return null;
         }
 
-        return new Hero(primaryName, imageURL);
+        return new HotSLogsHero(primaryName, imageURL);
     }
 }

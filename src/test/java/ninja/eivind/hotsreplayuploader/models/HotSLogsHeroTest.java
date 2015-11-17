@@ -14,16 +14,17 @@
 
 package ninja.eivind.hotsreplayuploader.models;
 
+import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.testutils.DataObjectTester;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class HeroTest {
+public class HotSLogsHeroTest {
     private static final String ARFAS_NAME = "Arfas", ARFAS_URL = "Frostmourn hungers... BLAH";
     // We need some mock heroes to test on. Arfas and Ufer, I choose you!
-    private Hero arfas, ufer;
+    private HotSLogsHero arfas, ufer;
     private String UFER_NAME = "Ufer", UFER_URL = "TRUE PALADIN OF THE LIGHT";
 
     /**
@@ -33,8 +34,8 @@ public class HeroTest {
      */
     @Before
     public void setUp() throws Exception {
-        arfas = new Hero(ARFAS_NAME, ARFAS_URL);
-        ufer = new Hero();
+        arfas = new HotSLogsHero(ARFAS_NAME, ARFAS_URL);
+        ufer = new HotSLogsHero();
         ufer.setPrimaryName(UFER_NAME);
         ufer.setImageURL(UFER_URL);
     }
@@ -43,13 +44,13 @@ public class HeroTest {
     public void testClassIsValidDataObject() throws Exception {
         // Verifying that the Hero object is an actual object and contains all
         // Necessary getters and setters
-        DataObjectTester<Hero> tester = new DataObjectTester<>(Hero.class, arfas);
+        DataObjectTester<HotSLogsHero> tester = new DataObjectTester<>(HotSLogsHero.class, arfas);
         tester.run();
     }
 
     /**
      * Test method for
-     * {@link Hero#Hero()}.
+     * {@link HotSLogsHero#HotSLogsHero()}.
      */
     @Test
     public void testHero() {
@@ -58,7 +59,7 @@ public class HeroTest {
 
     /**
      * Test method for
-     * {@link Hero#Hero(java.lang.String, java.lang.String)}
+     * {@link HotSLogsHero#HotSLogsHero(java.lang.String, java.lang.String)}
      * .
      */
     @Test
@@ -68,7 +69,7 @@ public class HeroTest {
 
     /**
      * Test method for
-     * {@link Hero#toString()}.
+     * {@link HotSLogsHero#toString()}.
      */
     @Test
     public void testToString() {
@@ -77,7 +78,7 @@ public class HeroTest {
 
     /**
      * Test method for
-     * {@link Hero#equals(java.lang.Object)}
+     * {@link HotSLogsHero#equals(java.lang.Object)}
      * .
      */
     @Test

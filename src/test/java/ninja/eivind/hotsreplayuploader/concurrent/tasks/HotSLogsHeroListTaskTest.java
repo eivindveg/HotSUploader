@@ -15,7 +15,7 @@
 package ninja.eivind.hotsreplayuploader.concurrent.tasks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ninja.eivind.hotsreplayuploader.models.Hero;
+import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClientTestUtils;
 import org.junit.Before;
@@ -27,12 +27,12 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class HeroListTaskTest {
+public class HotSLogsHeroListTaskTest {
 
     private HeroListTask task;
-    private Hero artanis = new Hero("Artanis", "Artanis");
-    private Hero abathur = new Hero("Abathur", "Abathur");
-    private Hero diablo = new Hero("Diablo", "Diablo");
+    private HotSLogsHero artanis = new HotSLogsHero("Artanis", "Artanis");
+    private HotSLogsHero abathur = new HotSLogsHero("Abathur", "Abathur");
+    private HotSLogsHero diablo = new HotSLogsHero("Diablo", "Diablo");
     private final SimpleHttpClient simpleHttpClient = SimpleHttpClientTestUtils.getBaseMock();
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -46,8 +46,8 @@ public class HeroListTaskTest {
         when(simpleHttpClient.simpleRequest(HeroListTask.API_ROUTE))
                 .thenReturn(objectMapper.writeValueAsString(Arrays.asList(artanis, diablo, abathur)));
 
-        List<Hero> expected = Arrays.asList(abathur, artanis, diablo);
-        List<Hero> actual = task.call();
+        List<HotSLogsHero> expected = Arrays.asList(abathur, artanis, diablo);
+        List<HotSLogsHero> actual = task.call();
 
         assertEquals("HeroListTask returns sorted list.", expected, actual);
     }

@@ -19,6 +19,8 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
+import ninja.eivind.stormparser.StormParser;
+import ninja.eivind.stormparser.models.Replay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +28,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * {@link ScheduledService} for checking the current values of
- * a user's {@link Account}s. Will be checked often for MMR changes.
+ * {@link Task} for uploading a replay to a {@link Collection} of {@link Provider}s
  */
 public class UploadTask extends Task<ReplayFile> {
     private static final Logger LOG = LoggerFactory.getLogger(UploadTask.class);
@@ -43,22 +44,36 @@ public class UploadTask extends Task<ReplayFile> {
     protected ReplayFile call() throws Exception {
         LOG.info("Uploading replay " + take);
         providers.forEach(provider -> {
-            Status upload = provider.upload(take);
-            if (upload == null) {
-                throw new RuntimeException("Failed");
-            }
-            List<UploadStatus> uploadStatuses = take.getUploadStatuses();
-            UploadStatus status = uploadStatuses.stream()
-                    .filter(uploadStatus -> uploadStatus.getHost().equals(provider.getName()))
-                    .findFirst()
-                    .orElse(null);
-            if (status == null) {
-                uploadStatuses.add(new UploadStatus(provider.getName(), upload));
+
+            StormParser parser = new StormParser(take.getFile());
+            Replay replay = parser.parseReplay();
+            Status preStatus = provider.getPreStatus(replay);
+            if(preStatus == Status.UPLOADED || preStatus == Status.UNSUPPORTED_GAME_MODE) {
+                LOG.info("Parsed preStatus reported no need to upload "
+                        + take.getFile() + " for provider " + provider.getName());
+                applyStatus(provider, preStatus);
             } else {
-                status.setStatus(upload);
+                Status upload = provider.upload(take);
+                if (upload == null) {
+                    throw new RuntimeException("Failed");
+                }
+                applyStatus(provider, upload);
             }
             succeeded();
         });
         return take;
+    }
+
+    private void applyStatus(final Provider provider, final Status status) {
+        List<UploadStatus> uploadStatuses = take.getUploadStatuses();
+        UploadStatus current = uploadStatuses.stream()
+                .filter(uploadStatus -> uploadStatus.getHost().equals(provider.getName()))
+                .findFirst()
+                .orElse(null);
+        if (current == null) {
+            uploadStatuses.add(new UploadStatus(provider.getName(), status));
+        } else {
+            current.setStatus(status);
+        }
     }
 }

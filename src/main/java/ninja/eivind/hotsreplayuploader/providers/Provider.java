@@ -17,6 +17,7 @@ package ninja.eivind.hotsreplayuploader.providers;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
+import ninja.eivind.stormparser.models.Replay;
 
 /**
  * Defines an interface for uploading a {@link ReplayFile}
@@ -39,6 +40,8 @@ public abstract class Provider {
     }
 
     public abstract Status upload(ReplayFile replayFile);
+
+    public abstract Status getPreStatus(Replay replay);
 
     public String getName() {
         return name;
