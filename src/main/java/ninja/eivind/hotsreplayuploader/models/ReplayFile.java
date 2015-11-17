@@ -43,10 +43,10 @@ public class ReplayFile implements Serializable {
     @DatabaseField(generatedId = true)
     private Long id;
     private File file;
-    @DatabaseField(width = 1023)
+    @DatabaseField(width = 1023, unique = true)
     private String fileName;
 
-    @ForeignCollectionField
+    @ForeignCollectionField(eager = true)
     private Collection<UploadStatus> uploadStatuses = new ArrayList<>();
 
     public ReplayFile() {

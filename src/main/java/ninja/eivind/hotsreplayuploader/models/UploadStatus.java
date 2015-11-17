@@ -30,7 +30,7 @@ public class UploadStatus {
     private String host;
     @DatabaseField
     private Status status;
-    @DatabaseField(foreign = true)
+    @DatabaseField(foreign = true, foreignAutoCreate = true)
     private ReplayFile replayFile;
 
     public UploadStatus() {
