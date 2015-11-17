@@ -6,10 +6,12 @@ import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
+@Singleton
 public class OrmLiteFileRepository implements FileRepository, Initializable {
 
     @Inject
