@@ -14,6 +14,7 @@
 
 package ninja.eivind.hotsreplayuploader.services;
 
+import com.google.inject.Inject;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
@@ -31,11 +32,11 @@ import java.util.List;
 public class HeroService extends ScheduledService<List<Hero>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(HeroService.class);
-    private final SimpleHttpClient httpClient;
+    @Inject
+    private SimpleHttpClient httpClient;
 
-    public HeroService(SimpleHttpClient httpClient) {
+    public HeroService() {
         LOG.info("Instantiating " + getClass().getSimpleName());
-        this.httpClient = httpClient;
         setPeriod(Duration.hours(2));
         setBackoffStrategy(param -> param.getPeriod().multiply(1.25));
         LOG.info("Instantiated " + getClass().getSimpleName());

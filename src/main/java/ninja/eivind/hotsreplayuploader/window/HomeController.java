@@ -115,6 +115,8 @@ public class HomeController implements JavaFXController {
 
     @Inject
     private StatusBinder statusBinder;
+    @Inject
+    private HeroService heroService;
 
 
     @Override
@@ -166,7 +168,6 @@ public class HomeController implements JavaFXController {
     private void fetchHeroNames() {
         heroName.converterProperty().setValue(new HeroConverter());
         FXUtils.autoCompleteComboBox(heroName, FXUtils.AutoCompleteMode.STARTS_WITH);
-        HeroService heroService = new HeroService(httpClient);
         heroService.setOnSucceeded(event -> {
             if (null != heroService.getValue()) {
                 heroName.getItems().setAll(heroService.getValue());
