@@ -31,7 +31,7 @@ import ninja.eivind.hotsreplayuploader.models.LeaderboardRanking;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.HeroConverter;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
-import ninja.eivind.hotsreplayuploader.providers.HotsLogsProvider;
+import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotsLogsProvider;
 import ninja.eivind.hotsreplayuploader.scene.control.CustomListCellFactory;
 import ninja.eivind.hotsreplayuploader.services.AccountService;
 import ninja.eivind.hotsreplayuploader.services.HeroService;

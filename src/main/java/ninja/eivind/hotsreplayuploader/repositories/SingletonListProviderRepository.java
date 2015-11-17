@@ -14,7 +14,7 @@
 
 package ninja.eivind.hotsreplayuploader.repositories;
 
-import ninja.eivind.hotsreplayuploader.providers.HotsLogsProvider;
+import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotsLogsProvider;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
 
 import java.util.Collection;

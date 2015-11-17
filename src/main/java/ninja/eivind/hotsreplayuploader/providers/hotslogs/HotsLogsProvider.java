@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package ninja.eivind.hotsreplayuploader.providers;
+package ninja.eivind.hotsreplayuploader.providers.hotslogs;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
+import ninja.eivind.hotsreplayuploader.providers.Provider;
 import ninja.eivind.mpq.models.MpqException;
 import ninja.eivind.stormparser.StormParser;
 import ninja.eivind.stormparser.models.Player;
