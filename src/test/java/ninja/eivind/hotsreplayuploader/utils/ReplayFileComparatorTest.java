@@ -37,7 +37,10 @@ public class ReplayFileComparatorTest {
         comparator = new ReplayFileComparator();
     }
 
-    @Test
+    /**
+     * @deprecated in favour of no status check
+     */
+    @Deprecated
     public void testCompareByStatus() throws Exception {
         ReplayFile expection = new ReplayFile(mock(File.class));
         expection.getUploadStatuses().add(new UploadStatus("test", Status.EXCEPTION));
