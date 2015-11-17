@@ -48,7 +48,7 @@ public class UploadTask extends Task<ReplayFile> {
             StormParser parser = new StormParser(take.getFile());
             Replay replay = parser.parseReplay();
             Status preStatus = provider.getPreStatus(replay);
-            if(preStatus != Status.NEW && preStatus != Status.EXCEPTION) {
+            if(preStatus == Status.UPLOADED || preStatus == Status.UNSUPPORTED_GAME_MODE) {
                 LOG.info("Parsed preStatus reported no need to upload "
                         + take.getFile() + " for provider " + provider.getName());
                 applyStatus(provider, preStatus);

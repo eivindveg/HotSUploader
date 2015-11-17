@@ -137,7 +137,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
                         uploadedCount.setValue(String.valueOf(newCount));
                         replayFile.getFailedProperty().setValue(false);
                         files.remove(replayFile);
-                    } else if (status == Status.EXCEPTION) {
+                    } else if (status == Status.EXCEPTION || status == Status.NEW) {
                         LOG.warn("Upload failed for replay " + replayFile + ". Tagging replay.");
                         replayFile.getFailedProperty().set(true);
                     }
