@@ -23,7 +23,7 @@ import java.util.List;
  * API object retrieved from HotSLogs.com calls, which represents a player's battle net account.<br>
  * Used to retrieve the player's leaderboard rankings.
  */
-public class Account {
+public class Account implements LeaderboardRanked, Named, Player {
 
     @JsonProperty("PlayerID")
     private Long playerId;
@@ -48,11 +48,12 @@ public class Account {
      *
      * @return this account's player id
      */
+    @Override
     public Long getPlayerId() {
         return playerId;
     }
 
-
+    @Override
     public void setPlayerId(final Long playerId) {
         this.playerId = playerId;
     }
@@ -62,10 +63,12 @@ public class Account {
      *
      * @return this account's name
      */
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(final String name) {
         this.name = name;
     }
@@ -76,6 +79,7 @@ public class Account {
      * @return a list of type {@link LeaderboardRanking}
      * @see LeaderboardRanking
      */
+    @Override
     public List<LeaderboardRanking> getLeaderboardRankings() {
         return leaderboardRankings;
     }
@@ -86,6 +90,7 @@ public class Account {
      *
      * @param leaderboardRankings a list of type {@link LeaderboardRanking}
      */
+    @Override
     public void setLeaderboardRankings(final List<LeaderboardRanking> leaderboardRankings) {
         this.leaderboardRankings = leaderboardRankings;
     }
