@@ -21,6 +21,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import ninja.eivind.hotsreplayuploader.concurrent.tasks.UploadTask;
+import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
  * {@link ScheduledService}, that is responsible for uploading {@link ReplayFile}s
  * to {@link Provider}s. Does also take care of updating the UI in the process.
  */
-public class UploaderService extends ScheduledService<ReplayFile> {
+public class UploaderService extends ScheduledService<ReplayFile> implements Initializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(UploaderService.class);
     private final StringProperty uploadedCount = new SimpleStringProperty("0");
@@ -62,7 +63,8 @@ public class UploaderService extends ScheduledService<ReplayFile> {
         LOG.info("Instantiated " + getClass().getSimpleName());
     }
 
-    public void init() {
+    @Override
+    public void initialize() {
         LOG.info("Initializing " + getClass().getSimpleName());
         watcher.addFileListener(file -> {
             files.add(file);
@@ -72,7 +74,7 @@ public class UploaderService extends ScheduledService<ReplayFile> {
         LOG.info("Initialized " + getClass().getSimpleName());
     }
 
-    public void registerInitial() {
+    private void registerInitial() {
         LOG.info("Registering initial replays.");
         List<ReplayFile> fileList = fileRepository.getAll();
         uploadQueue.addAll(

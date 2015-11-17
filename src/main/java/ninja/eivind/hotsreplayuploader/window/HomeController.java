@@ -24,7 +24,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
-import ninja.eivind.hotsreplayuploader.services.AccountService;
+import ninja.eivind.hotsreplayuploader.di.JavaFXController;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.models.Hero;
 import ninja.eivind.hotsreplayuploader.models.LeaderboardRanking;
@@ -33,6 +33,7 @@ import ninja.eivind.hotsreplayuploader.models.stringconverters.HeroConverter;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.providers.HotsLogsProvider;
 import ninja.eivind.hotsreplayuploader.scene.control.CustomListCellFactory;
+import ninja.eivind.hotsreplayuploader.services.AccountService;
 import ninja.eivind.hotsreplayuploader.services.HeroService;
 import ninja.eivind.hotsreplayuploader.services.UploaderService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
@@ -44,13 +45,12 @@ import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public class HomeController {
+public class HomeController implements JavaFXController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
     @Inject
@@ -117,9 +117,8 @@ public class HomeController {
     private StatusBinder statusBinder;
 
 
-    @PostConstruct
+    @Override
     public void initialize() {
-        uploaderService.init();
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
         setPlayerSearchActions();

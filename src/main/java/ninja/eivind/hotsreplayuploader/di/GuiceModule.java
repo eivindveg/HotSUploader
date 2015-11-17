@@ -16,6 +16,13 @@ package ninja.eivind.hotsreplayuploader.di;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
+import com.google.inject.Binding;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
+import com.google.inject.matcher.AbstractMatcher;
+import com.google.inject.spi.InjectionListener;
+import com.google.inject.spi.TypeEncounter;
+import com.google.inject.spi.TypeListener;
 import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
 import ninja.eivind.hotsreplayuploader.repositories.JsonStoreFileRepository;
 import ninja.eivind.hotsreplayuploader.repositories.ProviderRepository;
@@ -37,5 +44,25 @@ public class GuiceModule extends AbstractModule {
         bind(ProviderRepository.class).to(SingletonListProviderRepository.class).asEagerSingleton();
         bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class).asEagerSingleton();
         LOG.info("IoC Container instantiated");
+
+        bindListener(new AbstractMatcher<TypeLiteral<?>>() {
+            @Override
+            public boolean matches(final TypeLiteral<?> typeLiteral) {
+                Class<?> rawType = typeLiteral.getRawType();
+                boolean assignableFrom = Initializable.class.isAssignableFrom(rawType);
+                LOG.info("Type " + rawType + " is " + (assignableFrom ? "" : "not ") + "Initializable.");
+                return assignableFrom;
+            }
+        }, new TypeListener() {
+            @Override
+            public <I> void hear(final TypeLiteral<I> type, final TypeEncounter<I> encounter) {
+                LOG.info("Binding "  + type.getType().getTypeName() + " to post inject.");
+                encounter.register((InjectionListener<I>) injectee -> {
+                    if(injectee instanceof Initializable) {
+                        ((Initializable) injectee).initialize();
+                    }
+                });
+            }
+        });
     }
 }
