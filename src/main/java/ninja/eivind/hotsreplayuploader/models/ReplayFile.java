@@ -15,33 +15,46 @@
 package ninja.eivind.hotsreplayuploader.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Repesents a physical replay file, which can be parsed and uploaded to {@link Provider}s.<br>
  * Also keeps track of this file's {@link UploadStatus}.
  */
+@DatabaseTable
 public class ReplayFile implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReplayFile.class);
     private static final long serialVersionUID = 1L;
-    private final File file;
-    private final List<UploadStatus> uploadStatuses;
     private final BooleanProperty failedProperty = new SimpleBooleanProperty(null, "failed", false);
+    @DatabaseField(generatedId = true)
+    private Long id;
+    private File file;
+    @DatabaseField
+    private String fileName;
+
+    @ForeignCollectionField
+    private Collection<UploadStatus> uploadStatuses = new ArrayList<>();
+
+    public ReplayFile() {
+    }
 
     public ReplayFile(final File file) {
-        uploadStatuses = new ArrayList<>();
         this.file = file;
+        this.fileName = file.toString();
     }
 
     public static long getSerialVersionUID() {
@@ -63,6 +76,14 @@ public class ReplayFile implements Serializable {
 
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
     public BooleanProperty getFailedProperty() {
         return failedProperty;
     }
@@ -73,7 +94,7 @@ public class ReplayFile implements Serializable {
 
     @Override
     public String toString() {
-        return file.getName();
+        return getFile().getName();
     }
 
     @Override
@@ -99,10 +120,13 @@ public class ReplayFile implements Serializable {
             LOG.warn(this + " has no statuses.");
             return Status.NEW;
         }
-        return uploadStatuses.get(0).getStatus();
+        return uploadStatuses.iterator().next().getStatus();
     }
 
     public File getFile() {
+        if (file == null && fileName != null) {
+            file = new File(fileName);
+        }
         return file;
     }
 
@@ -110,7 +134,7 @@ public class ReplayFile implements Serializable {
         uploadStatuses.addAll(list);
     }
 
-    public List<UploadStatus> getUploadStatuses() {
+    public Collection<UploadStatus> getUploadStatuses() {
         return uploadStatuses;
     }
 

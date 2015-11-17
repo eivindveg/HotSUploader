@@ -47,7 +47,7 @@ public class UploadTask extends Task<ReplayFile> {
             if (upload == null) {
                 throw new RuntimeException("Failed");
             }
-            List<UploadStatus> uploadStatuses = take.getUploadStatuses();
+            Collection<UploadStatus> uploadStatuses = take.getUploadStatuses();
             UploadStatus status = uploadStatuses.stream()
                     .filter(uploadStatus -> uploadStatus.getHost().equals(provider.getName()))
                     .findFirst()

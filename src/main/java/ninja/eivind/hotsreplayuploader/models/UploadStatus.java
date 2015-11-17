@@ -14,20 +14,27 @@
 
 package ninja.eivind.hotsreplayuploader.models;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
 
 /**
  * Defines a more specific upload status by adding a specific host to an {@link Status}.
  */
+@DatabaseTable
 public class UploadStatus {
 
+    @DatabaseField(generatedId = true)
+    private Long id;
+    @DatabaseField
     private String host;
+    @DatabaseField
     private Status status;
-
+    @DatabaseField(foreign = true)
+    private ReplayFile replayFile;
     public UploadStatus() {
 
     }
-
     public UploadStatus(final Provider host) {
         this.host = host.getName();
         this.status = Status.NEW;
@@ -36,6 +43,14 @@ public class UploadStatus {
     public UploadStatus(final String host, final Status status) {
         this.host = host;
         this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
     }
 
     public String getHost() {
