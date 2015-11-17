@@ -19,7 +19,7 @@ import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
 import ninja.eivind.hotsreplayuploader.concurrent.tasks.HeroListTask;
-import ninja.eivind.hotsreplayuploader.models.Hero;
+import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
- * {@link ScheduledService} for checking the current list of available {@link Hero}es periodically.
+ * {@link ScheduledService} for checking the current list of available {@link HotSLogsHero}es periodically.
  */
-public class HeroService extends ScheduledService<List<Hero>> {
+public class HeroService extends ScheduledService<List<HotSLogsHero>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(HeroService.class);
     @Inject
@@ -43,7 +43,7 @@ public class HeroService extends ScheduledService<List<Hero>> {
     }
 
     @Override
-    protected Task<List<Hero>> createTask() {
+    protected Task<List<HotSLogsHero>> createTask() {
         HeroListTask heroListTask = new HeroListTask(httpClient);
         heroListTask.setOnSucceeded(event -> {
             getOnSucceeded().handle(event);

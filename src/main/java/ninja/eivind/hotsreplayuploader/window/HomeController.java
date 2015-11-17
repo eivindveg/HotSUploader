@@ -26,7 +26,7 @@ import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 import ninja.eivind.hotsreplayuploader.di.JavaFXController;
 import ninja.eivind.hotsreplayuploader.models.Account;
-import ninja.eivind.hotsreplayuploader.models.Hero;
+import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.hotsreplayuploader.models.LeaderboardRanking;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.HeroConverter;
@@ -97,7 +97,7 @@ public class HomeController implements JavaFXController {
     private Button lookupHero;
 
     @FXML
-    private ComboBox<Hero> heroName;
+    private ComboBox<HotSLogsHero> heroName;
 
     @Inject
     private UploaderService uploaderService;
@@ -200,7 +200,7 @@ public class HomeController implements JavaFXController {
 
     @FXML
     private void doLookupHero() {
-        Hero hero = this.heroName.getValue();
+        HotSLogsHero hero = this.heroName.getValue();
         if (hero == null) {
             return;
         }

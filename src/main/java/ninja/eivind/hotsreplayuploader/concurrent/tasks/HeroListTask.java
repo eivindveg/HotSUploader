@@ -16,7 +16,7 @@ package ninja.eivind.hotsreplayuploader.concurrent.tasks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
-import ninja.eivind.hotsreplayuploader.models.Hero;
+import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 
 import java.util.Arrays;
@@ -24,9 +24,9 @@ import java.util.List;
 
 /**
  * Asynchronous {@link Task}, which retrieves a list of
- * all currently available {@link Hero}es from the hotslogs API.
+ * all currently available {@link HotSLogsHero}es from the hotslogs API.
  */
-public class HeroListTask extends Task<List<Hero>> {
+public class HeroListTask extends Task<List<HotSLogsHero>> {
     public static final String API_ROUTE = "https://www.hotslogs.com/API/Data/Heroes";
     private final SimpleHttpClient httpClient;
 
@@ -35,10 +35,10 @@ public class HeroListTask extends Task<List<Hero>> {
     }
 
     @Override
-    protected List<Hero> call() throws Exception {
+    protected List<HotSLogsHero> call() throws Exception {
         final String result = httpClient.simpleRequest(API_ROUTE);
-        final Hero[] heroes = new ObjectMapper().readValue(result, Hero[].class);
-        List<Hero> heroList = Arrays.asList(heroes);
+        final HotSLogsHero[] heroes = new ObjectMapper().readValue(result, HotSLogsHero[].class);
+        List<HotSLogsHero> heroList = Arrays.asList(heroes);
         heroList.sort((o1, o2) -> o1.getPrimaryName().compareTo(o2.getPrimaryName()));
         return heroList;
     }

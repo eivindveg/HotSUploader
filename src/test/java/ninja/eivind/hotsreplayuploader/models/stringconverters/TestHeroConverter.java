@@ -14,7 +14,7 @@
 
 package ninja.eivind.hotsreplayuploader.models.stringconverters;
 
-import ninja.eivind.hotsreplayuploader.models.Hero;
+import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,12 +23,12 @@ import static org.junit.Assert.*;
 public class TestHeroConverter {
 
     private HeroConverter heroConverter;
-    private Hero hero;
+    private HotSLogsHero hero;
 
     @Before
     public void setup() {
         heroConverter = new HeroConverter();
-        hero = new Hero();
+        hero = new HotSLogsHero();
         hero.setImageURL("TestHero");
         hero.setPrimaryName("Test Hero'");
     }
@@ -46,8 +46,8 @@ public class TestHeroConverter {
 
     @Test
     public void testFromString() {
-        Hero expected = hero;
-        Hero actual = heroConverter.fromString("Test Hero'");
+        HotSLogsHero expected = hero;
+        HotSLogsHero actual = heroConverter.fromString("Test Hero'");
 
         assertEquals("HeroConverter creates a hero from a string", expected, actual);
         assertEquals("HeroConverter knows how to build an ImageURL", expected.getImageURL(), actual.getImageURL());
