@@ -3,6 +3,8 @@ package ninja.eivind.hotsreplayuploader.repositories;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.spring.DaoFactory;
 import com.j256.ormlite.spring.TableCreator;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import ninja.eivind.hotsreplayuploader.di.Initializable;
@@ -76,11 +78,15 @@ public class OrmLiteFileRepository implements FileRepository, Initializable {
 
     private ReplayFile getByFileName(final ReplayFile replayFile) {
         try {
-            final ReplayFile byFileName = dao.queryBuilder().where().eq("fileName", replayFile.getFileName()).queryForFirst();
-            if (byFileName == null) {
+            final SelectArg selectArg = new SelectArg("fileName", replayFile.getFileName());
+            final PreparedQuery<ReplayFile> query = dao.queryBuilder()
+                    .where().eq("fileName", selectArg)
+                    .prepare();
+            final List<ReplayFile> result = dao.query(query);
+            if (result.size() == 0) {
                 return replayFile;
             } else {
-                return byFileName;
+                return result.get(0);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
