@@ -2,7 +2,6 @@ package ninja.eivind.hotsreplayuploader.repositories;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.spring.DaoFactory;
-import com.j256.ormlite.spring.TableCreator;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
@@ -11,15 +10,11 @@ import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
-import ninja.eivind.hotsreplayuploader.utils.FileUtils;
-import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,12 +91,10 @@ public class OrmLiteFileRepository implements FileRepository, Initializable {
             final PreparedQuery<ReplayFile> query = dao.queryBuilder()
                     .where().eq("fileName", selectArg)
                     .prepare();
-            final List<ReplayFile> result = dao.query(query);
-            if (result.size() == 0) {
-                return replayFile;
-            } else {
-                return result.get(0);
-            }
+
+            return dao.query(query).stream()
+                    .findAny()
+                    .orElse(replayFile);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
