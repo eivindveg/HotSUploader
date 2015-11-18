@@ -11,6 +11,11 @@ import javax.inject.Provider;
 import java.io.File;
 import java.sql.SQLException;
 
+/**
+ * Defines the {@link ConnectionSource}, which is used by ORMLite
+ * to connect to the underlying database.<br>
+ * Database connection strings may differ for development or production mode.
+ */
 public class ConnectionSourceProvider implements Provider<ConnectionSource> {
 
     @Inject

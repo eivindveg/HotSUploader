@@ -16,13 +16,31 @@ package ninja.eivind.hotsreplayuploader.repositories;
 
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 
+import java.io.File;
 import java.util.List;
 
+/**
+ * Interface, that abstracts the interaction with {@link ReplayFile}s
+ * like removing them or creating and updating a related upload status.
+ */
 public interface FileRepository {
 
+    /**
+     * Deletes a {@link ReplayFile}'s physical {@link File}
+     * and it's saved upload status information.
+     * @param replayFile to delete
+     */
     void deleteReplay(ReplayFile replayFile);
 
+    /**
+     * Persists or updates the status of a {@link ReplayFile}.
+     * @param file the affected replay
+     */
     void updateReplay(ReplayFile file);
 
+    /**
+     * Retrieves all available {@link ReplayFile}s
+     * @return {@link List} of {@link ReplayFile}s
+     */
     List<ReplayFile> getAll();
 }

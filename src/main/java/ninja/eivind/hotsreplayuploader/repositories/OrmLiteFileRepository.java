@@ -18,6 +18,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of a {@link FileRepository}, which is based on a database backend.<br>
+ * Uses ORMLite to abstract database access.
+ */
 @Singleton
 public class OrmLiteFileRepository implements FileRepository, Initializable {
 
