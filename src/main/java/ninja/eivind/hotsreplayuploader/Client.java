@@ -50,6 +50,7 @@ public class Client extends Application {
     private PlatformService platformService;
     @Inject
     private StatusBinder statusBinder;
+    private TrayIcon trayIcon;
 
     public static void main(String[] args) {
         LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
@@ -57,13 +58,11 @@ public class Client extends Application {
 
     @Override
     public void stop() throws Exception {
+        if (trayIcon != null) {
+            SystemTray.getSystemTray().remove(trayIcon);
+        }
         context.dispose();
         super.stop();
-
-        /* If we get to this point, we're either just waiting for this call to finish, or we have dead threads.
-         For some reason, AWT threads don't shut down automatically because they're not daemons.
-          Not at all elegant, but at this point, we declare nuclear war: */
-        System.exit(0);
     }
 
     @Override
@@ -92,7 +91,7 @@ public class Client extends Application {
 
     private void addToTray(final Stage primaryStage) {
         try {
-            TrayIcon trayIcon = platformService.getTrayIcon(primaryStage);
+            trayIcon = platformService.getTrayIcon(primaryStage);
             SystemTray systemTray = SystemTray.getSystemTray();
             systemTray.add(trayIcon);
 
