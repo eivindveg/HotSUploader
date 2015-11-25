@@ -23,6 +23,7 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -34,11 +35,13 @@ public class AccountDirectoryWatcher {
     private final Set<File> watchDirectories;
     private StormHandler stormHandler;
     private Set<WatchHandler> watchHandlers = new HashSet<>();
+    private Collection<Thread> threads;
 
     @Inject
     public AccountDirectoryWatcher(StormHandler stormHandler) {
         this.stormHandler = stormHandler;
         watchDirectories = new HashSet<>(stormHandler.getHotSAccountDirectories());
+        threads = new HashSet<>();
         beginWatch();
     }
 
@@ -49,7 +52,9 @@ public class AccountDirectoryWatcher {
                 LOG.info("\t" + path);
                 WatchHandler watchHandler = new WatchHandler(stormHandler, path);
                 watchHandlers.add(watchHandler);
-                new Thread(watchHandler).start();
+                Thread thread = new Thread(watchHandler);
+                thread.start();
+                threads.add(thread);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -66,5 +71,11 @@ public class AccountDirectoryWatcher {
         for (final WatchHandler watchHandler : watchHandlers) {
             watchHandler.addListener(fileListener);
         }
+    }
+
+    public void stop() {
+        threads.stream()
+                .filter(thread -> !thread.isInterrupted())
+                .forEach(Thread::interrupt);
     }
 }
