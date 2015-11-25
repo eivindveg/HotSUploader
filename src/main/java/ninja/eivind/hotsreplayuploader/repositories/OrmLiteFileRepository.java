@@ -77,25 +77,24 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
 
     @Override
     public List<ReplayFile> getAll() {
-        List<ReplayFile> collect = accountDirectoryWatcher.getAllFiles()
+        return accountDirectoryWatcher.getAllFiles()
                 .map(ReplayFile::fromDirectory)
                 .flatMap(List::stream)
                 .map(this::getByFileName)
                 .map(replayFile -> {
                     File file = replayFile.getFile();
-                    if (!file.exists()) {
+                    if (file.exists()) {
+                        return replayFile;
+                    } else {
                         try {
                             dao.delete(replayFile);
                             return null;
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
-                    } else {
-                        return replayFile;
                     }
                 })
                 .collect(Collectors.toList());
-        return collect;
     }
 
     private ReplayFile getByFileName(final ReplayFile replayFile) {
