@@ -20,6 +20,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
+/**
+ * Utility model for communicating with Github.com's release API. Contains only the fields we need.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GitHubRelease {
 

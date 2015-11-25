@@ -33,7 +33,7 @@ public class PlatformServiceProvider implements Provider<PlatformService> {
         } else if (OS_NAME.contains("Linux")) {
             return new LinuxService();
         } else {
-            throw new UnsupportedOperationException("Operating system not supported");
+            throw new PlatformNotSupportedException("Operating system not supported");
         }
     }
 }

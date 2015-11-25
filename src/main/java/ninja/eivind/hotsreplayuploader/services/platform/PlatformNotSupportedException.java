@@ -14,7 +14,10 @@
 
 package ninja.eivind.hotsreplayuploader.services.platform;
 
-public class PlatformNotSupportedException extends Exception {
+/**
+ * Exception thrown by {@link PlatformService} when a given platform does not support an action.
+ */
+public class PlatformNotSupportedException extends RuntimeException {
     public PlatformNotSupportedException(final String message) {
         super(message);
     }

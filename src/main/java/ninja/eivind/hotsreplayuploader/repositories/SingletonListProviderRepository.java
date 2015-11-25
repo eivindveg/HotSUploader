@@ -21,9 +21,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Simple implementation containing only the {@link HotsLogsProvider}.
+ */
 public class SingletonListProviderRepository implements ProviderRepository {
 
-    private List<Provider> all = Collections.singletonList(new HotsLogsProvider());
+    private final List<Provider> all = Collections.singletonList(new HotsLogsProvider());
     @Override
     public Collection<Provider> getAll() {
         return all;

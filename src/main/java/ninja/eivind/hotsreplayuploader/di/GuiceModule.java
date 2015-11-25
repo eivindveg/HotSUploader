@@ -30,6 +30,10 @@ import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceProvider
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * {@link com.gluonhq.ignite.DIContext} implementation that wires into Ignite-Guice to service the application's
+ * CDI needs.
+ */
 public class GuiceModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(GuiceModule.class);

@@ -18,6 +18,10 @@ import ninja.eivind.hotsreplayuploader.providers.Provider;
 
 import java.util.Collection;
 
+/**
+ * Repository interface for {@link Provider} services. Single entry point for locating a Provider to handle replay files
+ * with external services.
+ */
 public interface ProviderRepository {
 
     Collection<Provider> getAll();

@@ -37,6 +37,9 @@ import java.awt.*;
 import java.net.URL;
 import java.util.Collections;
 
+/**
+ * Application entry point. Sets up the actions that connect to the underlying platform.
+ */
 public class Client extends Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(Client.class);

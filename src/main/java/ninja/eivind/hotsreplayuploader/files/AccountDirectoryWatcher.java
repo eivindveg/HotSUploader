@@ -27,6 +27,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
+/**
+ * Service that manages multiple {@link WatchHandler}s, which in turn manages different
+ * {@link java.nio.file.WatchService}s. Runs concurrently.
+ */
 @Singleton
 public class AccountDirectoryWatcher {
 

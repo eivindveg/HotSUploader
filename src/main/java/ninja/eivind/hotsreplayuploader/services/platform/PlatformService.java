@@ -27,6 +27,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
+/**
+ * Interface for implementations. There should be one active at all times, depending on the user's platform/operating
+ * system. When no valid implementation can be detected, the {@link PlatformServiceProvider} will throw a
+ * {@link PlatformNotSupportedException}.
+ */
 public interface PlatformService {
 
     String USER_HOME = System.getProperty("user.home");

@@ -50,6 +50,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Window controller for the application. Contains references to all the components exposed to the user. Sets up events
+ * and services to handle almost everything that happens in this application.
+ */
 public class HomeController implements JavaFXController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);

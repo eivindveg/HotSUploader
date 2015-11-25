@@ -18,6 +18,9 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 
 import java.util.List;
 
+/**
+ * Repository interface for the {@link ReplayFile} model. Handles all CRUD operation for persistable ReplayFile data.
+ */
 public interface FileRepository {
 
     void deleteReplay(ReplayFile replayFile);

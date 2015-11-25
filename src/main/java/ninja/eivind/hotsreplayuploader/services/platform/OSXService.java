@@ -29,7 +29,9 @@ import javafx.event.EventType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-
+/**
+ * {@link PlatformService} that is active on Apple OSX systems.
+ */
 public class OSXService implements PlatformService {
     private static final Logger LOG = LoggerFactory.getLogger(OSXService.class);
     private final String libraryPath = "/Library/Application Support";

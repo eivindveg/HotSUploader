@@ -16,10 +16,17 @@ package ninja.eivind.hotsreplayuploader.versions;
 
 import java.util.Comparator;
 
+/**
+ * {@link Comparator} for ordering {@link GitHubRelease}s. Will take several matters into consideration:
+ * <p>
+ * The version string
+ * Prerelease status
+ * <p>
+ * The end result will be releases before pre-releases, sorted by version String
+ */
 public class ReleaseComparator implements Comparator<GitHubRelease> {
 
     /**
-     *
      * @param release1 The first {@link GitHubRelease}
      * @param release2 The second {@link GitHubRelease}
      * @return 1 if the second release is considered newer than the first

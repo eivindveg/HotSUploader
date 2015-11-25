@@ -28,6 +28,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service object that intends to finds the last current GitHub.com release for the application, as well provide
+ * its own implementation of current version to compare against.
+ */
 public class ReleaseManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReleaseManager.class);

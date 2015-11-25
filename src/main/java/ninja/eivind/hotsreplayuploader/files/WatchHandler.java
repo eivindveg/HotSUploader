@@ -28,6 +28,11 @@ import java.util.List;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
+/**
+ * Service object that manages a single {@link WatchService}. This handler manages new {@link ReplayFile}s as they are
+ * detected as {@link File}s, mapping them into correct models and notifying
+ * {@link ninja.eivind.hotsreplayuploader.services.UploaderService}
+ */
 public class WatchHandler implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(WatchHandler.class);

@@ -16,6 +16,9 @@ package ninja.eivind.hotsreplayuploader.files;
 
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 
+/**
+ * Functional interface for listeners added to {@link AccountDirectoryWatcher}.
+ */
 @FunctionalInterface
 public interface FileListener {
 

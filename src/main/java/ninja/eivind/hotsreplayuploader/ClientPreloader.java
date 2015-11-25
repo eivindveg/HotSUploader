@@ -23,6 +23,9 @@ import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Application preloader. This displays a splash screen while {@link Client} is loading.
+ */
 public class ClientPreloader extends Preloader {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientPreloader.class);

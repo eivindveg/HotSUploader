@@ -19,6 +19,11 @@ import javafx.beans.property.StringProperty;
 
 import javax.inject.Singleton;
 
+/**
+ * Binds a {@link StringProperty} representing the current application status to various elements, including the
+ * {@link java.awt.SystemTray} icon and the {@link ninja.eivind.hotsreplayuploader.window.HomeController}'s status
+ * display.
+ */
 @Singleton
 public class StatusBinder {
 

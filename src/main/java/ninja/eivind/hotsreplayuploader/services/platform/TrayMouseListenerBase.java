@@ -17,6 +17,9 @@ package ninja.eivind.hotsreplayuploader.services.platform;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * Base class for simple implementations of a {@link MouseListener}.
+ */
 public abstract class TrayMouseListenerBase implements MouseListener {
 
     @Override

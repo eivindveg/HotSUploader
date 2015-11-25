@@ -25,6 +25,9 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * {@link PlatformService} that is active on Microsoft Windows systems.
+ */
 public class WindowsService implements PlatformService {
 
     private static final Logger LOG = LoggerFactory.getLogger(WindowsService.class);

@@ -20,6 +20,10 @@ import com.google.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * {@link Provider} for Jackson's {@link ObjectMapper}. Required to provide an ObjectMapper capable of deserializing
+ * JSR310 objects through {@link JavaTimeModule}.
+ */
 public class ObjectMapperProvider implements Provider<ObjectMapper> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ObjectMapperProvider.class);

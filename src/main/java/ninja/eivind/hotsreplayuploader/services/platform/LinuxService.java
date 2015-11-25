@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
+/**
+ * {@link PlatformService} that is active on GNU/Linux systems.
+ */
 public class LinuxService implements PlatformService {
 
     private Desktop desktop;
