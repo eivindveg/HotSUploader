@@ -329,7 +329,7 @@ public class HomeController implements JavaFXController {
 
             if(SystemTray.isSupported() && newReplaysView.getItems().size() < 10) {
                 TrayIcon[] trayIcons = SystemTray.getSystemTray().getTrayIcons();
-                if (trayIcons != null && trayIcons[0] != null) {
+                if (trayIcons != null && trayIcons[0] != null && uploaderService.getValue() != null) {
                     trayIcons[0].displayMessage(Constants.APPLICATION_NAME,
                             uploaderService.getValue() + " uploaded.", TrayIcon.MessageType.INFO);
                 }
