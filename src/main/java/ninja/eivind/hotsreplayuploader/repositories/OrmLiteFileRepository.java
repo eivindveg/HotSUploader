@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Implementation of a {@link FileRepository}, which is based on a database backend.<br>
@@ -79,10 +80,12 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
 
     @Override
     public List<ReplayFile> getAll() {
-        return accountDirectoryWatcher.getAllFiles()
+        List<String> fileNames = accountDirectoryWatcher.getAllFiles()
                 .map(ReplayFile::fromDirectory)
                 .flatMap(List::stream)
-                .map(this::getByFileName)
+                .map(ReplayFile::getFileName).collect(Collectors.toList());
+
+        return getAllByFileNames(fileNames)
                 .map(replayFile -> {
                     File file = replayFile.getFile();
                     if (file.exists()) {
@@ -107,6 +110,14 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
             deleteBuilder.where()
                     .eq("fileName", selectArg);
             dao.delete(deleteBuilder.prepare());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Stream<ReplayFile> getAllByFileNames(List<String> fileNames) {
+        try {
+            return dao.queryForAll().stream().filter(file -> fileNames.contains(file.getFileName()));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
