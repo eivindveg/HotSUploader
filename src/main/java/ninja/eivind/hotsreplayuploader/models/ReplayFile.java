@@ -34,7 +34,7 @@ import java.util.List;
  * Repesents a physical replay file, which can be parsed and uploaded to {@link Provider}s.<br>
  * Also keeps track of this file's {@link UploadStatus}.
  */
-@DatabaseTable
+@DatabaseTable(tableName = "ReplayFile")
 public class ReplayFile implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReplayFile.class);

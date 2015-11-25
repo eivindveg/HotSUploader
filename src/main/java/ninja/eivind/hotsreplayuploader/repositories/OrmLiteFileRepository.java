@@ -15,17 +15,13 @@
 package ninja.eivind.hotsreplayuploader.repositories;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.spring.DaoFactory;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
-import ninja.eivind.hotsreplayuploader.models.UploadStatus;
-import org.flywaydb.core.Flyway;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -87,7 +83,7 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
                 .map(this::getByFileName)
                 .map(replayFile -> {
                     File file = replayFile.getFile();
-                    if(!file.exists()) {
+                    if (!file.exists()) {
                         try {
                             dao.delete(replayFile);
                             return null;
