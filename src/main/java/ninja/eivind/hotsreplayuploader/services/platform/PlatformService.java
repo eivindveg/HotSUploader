@@ -81,7 +81,6 @@ public interface PlatformService {
         showItem.addActionListener(e -> openAction.run());
         exitItem.addActionListener(event -> {
             Platform.exit();
-            System.exit(0);
         });
         return trayIcon;
 

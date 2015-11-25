@@ -37,7 +37,7 @@ public class ReleaseManagerTest {
     @Before
     public void setup() {
         httpClient = mock(SimpleHttpClient.class);
-        releaseManager = new ReleaseManager(mock(StormHandler.class));
+        releaseManager = new ReleaseManager();
         releaseManager.setHttpClient(httpClient);
     }
 

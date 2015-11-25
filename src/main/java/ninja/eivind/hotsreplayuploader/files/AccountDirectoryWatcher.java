@@ -20,9 +20,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -32,17 +34,19 @@ import java.util.stream.Stream;
  * {@link java.nio.file.WatchService}s. Runs concurrently.
  */
 @Singleton
-public class AccountDirectoryWatcher {
+public class AccountDirectoryWatcher implements Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountDirectoryWatcher.class);
     private final Set<File> watchDirectories;
     private StormHandler stormHandler;
     private Set<WatchHandler> watchHandlers = new HashSet<>();
+    private Collection<Thread> threads;
 
     @Inject
     public AccountDirectoryWatcher(StormHandler stormHandler) {
         this.stormHandler = stormHandler;
         watchDirectories = new HashSet<>(stormHandler.getHotSAccountDirectories());
+        threads = new HashSet<>();
         beginWatch();
     }
 
@@ -53,7 +57,9 @@ public class AccountDirectoryWatcher {
                 LOG.info("\t" + path);
                 WatchHandler watchHandler = new WatchHandler(stormHandler, path);
                 watchHandlers.add(watchHandler);
-                new Thread(watchHandler).start();
+                Thread thread = new Thread(watchHandler);
+                thread.start();
+                threads.add(thread);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -70,5 +76,12 @@ public class AccountDirectoryWatcher {
         for (final WatchHandler watchHandler : watchHandlers) {
             watchHandler.addListener(fileListener);
         }
+    }
+
+    @Override
+    public void close() {
+        threads.stream()
+                .filter(thread -> !thread.isInterrupted())
+                .forEach(Thread::interrupt);
     }
 }

@@ -24,11 +24,13 @@ import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
  * {@link ScheduledService} for checking the current list of available {@link HotSLogsHero}es periodically.
  */
+@Singleton
 public class HeroService extends ScheduledService<List<HotSLogsHero>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(HeroService.class);
