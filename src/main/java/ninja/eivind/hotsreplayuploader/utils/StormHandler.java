@@ -29,13 +29,12 @@ import java.util.stream.Collectors;
 /**
  * Utility class, which holds several application properties like paths
  * and provides several convencience methods like OS detection or
- *  data mining game related information .
+ * data mining game related information .
  */
 @Singleton
 public class StormHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(StormHandler.class);
-    private static final String APPLICATION_DIRECTORY_NAME = "HotSLogs UploaderFX";
     private static final String SEPARATOR = System.getProperty("file.separator");
     private final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
     private final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
@@ -55,9 +54,9 @@ public class StormHandler {
             // Migration logic; should be removed somewhere around version 2.X(not 2.0) or 3.0
             File parentFile = applicationHome.getParentFile();
             File oldDirectory = new File(parentFile, "HotSLogs UploaderFX");
-            if(oldDirectory.exists()) {
-                if(!oldDirectory.renameTo(applicationHome)) {
-                    if(!oldDirectory.delete()) {
+            if (oldDirectory.exists()) {
+                if (!oldDirectory.renameTo(applicationHome)) {
+                    if (!oldDirectory.delete()) {
                         LOG.warn("Could not delete old replay properties folder");
                     }
                 }
@@ -134,9 +133,5 @@ public class StormHandler {
 
     public String getHotSAccountFilter() {
         return hotsAccountFilter;
-    }
-
-    public static String getApplicationName() {
-        return APPLICATION_DIRECTORY_NAME;
     }
 }

@@ -61,7 +61,7 @@ public interface PlatformService {
         popup.add(showItem);
         popup.add(exitItem);
 
-        final TrayIcon trayIcon = new TrayIcon(image, StormHandler.getApplicationName(), popup);
+        final TrayIcon trayIcon = new TrayIcon(image, "Initializing tooltip", popup);
         trayIcon.setImageAutoSize(true);
 
         // Add listeners
