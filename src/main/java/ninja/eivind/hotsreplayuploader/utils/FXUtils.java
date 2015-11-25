@@ -24,13 +24,12 @@ import javafx.scene.input.KeyEvent;
 /**
  * Helper class for JavaFX related problems.
  */
-public class FXUtils {
+public final class FXUtils {
 
-    public enum AutoCompleteMode {
-        STARTS_WITH,CONTAINING,;
+    private FXUtils() {
     }
 
-    public static<T> void autoCompleteComboBox(ComboBox<T> comboBox, AutoCompleteMode mode) {
+    public static <T> void autoCompleteComboBox(ComboBox<T> comboBox, AutoCompleteMode mode) {
         ObservableList<T> data = comboBox.getItems();
 
         comboBox.setEditable(true);
@@ -114,5 +113,9 @@ public class FXUtils {
                 moveCaretToPos = false;
             }
         });
+    }
+
+    public enum AutoCompleteMode {
+        STARTS_WITH, CONTAINING,;
     }
 }

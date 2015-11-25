@@ -40,7 +40,7 @@ import java.util.Collections;
 public class Client extends Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(Client.class);
-    private DIContext context = new GuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
+    private final DIContext context = new GuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
     @Inject
     private FXMLLoader fxmlLoader;
     @Inject

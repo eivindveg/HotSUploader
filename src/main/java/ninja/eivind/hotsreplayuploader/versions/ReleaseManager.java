@@ -44,13 +44,11 @@ public class ReleaseManager {
     private ObjectMapper objectMapper;
     private final GitHubRelease currentRelease;
 
-    private StormHandler stormHandler;
     @Inject
     private SimpleHttpClient httpClient;
 
     @Inject
-    public ReleaseManager(StormHandler stormHandler) {
-        this.stormHandler = stormHandler;
+    public ReleaseManager() {
         currentRelease = buildCurrentRelease();
     }
 

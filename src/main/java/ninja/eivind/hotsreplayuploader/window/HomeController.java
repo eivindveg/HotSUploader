@@ -53,66 +53,33 @@ import java.util.Optional;
 public class HomeController implements JavaFXController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
-    @Inject
-    private SimpleHttpClient httpClient;
 
-    @FXML
-    private VBox updatePane;
-    @FXML
-    private Label newVersionLabel;
-    @FXML
-    private Hyperlink updateLink;
-
-    @FXML
-    private ListView<ReplayFile> newReplaysView;
-
-    @FXML
-    private Label status;
-
-    @FXML
-    private Label qmMmr;
-
-    @FXML
-    private Label hlMmr;
-
-    @FXML
-    private Label tlMmr;
-
-    @FXML
-    private ImageView logo;
-
-    @FXML
-    private Button playerSearch;
-
-    @FXML
-    private TextField playerSearchInput;
-
-    @FXML
-    private Button viewProfile;
-
-    @FXML
-    private ComboBox<Account> accountSelect;
-
-    @FXML
-    private Button lookupHero;
-
-    @FXML
-    private ComboBox<HotSLogsHero> heroName;
+    @FXML private VBox updatePane;
+    @FXML private Label newVersionLabel;
+    @FXML private Hyperlink updateLink;
+    @FXML private ListView<ReplayFile> newReplaysView;
+    @FXML private Label status;
+    @FXML private Label qmMmr;
+    @FXML private Label hlMmr;
+    @FXML private Label tlMmr;
+    @FXML private ImageView logo;
+    @FXML private Button playerSearch;
+    @FXML private TextField playerSearchInput;
+    @FXML private Button viewProfile;
+    @FXML private ComboBox<Account> accountSelect;
+    @FXML private Button lookupHero;
+    @FXML private ComboBox<HotSLogsHero> heroName;
+    @FXML private Label newReplaysCount;
+    @FXML private Label uploadedReplays;
 
     @Inject
     private UploaderService uploaderService;
-
     @Inject
     private PlatformService platformService;
     @Inject
     private ReleaseManager releaseManager;
-    @FXML
-    private Label uploadedReplays;
-    @FXML
-    private Label newReplaysCount;
     @Inject
     private AccountService accountService;
-
     @Inject
     private StatusBinder statusBinder;
     @Inject
