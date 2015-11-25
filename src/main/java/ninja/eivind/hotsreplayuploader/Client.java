@@ -49,9 +49,17 @@ public class Client extends Application {
     private PlatformService platformService;
     @Inject
     private StatusBinder statusBinder;
+    @Inject
+    private AccountDirectoryWatcher watcher;
 
     public static void main(String[] args) {
         LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
+    }
+
+    @Override
+    public void stop() throws Exception {
+        watcher.stop();
+        super.stop();
     }
 
     @Override
