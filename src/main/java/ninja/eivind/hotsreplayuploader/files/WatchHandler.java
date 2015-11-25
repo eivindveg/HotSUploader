@@ -49,7 +49,7 @@ public class WatchHandler implements Runnable {
     @Override
     public void run() {
         WatchKey key = null;
-        for (; ; ) {
+        while (true) {
             if (key != null) {
                 if (!key.reset()) {
                     break;
@@ -115,7 +115,7 @@ public class WatchHandler implements Runnable {
 
         private final File target;
 
-        public Handler(File target) {
+        private Handler(File target) {
             this.target = target;
         }
 
@@ -129,7 +129,7 @@ public class WatchHandler implements Runnable {
 
     private class CreationHandler extends Handler {
 
-        public CreationHandler(final File file) {
+        private CreationHandler(final File file) {
             super(file);
         }
 
@@ -147,7 +147,7 @@ public class WatchHandler implements Runnable {
 
     private class ModificationHandler extends Handler {
 
-        public ModificationHandler(File target) {
+        private ModificationHandler(File target) {
             super(target);
         }
 
