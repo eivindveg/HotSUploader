@@ -53,8 +53,11 @@ public interface PlatformService {
 
         // Deal with window events
         Platform.setImplicitExit(false);
+        final TrayIcon trayIcon = new TrayIcon(image, "Initializing tooltip", popup);
         primaryStage.setOnHiding(value -> {
             primaryStage.hide();
+            trayIcon.displayMessage("HotS Replay Uploader", "You've closed the window, but the application lives on " +
+                    "in the tray.", TrayIcon.MessageType.INFO);
             value.consume();
         });
 
@@ -66,7 +69,6 @@ public interface PlatformService {
         popup.add(showItem);
         popup.add(exitItem);
 
-        final TrayIcon trayIcon = new TrayIcon(image, "Initializing tooltip", popup);
         trayIcon.setImageAutoSize(true);
 
         // Add listeners
