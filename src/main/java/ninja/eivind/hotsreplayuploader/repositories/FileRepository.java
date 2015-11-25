@@ -43,4 +43,6 @@ public interface FileRepository {
      * @return {@link List} of {@link ReplayFile}s
      */
     List<ReplayFile> getAll();
+
+    void deleteByFileName(ReplayFile file);
 }

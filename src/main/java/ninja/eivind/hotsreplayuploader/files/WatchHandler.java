@@ -74,12 +74,6 @@ public class WatchHandler implements Runnable {
                     continue;
                 }
                 ReplayFile replayFile = getReplayFileForEvent(kind, file);
-                File propertiesFile = stormHandler.getPropertiesFile(file);
-                if (propertiesFile.exists()) {
-                    if (!propertiesFile.delete()) {
-                        throw new RuntimeException(new IOException("Could not delete file"));
-                    }
-                }
                 Platform.runLater(() -> {
                     fileListeners.forEach(fileListener -> fileListener.handle(replayFile));
                     LOG.info("File " + replayFile + " registered with listeners.");

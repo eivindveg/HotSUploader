@@ -16,6 +16,8 @@ package ninja.eivind.hotsreplayuploader.repositories;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.spring.DaoFactory;
+import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.PreparedDelete;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
@@ -95,6 +97,19 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
                     }
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteByFileName(ReplayFile file) {
+        SelectArg selectArg = new SelectArg("fileName", file.getFileName());
+        try {
+            DeleteBuilder<ReplayFile, Long> deleteBuilder = dao.deleteBuilder();
+            deleteBuilder.where()
+                    .eq("fileName", selectArg);
+            dao.delete(deleteBuilder.prepare());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private ReplayFile getByFileName(final ReplayFile replayFile) {
