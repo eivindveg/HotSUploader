@@ -16,8 +16,6 @@ package ninja.eivind.hotsreplayuploader.di;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
-import com.google.inject.Binding;
-import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.AbstractMatcher;
 import com.google.inject.spi.InjectionListener;
@@ -56,9 +54,9 @@ public class GuiceModule extends AbstractModule {
         }, new TypeListener() {
             @Override
             public <I> void hear(final TypeLiteral<I> type, final TypeEncounter<I> encounter) {
-                LOG.info("Binding "  + type.getType().getTypeName() + " to post inject.");
+                LOG.info("Binding " + type.getType().getTypeName() + " to post inject.");
                 encounter.register((InjectionListener<I>) injectee -> {
-                    if(injectee instanceof Initializable) {
+                    if (injectee instanceof Initializable) {
                         ((Initializable) injectee).initialize();
                     }
                 });
