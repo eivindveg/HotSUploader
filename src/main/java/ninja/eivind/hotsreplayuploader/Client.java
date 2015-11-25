@@ -55,7 +55,7 @@ public class Client extends Application {
     private StatusBinder statusBinder;
     private TrayIcon trayIcon;
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
     }
 
