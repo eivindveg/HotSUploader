@@ -1,6 +1,21 @@
+// Copyright 2015 Eivind Vegsundvåg
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package ninja.eivind.hotsreplayuploader.repositories;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.spring.DaoFactory;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.SelectArg;
@@ -10,10 +25,13 @@ import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
+import org.flywaydb.core.Flyway;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +41,7 @@ import java.util.stream.Collectors;
  * Uses ORMLite to abstract database access.
  */
 @Singleton
-public class OrmLiteFileRepository implements FileRepository, Initializable {
+public class OrmLiteFileRepository implements FileRepository, Initializable, Closeable {
 
     @Inject
     private ConnectionSource connectionSource;
@@ -38,11 +56,6 @@ public class OrmLiteFileRepository implements FileRepository, Initializable {
     public void initialize() {
         try {
             dao = DaoFactory.createDao(connectionSource, ReplayFile.class);
-
-            if(!dao.isTableExists()) {
-                TableUtils.createTable(connectionSource, ReplayFile.class);
-                TableUtils.createTable(connectionSource, UploadStatus.class);
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -103,5 +116,10 @@ public class OrmLiteFileRepository implements FileRepository, Initializable {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Override
+    public void close() throws IOException {
+        connectionSource.closeQuietly();
     }
 }

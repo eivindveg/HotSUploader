@@ -30,6 +30,8 @@ import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceProvider
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
+
 public class GuiceModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(GuiceModule.class);
@@ -39,6 +41,7 @@ public class GuiceModule extends AbstractModule {
         LOG.info("Instantiating IoC Container");
         bind(PlatformService.class).toProvider(new PlatformServiceProvider()).asEagerSingleton();
         bind(FileRepository.class).to(OrmLiteFileRepository.class).asEagerSingleton();
+        bind(DataSource.class).toProvider(DataSourceProvider.class).asEagerSingleton();
         bind(ConnectionSource.class).toProvider(ConnectionSourceProvider.class).asEagerSingleton();
         bind(ProviderRepository.class).to(SingletonListProviderRepository.class).asEagerSingleton();
         bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class).asEagerSingleton();

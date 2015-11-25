@@ -1,0 +1,49 @@
+// Copyright 2015 Eivind Vegsundvåg
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package ninja.eivind.hotsreplayuploader.repositories;
+
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import org.flywaydb.core.Flyway;
+import org.h2.jdbcx.JdbcDataSource;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.sql.DataSource;
+import java.io.File;
+
+public class DataSourceProvider implements Provider<DataSource> {
+
+    @Inject
+    private PlatformService platformService;
+
+    @Override
+    public DataSource get() {
+        final File database = new File(platformService.getApplicationHome(), "database");
+        JdbcDataSource dataSource = new JdbcDataSource();
+        dataSource.setUrl("jdbc:h2:" + database.toString());
+
+        migrateDataSource(dataSource);
+
+        return dataSource;
+    }
+
+    private void migrateDataSource(JdbcDataSource dataSource) {
+        Flyway flyway = new Flyway();
+
+        flyway.setDataSource(dataSource);
+
+        flyway.migrate();
+    }
+}
