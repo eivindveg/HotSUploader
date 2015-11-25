@@ -15,6 +15,7 @@
 package ninja.eivind.hotsreplayuploader.repositories;
 
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcDataSource;
 import org.slf4j.Logger;
@@ -30,12 +31,21 @@ public class DataSourceProvider implements Provider<DataSource> {
     private static final Logger LOG = LoggerFactory.getLogger(DataSourceProvider.class);
     @Inject
     private PlatformService platformService;
+    @Inject
+    private ReleaseManager releaseManager;
 
     @Override
     public DataSource get() {
         final File database = new File(platformService.getApplicationHome(), "database");
         final JdbcDataSource dataSource = new JdbcDataSource();
-        final String url = "jdbc:h2:" + database.toString();
+        String databaseName;
+        if (releaseManager == null || releaseManager.getCurrentVersion().equals("Development")) {
+            databaseName = database.toString() + "-dev";
+        } else {
+            databaseName  = database.toString();
+        }
+
+        final String url = "jdbc:h2:" + databaseName;
 
         LOG.info("Setting up DataSource with URL " + url);
         dataSource.setUrl(url);
