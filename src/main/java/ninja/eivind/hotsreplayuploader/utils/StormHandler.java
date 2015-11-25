@@ -55,10 +55,8 @@ public class StormHandler {
             File parentFile = applicationHome.getParentFile();
             File oldDirectory = new File(parentFile, "HotSLogs UploaderFX");
             if (oldDirectory.exists()) {
-                if (!oldDirectory.renameTo(applicationHome)) {
-                    if (!oldDirectory.delete()) {
-                        LOG.warn("Could not delete old replay properties folder");
-                    }
+                if (!oldDirectory.delete()) {
+                    LOG.warn("Could not delete old replay properties folder");
                 }
             }
         }
