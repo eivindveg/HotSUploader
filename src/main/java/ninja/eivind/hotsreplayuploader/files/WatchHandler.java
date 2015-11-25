@@ -45,7 +45,6 @@ public class WatchHandler implements Runnable {
 
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void run() {
         WatchKey key = null;
@@ -62,29 +61,9 @@ public class WatchHandler implements Runnable {
                 break;
             }
             for (final WatchEvent<?> watchEvent : key.pollEvents()) {
-                WatchEvent.Kind<?> kind = watchEvent.kind();
-                if (kind == OVERFLOW) {
+                if (handleEvent(watchEvent)) {
                     continue;
                 }
-                WatchEvent<Path> event = (WatchEvent<Path>) watchEvent;
-                final Path fileName = event.context();
-                LOG.info("Received " + kind + " for path " + fileName);
-
-                File file = new File(path.toFile(), fileName.toString());
-                if (!file.getName().endsWith(".StormReplay")) {
-                    continue;
-                }
-                ReplayFile replayFile = getReplayFileForEvent(kind, file);
-                File propertiesFile = stormHandler.getPropertiesFile(file);
-                if (propertiesFile.exists()) {
-                    if (!propertiesFile.delete()) {
-                        throw new RuntimeException(new IOException("Could not delete file"));
-                    }
-                }
-                Platform.runLater(() -> {
-                    fileListeners.forEach(fileListener -> fileListener.handle(replayFile));
-                    LOG.info("File " + replayFile + " registered with listeners.");
-                });
                 boolean valid = key.reset();
                 if (!valid) {
                     break;
@@ -96,6 +75,34 @@ public class WatchHandler implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean handleEvent(WatchEvent<?> watchEvent) {
+        WatchEvent.Kind<?> kind = watchEvent.kind();
+        if (kind == OVERFLOW) {
+            return false;
+        }
+        WatchEvent<Path> event = (WatchEvent<Path>) watchEvent;
+        final Path fileName = event.context();
+        LOG.info("Received " + kind + " for path " + fileName);
+
+        File file = new File(path.toFile(), fileName.toString());
+        if (!file.getName().endsWith(".StormReplay")) {
+            return false;
+        }
+        ReplayFile replayFile = getReplayFileForEvent(kind, file);
+        File propertiesFile = stormHandler.getPropertiesFile(file);
+        if (propertiesFile.exists()) {
+            if (!propertiesFile.delete()) {
+                throw new RuntimeException(new IOException("Could not delete file"));
+            }
+        }
+        Platform.runLater(() -> {
+            fileListeners.forEach(fileListener -> fileListener.handle(replayFile));
+            LOG.info("File " + replayFile + " registered with listeners.");
+        });
+        return true;
     }
 
     private ReplayFile getReplayFileForEvent(final WatchEvent.Kind<?> kind, final File file) {
