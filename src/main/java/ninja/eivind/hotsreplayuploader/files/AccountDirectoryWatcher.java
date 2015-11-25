@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -29,7 +30,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 @Singleton
-public class AccountDirectoryWatcher {
+public class AccountDirectoryWatcher implements Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountDirectoryWatcher.class);
     private final Set<File> watchDirectories;
@@ -73,7 +74,8 @@ public class AccountDirectoryWatcher {
         }
     }
 
-    public void stop() {
+    @Override
+    public void close() {
         threads.stream()
                 .filter(thread -> !thread.isInterrupted())
                 .forEach(Thread::interrupt);

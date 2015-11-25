@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -43,6 +44,7 @@ import java.util.stream.Collectors;
  * {@link ScheduledService}, that is responsible for uploading {@link ReplayFile}s
  * to {@link Provider}s. Does also take care of updating the UI in the process.
  */
+@Singleton
 public class UploaderService extends ScheduledService<ReplayFile> implements Initializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(UploaderService.class);

@@ -15,22 +15,23 @@
 package ninja.eivind.hotsreplayuploader;
 
 import com.gluonhq.ignite.DIContext;
-import com.gluonhq.ignite.guice.GuiceContext;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import ninja.eivind.hotsreplayuploader.di.CloseableGuiceContext;
 import ninja.eivind.hotsreplayuploader.di.GuiceModule;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import ninja.eivind.hotsreplayuploader.utils.Constants;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ninja.eivind.hotsreplayuploader.utils.Constants;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -40,7 +41,7 @@ import java.util.Collections;
 public class Client extends Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(Client.class);
-    private DIContext context = new GuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
+    private DIContext context = new CloseableGuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
     @Inject
     private FXMLLoader fxmlLoader;
     @Inject
@@ -49,8 +50,6 @@ public class Client extends Application {
     private PlatformService platformService;
     @Inject
     private StatusBinder statusBinder;
-    @Inject
-    private AccountDirectoryWatcher watcher;
 
     public static void main(String[] args) {
         LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
@@ -58,8 +57,13 @@ public class Client extends Application {
 
     @Override
     public void stop() throws Exception {
-        watcher.stop();
+        context.dispose();
         super.stop();
+
+        /* If we get to this point, we're either just waiting for this call to finish, or we have dead threads.
+         For some reason, AWT threads don't shut down automatically because they're not daemons.
+          Not at all elegant, but at this point, we declare nuclear war: */
+        System.exit(0);
     }
 
     @Override
@@ -91,6 +95,7 @@ public class Client extends Application {
             TrayIcon trayIcon = platformService.getTrayIcon(primaryStage);
             SystemTray systemTray = SystemTray.getSystemTray();
             systemTray.add(trayIcon);
+
             statusBinder.message().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null && !newValue.isEmpty()) {
                     trayIcon.setToolTip("Status: " + newValue);
@@ -98,7 +103,7 @@ public class Client extends Application {
             });
         } catch (PlatformNotSupportedException | AWTException e) {
             LOG.warn("Could not instantiate tray icon. Reverting to default behaviour", e);
-            primaryStage.setOnCloseRequest(event -> System.exit(0));
+            primaryStage.setOnCloseRequest(event -> Platform.exit());
         }
     }
 

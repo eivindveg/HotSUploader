@@ -206,4 +206,9 @@ public class HotsLogsProvider extends Provider {
         builder.append(randomValue);
         return builder.toString();
     }
+
+    @Override
+    public void close() {
+        s3Client.shutdown();
+    }
 }
