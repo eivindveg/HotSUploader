@@ -108,7 +108,7 @@ public class Client extends Application {
                     trayIcon.setToolTip("Status: " + newValue);
                 }
             });
-            
+
             SystemTray systemTray = SystemTray.getSystemTray();
             systemTray.add(trayIcon);
 
