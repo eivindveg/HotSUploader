@@ -94,15 +94,18 @@ public class Client extends Application {
 
     private void addToTray(final Stage primaryStage) {
         try {
-            // Deal with window events
-            Platform.setImplicitExit(false);
+
             trayIcon = platformService.getTrayIcon(primaryStage);
+            // deal with window events
+            Platform.setImplicitExit(false);
             primaryStage.setOnHiding(value -> {
                 primaryStage.setIconified(true);
                 trayIcon.displayMessage("HotS Replay Uploader", "You've closed the window, but the application lives on " +
                         "in the tray.", TrayIcon.MessageType.INFO);
                 value.consume();
             });
+
+            // update tooltip when the statusbinder changes status
             statusBinder.message().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null && !newValue.isEmpty()) {
                     trayIcon.setToolTip("Status: " + newValue);
