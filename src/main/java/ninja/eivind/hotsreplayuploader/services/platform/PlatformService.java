@@ -53,6 +53,7 @@ public interface PlatformService {
 
         // Declare shared action for showItem and trayicon click
         Runnable openAction = () -> Platform.runLater(() -> {
+            primaryStage.setIconified(false);
             primaryStage.show();
             primaryStage.toFront();
         });
