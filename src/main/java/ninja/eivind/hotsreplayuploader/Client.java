@@ -15,16 +15,17 @@
 package ninja.eivind.hotsreplayuploader;
 
 import com.gluonhq.ignite.DIContext;
-import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import ninja.eivind.hotsreplayuploader.di.CloseableGuiceContext;
-import ninja.eivind.hotsreplayuploader.di.GuiceModule;
+import javafx.stage.StageStyle;
+import ninja.eivind.hotsreplayuploader.di.ContextTask;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
@@ -35,8 +36,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.awt.*;
+import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 
 /**
  * Application entry point. Sets up the actions that connect to the underlying platform.
@@ -44,7 +45,7 @@ import java.util.Collections;
 public class Client extends Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(Client.class);
-    private final DIContext context = new CloseableGuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
+    private DIContext context;
     @Inject
     private FXMLLoader fxmlLoader;
     @Inject
@@ -56,7 +57,7 @@ public class Client extends Application {
     private TrayIcon trayIcon;
 
     public static void main(String... args) {
-        LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
+        launch(Client.class, args);
     }
 
     @Override
@@ -69,27 +70,62 @@ public class Client extends Application {
     }
 
     @Override
-    public void init() {
-        context.init();
+    public void start(final Stage primaryStage) throws Exception {
+        Stage preLoaderStage = launchPreloader(primaryStage);
+
+        LOG.info("Initializing application context.");
+        Task<DIContext> initTask = new ContextTask();
+        LOG.info("Application context initialized.");
+        initTask.setOnSucceeded(value -> launchApplication(primaryStage, preLoaderStage, initTask));
+
+        new Thread(initTask).start();
     }
 
-    @Override
-    public void start(final Stage primaryStage) throws Exception {
-        URL logo = platformService.getLogoUrl();
-        Image image = new Image(logo.toString());
-        primaryStage.getIcons().add(image);
-        primaryStage.setResizable(false);
-        addToTray(primaryStage);
+    private void launchApplication(Stage primaryStage, Stage preLoaderStage, Task<DIContext> initTask) {
+        try {
+            context = initTask.getValue();
+            context.injectMembers(Client.this);
+            LOG.info("Loading primary view.");
+            URL logo = platformService.getLogoUrl();
+            Image image = new Image(logo.toString());
+            primaryStage.getIcons().add(image);
+            primaryStage.setResizable(false);
 
-        // Set window title
-        String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
-        primaryStage.setTitle(windowTitle);
+            // Set window title
+            String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
 
-        fxmlLoader.setLocation(getClass().getResource("/ninja/eivind/hotsreplayuploader/window/Home.fxml"));
-        Parent root = fxmlLoader.load();
+            fxmlLoader.setLocation(getClass().getResource("/ninja/eivind/hotsreplayuploader/window/Home.fxml"));
 
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+            Parent root = fxmlLoader.load();
+            LOG.info("Application loaded. Showing.");
+            primaryStage.setTitle(windowTitle);
+            addToTray(primaryStage);
+            primaryStage.initStyle(StageStyle.DECORATED);
+            primaryStage.setScene(new Scene(root));
+            preLoaderStage.hide();
+            primaryStage.show();
+            primaryStage.toFront();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Stage launchPreloader(Stage owner) throws IOException {
+        LOG.info("Preloading application");
+        Stage preLoaderStage = new Stage();
+        preLoaderStage.initOwner(owner);
+
+        preLoaderStage.initModality(Modality.WINDOW_MODAL);
+        preLoaderStage.initStyle(StageStyle.UNDECORATED);
+
+        Parent root = FXMLLoader.load(getClass().getResource("window/Preloader.fxml"));
+
+        Scene scene = new Scene(root);
+
+        preLoaderStage.setScene(scene);
+        preLoaderStage.sizeToScene();
+        preLoaderStage.show();
+        return preLoaderStage;
     }
 
     private void addToTray(final Stage primaryStage) {
