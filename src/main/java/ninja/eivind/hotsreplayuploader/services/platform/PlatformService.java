@@ -51,8 +51,6 @@ public interface PlatformService {
         final MenuItem showItem = new MenuItem("Show");
         final MenuItem exitItem = new MenuItem("Exit");
 
-        final TrayIcon trayIcon = new TrayIcon(image, "Initializing tooltip", popup);
-
         // Declare shared action for showItem and trayicon click
         Runnable openAction = () -> Platform.runLater(() -> {
             primaryStage.show();
@@ -61,6 +59,7 @@ public interface PlatformService {
         popup.add(showItem);
         popup.add(exitItem);
 
+        final TrayIcon trayIcon = new TrayIcon(image, "Initializing tooltip", popup);
         trayIcon.setImageAutoSize(true);
 
         // Add listeners

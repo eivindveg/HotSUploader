@@ -100,8 +100,6 @@ public class Client extends Application {
             Platform.setImplicitExit(false);
             primaryStage.setOnHiding(value -> {
                 primaryStage.setIconified(true);
-                trayIcon.displayMessage("HotS Replay Uploader", "You've closed the window, but the application lives on " +
-                        "in the tray.", TrayIcon.MessageType.INFO);
                 value.consume();
             });
 
