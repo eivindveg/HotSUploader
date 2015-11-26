@@ -70,11 +70,6 @@ public class Client extends Application {
     }
 
     @Override
-    public void init() {
-
-    }
-
-    @Override
     public void start(final Stage primaryStage) throws Exception {
         Stage preLoaderStage = launchPreloader(primaryStage);
 
