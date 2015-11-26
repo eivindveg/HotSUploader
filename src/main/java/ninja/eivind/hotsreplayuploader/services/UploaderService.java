@@ -69,6 +69,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
     public void initialize() {
         LOG.info("Initializing " + getClass().getSimpleName());
         watcher.addFileListener(file -> {
+            fileRepository.deleteByFileName(file);
             files.add(file);
             uploadQueue.add(file);
         });

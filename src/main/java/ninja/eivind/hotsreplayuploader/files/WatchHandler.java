@@ -66,7 +66,7 @@ public class WatchHandler implements Runnable {
                 break;
             }
             for (final WatchEvent<?> watchEvent : key.pollEvents()) {
-                if (handleEvent(watchEvent)) {
+                if (!handleEvent(watchEvent)) {
                     continue;
                 }
                 boolean valid = key.reset();
@@ -97,12 +97,10 @@ public class WatchHandler implements Runnable {
             return false;
         }
         ReplayFile replayFile = getReplayFileForEvent(kind, file);
-        File propertiesFile = stormHandler.getPropertiesFile(file);
-        if (propertiesFile.exists()) {
-            if (!propertiesFile.delete()) {
-                throw new RuntimeException(new IOException("Could not delete file"));
-            }
-        }
+        Platform.runLater(() -> {
+            fileListeners.forEach(fileListener -> fileListener.handle(replayFile));
+            LOG.info("File " + replayFile + " registered with listeners.");
+        });
         Platform.runLater(() -> {
             fileListeners.forEach(fileListener -> fileListener.handle(replayFile));
             LOG.info("File " + replayFile + " registered with listeners.");

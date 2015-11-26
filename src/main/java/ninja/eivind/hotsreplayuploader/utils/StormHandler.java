@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 public class StormHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(StormHandler.class);
-    private static final String SEPARATOR = System.getProperty("file.separator");
     private final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
     private final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
 
@@ -67,18 +66,6 @@ public class StormHandler {
         return platformService.getApplicationHome();
     }
 
-    public File getPropertiesFile(final File replayFile) {
-        final String propertiesFileName = replayFile.toString().replaceAll(".StormReplay", "") + ".json";
-        final String replace = propertiesFileName.replace(getHotSHome().toString(), getApplicationHome() + SEPARATOR + "Accounts");
-        return new File(replace);
-    }
-
-    public File getReplayFile(final File propertiesFile) {
-        final String replayFileName = propertiesFile.toString().replaceAll(".json", "") + ".StormReplay";
-        final String replace = replayFileName.replace(getApplicationHome() + SEPARATOR + "Accounts", getHotSHome().toString());
-        return new File(replace);
-    }
-
     public File getHotSHome() {
         if (hotsHome == null) {
             hotsHome = buildHotSHome();
@@ -92,10 +79,6 @@ public class StormHandler {
 
     public List<File> getHotSAccountDirectories() {
         return getAccountDirectories(getHotSHome());
-    }
-
-    public List<File> getApplicationAccountDirectories() {
-        return getAccountDirectories(new File(getApplicationHome(), "Accounts"));
     }
 
     private List<File> getAccountDirectories(final File root) {
