@@ -16,7 +16,6 @@ package ninja.eivind.hotsreplayuploader.services.platform;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 
 
@@ -74,10 +73,21 @@ public interface PlatformService {
         });
         showItem.addActionListener(e -> openAction.run());
         exitItem.addActionListener(event -> {
-            Platform.exit();
+            shutdown();
         });
         return trayIcon;
 
+    }
+
+    /**
+     * Shuts down the application by delegating service cleanups
+     * to the Application Thread and elminating any running non-daemon threads.
+     */
+    default void shutdown() {
+        //let JavaFX shut close its services gracefully
+        Platform.exit();
+        //event threads like AWT are still keeping the application alive, kill them
+        System.exit(0);
     }
 
     void browse(URI uri) throws IOException;
