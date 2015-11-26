@@ -15,6 +15,7 @@
 package ninja.eivind.hotsreplayuploader.repositories;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.spring.DaoFactory;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -31,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 /**
@@ -70,7 +72,10 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     @Override
     public void updateReplay(final ReplayFile file) {
         try {
-            dao.createOrUpdate(file);
+            TransactionManager.callInTransaction(connectionSource, (Callable<Void>) () -> {
+                dao.createOrUpdate(file);
+                return null;
+            });
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
