@@ -87,11 +87,7 @@ public class ReplayFile implements Serializable {
     public BooleanProperty getFailedProperty() {
         return failedProperty;
     }
-
-    public BooleanProperty failedPropertyProperty() {
-        return failedProperty;
-    }
-
+    
     @Override
     public String toString() {
         return getFile().getName();
