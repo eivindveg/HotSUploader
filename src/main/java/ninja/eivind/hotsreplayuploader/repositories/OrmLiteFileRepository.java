@@ -85,6 +85,7 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     public List<ReplayFile> getAll() {
         return accountDirectoryWatcher.getAllFiles()
                 .map(ReplayFile::fromDirectory)
+                // TODO Replace with SELECT IN statement. Needs readding of missing files. Improves performance
                 .flatMap(List::stream)
                 .map(this::getByFileName)
                 .map(replayFile -> {
