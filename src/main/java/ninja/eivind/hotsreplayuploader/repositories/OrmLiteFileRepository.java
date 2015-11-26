@@ -31,6 +31,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -85,9 +86,9 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     public List<ReplayFile> getAll() {
         return accountDirectoryWatcher.getAllFiles()
                 .map(ReplayFile::fromDirectory)
+                .map(this::refreshAll)
                 // TODO Replace with SELECT IN statement. Needs readding of missing files. Improves performance
                 .flatMap(List::stream)
-                .map(this::getByFileName)
                 .map(replayFile -> {
                     File file = replayFile.getFile();
                     if (file.exists()) {
@@ -102,6 +103,18 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
                     }
                 })
                 .collect(Collectors.toList());
+    }
+
+    private List<ReplayFile> refreshAll(List<ReplayFile> replayFiles) {
+        try {
+            List<ReplayFile> collect = new ArrayList<>();
+            List<ReplayFile> fromDb = dao.queryForAll();
+            collect.addAll(fromDb);
+            replayFiles.stream().filter(file -> !fromDb.contains(file)).forEach(collect::add);
+            return collect;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

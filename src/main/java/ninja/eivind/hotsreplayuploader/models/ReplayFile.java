@@ -104,7 +104,7 @@ public class ReplayFile implements Serializable {
 
         final ReplayFile that = (ReplayFile) o;
 
-        return !(file != null ? !file.equals(that.file) : that.file != null);
+        return !(fileName != null ? !fileName.equals(that.fileName) : that.fileName != null);
 
     }
 
