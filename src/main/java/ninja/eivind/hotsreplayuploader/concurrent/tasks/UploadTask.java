@@ -65,7 +65,7 @@ public class UploadTask extends Task<ReplayFile> {
     }
 
     private void applyStatus(final Provider provider, final Status status) {
-        List<UploadStatus> uploadStatuses = take.getUploadStatuses();
+        Collection<UploadStatus> uploadStatuses = take.getUploadStatuses();
         UploadStatus current = uploadStatuses.stream()
                 .filter(uploadStatus -> uploadStatus.getHost().equals(provider.getName()))
                 .findFirst()
