@@ -22,6 +22,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
+import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,10 @@ public class OSXService implements PlatformService {
         primaryStage.addEventHandler(keyPressed, event -> {
             if (event.getCode() == KeyCode.Q && event.isMetaDown()) {
                 LOG.info("Exiting application due to keyboard shortcut.");
-                System.exit(0);
+                Platform.exit();
+            } else if(event.getCode() == KeyCode.H && event.isMetaDown()) {
+                LOG.info("Hiding application due to keyboard shortcut.");
+                primaryStage.hide();
             }
         });
         return buildTrayIcon(imageURL, primaryStage);
