@@ -14,22 +14,21 @@
 
 package ninja.eivind.hotsreplayuploader.services.platform;
 
-import java.awt.Desktop;
-import java.awt.TrayIcon;
+import javafx.application.Platform;
+import javafx.event.EventType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-import javafx.application.Platform;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javafx.event.EventType;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 /**
  * {@link PlatformService} that is active on Apple OSX systems.
  */
@@ -69,12 +68,14 @@ public class OSXService implements PlatformService {
         URL imageURL = getLogoUrl();
         EventType<KeyEvent> keyPressed = KeyEvent.KEY_PRESSED;
         primaryStage.addEventHandler(keyPressed, event -> {
-            if (event.getCode() == KeyCode.Q && event.isMetaDown()) {
-                LOG.info("Exiting application due to keyboard shortcut.");
-                Platform.exit();
-            } else if(event.getCode() == KeyCode.H && event.isMetaDown()) {
-                LOG.info("Hiding application due to keyboard shortcut.");
-                primaryStage.hide();
+            if (event.isMetaDown()) {
+                if (event.getCode() == KeyCode.Q) {
+                    LOG.info("Exiting application due to keyboard shortcut.");
+                    Platform.exit();
+                } else if (event.getCode() == KeyCode.H) {
+                    LOG.info("Hiding application due to keyboard shortcut.");
+                    primaryStage.hide();
+                }
             }
         });
         return buildTrayIcon(imageURL, primaryStage);
@@ -83,6 +84,7 @@ public class OSXService implements PlatformService {
     /**
      * Checks, if the OS X dark mode is used by querying the defaults CLI.<br>
      * This is needed for adding the correct tray icon once at the startup.
+     *
      * @return true if <code>defaults read -g AppleInterfaceStyle</code>
      * has an exit status of <code>0</code> (i.e. _not_ returning "key not found").
      */
@@ -93,7 +95,7 @@ public class OSXService implements PlatformService {
              *  we might need to analyze string contents...
              */
             final Process proc = Runtime.getRuntime().exec(
-                    new String[] {"defaults", "read", "-g", "AppleInterfaceStyle"});
+                    new String[]{"defaults", "read", "-g", "AppleInterfaceStyle"});
             proc.waitFor(100, TimeUnit.MILLISECONDS);
             return proc.exitValue() == 0;
         } catch (IOException | InterruptedException | IllegalThreadStateException ex) {
