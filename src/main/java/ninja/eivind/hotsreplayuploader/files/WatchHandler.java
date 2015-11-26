@@ -101,10 +101,6 @@ public class WatchHandler implements Runnable {
             fileListeners.forEach(fileListener -> fileListener.handle(replayFile));
             LOG.info("File " + replayFile + " registered with listeners.");
         });
-        Platform.runLater(() -> {
-            fileListeners.forEach(fileListener -> fileListener.handle(replayFile));
-            LOG.info("File " + replayFile + " registered with listeners.");
-        });
         return true;
     }
 
