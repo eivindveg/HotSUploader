@@ -21,8 +21,10 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,12 +100,14 @@ public class StormHandler {
     }
 
     public List<String> getAccountStringUris() {
-        return getAccountDirectories(new File(getApplicationHome(), "Accounts")).stream()
-                .map(File::getParentFile)
-                .map(File::getParentFile)
+        File[] array = platformService.getHotSHome().listFiles();
+        if(array == null) {
+            return Collections.emptyList();
+        }
+        return Arrays.stream(array)
+                .flatMap(file -> Arrays.stream(file.list((dir, name) -> name.matches(hotsAccountFilter))))
                 .map(folder -> {
-                    String accountName = folder.getName();
-                    String[] split = accountName.replace("-Hero", "").split("-");
+                    String[] split = folder.replace("-Hero", "").split("-");
                     StringBuilder accountNameBuilder = new StringBuilder();
                     for (final String s : split) {
                         accountNameBuilder.append("/").append(s);
