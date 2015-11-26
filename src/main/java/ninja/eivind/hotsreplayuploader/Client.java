@@ -56,7 +56,7 @@ public class Client extends Application {
     private TrayIcon trayIcon;
 
     public static void main(String... args) {
-        LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
+        launch(Client.class, args);
     }
 
     @Override
