@@ -94,15 +94,24 @@ public class Client extends Application {
 
     private void addToTray(final Stage primaryStage) {
         try {
+            // Deal with window events
+            Platform.setImplicitExit(false);
             trayIcon = platformService.getTrayIcon(primaryStage);
-            SystemTray systemTray = SystemTray.getSystemTray();
-            systemTray.add(trayIcon);
-
+            primaryStage.setOnHiding(value -> {
+                primaryStage.setIconified(true);
+                trayIcon.displayMessage("HotS Replay Uploader", "You've closed the window, but the application lives on " +
+                        "in the tray.", TrayIcon.MessageType.INFO);
+                value.consume();
+            });
             statusBinder.message().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null && !newValue.isEmpty()) {
                     trayIcon.setToolTip("Status: " + newValue);
                 }
             });
+            
+            SystemTray systemTray = SystemTray.getSystemTray();
+            systemTray.add(trayIcon);
+
         } catch (PlatformNotSupportedException | AWTException e) {
             LOG.warn("Could not instantiate tray icon. Reverting to default behaviour", e);
             primaryStage.setOnCloseRequest(event -> Platform.exit());

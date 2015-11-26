@@ -51,15 +51,7 @@ public interface PlatformService {
         final MenuItem showItem = new MenuItem("Show");
         final MenuItem exitItem = new MenuItem("Exit");
 
-        // Deal with window events
-        Platform.setImplicitExit(false);
         final TrayIcon trayIcon = new TrayIcon(image, "Initializing tooltip", popup);
-        primaryStage.setOnHiding(value -> {
-            primaryStage.hide();
-            trayIcon.displayMessage("HotS Replay Uploader", "You've closed the window, but the application lives on " +
-                    "in the tray.", TrayIcon.MessageType.INFO);
-            value.consume();
-        });
 
         // Declare shared action for showItem and trayicon click
         Runnable openAction = () -> Platform.runLater(() -> {

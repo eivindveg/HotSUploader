@@ -74,10 +74,11 @@ public class OSXService implements PlatformService {
                     Platform.exit();
                 } else if (event.getCode() == KeyCode.H) {
                     LOG.info("Hiding application due to keyboard shortcut.");
-                    primaryStage.hide();
+                    primaryStage.setIconified(true);
                 }
             }
         });
+
         return buildTrayIcon(imageURL, primaryStage);
     }
 
