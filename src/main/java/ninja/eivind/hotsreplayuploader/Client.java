@@ -15,7 +15,6 @@
 package ninja.eivind.hotsreplayuploader;
 
 import com.gluonhq.ignite.DIContext;
-import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -71,6 +70,14 @@ public class Client extends Application {
     @Override
     public void init() {
         context.init();
+
+        //add a shutdown hook to be really sure, resources are closed properly
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                context.dispose();
+            }
+        }));
     }
 
     @Override
