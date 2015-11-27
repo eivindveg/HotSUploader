@@ -72,11 +72,8 @@ public class Client extends Application {
         context.init();
 
         //add a shutdown hook to be really sure, resources are closed properly
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                context.dispose();
-            }
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            context.dispose();
         }));
     }
 
