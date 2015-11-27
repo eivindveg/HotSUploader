@@ -81,13 +81,11 @@ public interface PlatformService {
 
     /**
      * Shuts down the application by delegating service cleanups
-     * to the Application Thread and elminating any running non-daemon threads.
+     * to the Application Thread, may also kill the VM depending on the OS.
      */
     default void shutdown() {
-        //let JavaFX shut close its services gracefully
+        // let JavaFX shut close its services gracefully
         Platform.exit();
-        //event threads like AWT are still keeping the application alive, kill them
-        System.exit(0);
     }
 
     void browse(URI uri) throws IOException;
