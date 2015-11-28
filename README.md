@@ -1,6 +1,6 @@
 [![Travis CI](http://travis-ci.org/eivindveg/HotSUploader.svg?branch=develop)](http://travis-ci.org/eivindveg/HotSUploader)
 [![VersionEye](https://www.versioneye.com/user/projects/563d0ed44d415e001b000073/badge.svg?style=flat)](https://www.versioneye.com/user/projects/563d0ed44d415e001b000073)
-[![Join the chat at https://gitter.im/eivindveg/HotSUploader](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/eivindveg/HotSUploader?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/eivindveg/HotSUploader](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/eivindveg/HotSUploader)
 # HotSLogs UploaderFX
 JavaFX-based Replay Uploader for Heroes of the Storm
 
