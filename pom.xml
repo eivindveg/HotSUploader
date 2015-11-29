@@ -23,6 +23,14 @@
                 <role>Linux maintainer</role>
             </roles>
         </developer>
+        <developer>
+            <name>Philipp Gruhn</name>
+            <email>philipp.gruhn gmail com</email>
+            <timezone>CET</timezone>
+            <roles>
+                <role>OS X maintainer</role>
+            </roles>
+        </developer>
     </developers>
 
     <contributors>
