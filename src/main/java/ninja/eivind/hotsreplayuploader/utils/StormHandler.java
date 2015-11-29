@@ -15,8 +15,6 @@
 package ninja.eivind.hotsreplayuploader.utils;
 
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,7 +33,6 @@ import java.util.stream.Collectors;
 @Singleton
 public class StormHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StormHandler.class);
     private final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
     private final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
 
