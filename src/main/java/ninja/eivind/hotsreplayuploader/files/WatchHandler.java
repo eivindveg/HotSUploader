@@ -62,7 +62,7 @@ public class WatchHandler implements Runnable {
             try {
                 key = watchService.take();
             } catch (InterruptedException e) {
-                LOG.info(getClass().getSimpleName() + " was interrupted. Winding down thread.", e);
+                LOG.info(getClass().getSimpleName() + " was interrupted. Winding down thread.");
                 break;
             }
             for (final WatchEvent<?> watchEvent : key.pollEvents()) {

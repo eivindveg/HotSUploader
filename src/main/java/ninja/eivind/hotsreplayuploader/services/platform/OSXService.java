@@ -14,7 +14,6 @@
 
 package ninja.eivind.hotsreplayuploader.services.platform;
 
-import javafx.application.Platform;
 import javafx.event.EventType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -71,7 +70,7 @@ public class OSXService implements PlatformService {
             if (event.isMetaDown()) {
                 if (event.getCode() == KeyCode.Q) {
                     LOG.info("Exiting application due to keyboard shortcut.");
-                    Platform.exit();
+                    shutdown();
                 } else if (event.getCode() == KeyCode.H) {
                     LOG.info("Hiding application due to keyboard shortcut.");
                     primaryStage.setIconified(true);
