@@ -70,11 +70,11 @@ public class HotsLogsProvider extends Provider {
             return null;
         }
 
-        File file = replayFile.getFile();
+        final File file = replayFile.getFile();
 
-        String fileName = UUID.randomUUID() + ".StormReplay";
+        final String fileName = UUID.randomUUID() + ".StormReplay";
         LOG.info("Assigning remote file name " + fileName + " to " + replayFile);
-        String uri = BASE_URL + "&FileName=" + fileName;
+        final String uri = BASE_URL + "&FileName=" + fileName;
 
         return uploadFileToHotSLogs(file, fileName, uri);
 
@@ -89,10 +89,10 @@ public class HotsLogsProvider extends Provider {
             return Status.UNSUPPORTED_GAME_MODE;
         }
         try {
-            String matchId = getMatchId(replay);
+            final String matchId = getMatchId(replay);
             LOG.info("Calculated matchId to be" + matchId);
-            String uri = BASE_URL + "&ReplayHash=" + matchId;
-            String result = getHttpClient().simpleRequest(uri).toLowerCase();
+            final String uri = BASE_URL + "&ReplayHash=" + matchId;
+            final String result = getHttpClient().simpleRequest(uri).toLowerCase();
             if(result.equals("duplicate")) {
                 return Status.UPLOADED;
             }
@@ -108,7 +108,7 @@ public class HotsLogsProvider extends Provider {
         try {
             s3Client.putObject("heroesreplays", fileName, file);
             LOG.info("File " + fileName + "uploaded to remote storage.");
-            String result = getHttpClient().simpleRequest(uri).toLowerCase();
+            final String result = getHttpClient().simpleRequest(uri).toLowerCase();
             switch (result) {
                 case "duplicate":
                 case "success":
@@ -143,15 +143,15 @@ public class HotsLogsProvider extends Provider {
     }
 
     protected String getMatchId(Replay replay) throws NoSuchAlgorithmException {
-        String concatenatedString = getConcatenatedString(replay);
+        final String concatenatedString = getConcatenatedString(replay);
 
         return getUUIDForString(concatenatedString).toString();
 
     }
 
     private UUID getUUIDForString(String concatenatedString) throws NoSuchAlgorithmException {
-        byte[] hashed = MessageDigest.getInstance("MD5").digest(concatenatedString.getBytes());
-        byte[] reArranged = reArrangeForUUID(hashed);
+        final byte[] hashed = MessageDigest.getInstance("MD5").digest(concatenatedString.getBytes());
+        final byte[] reArranged = reArrangeForUUID(hashed);
         return getUUID(reArranged);
     }
 
@@ -192,8 +192,8 @@ public class HotsLogsProvider extends Provider {
     }
 
     private String getConcatenatedString(Replay replay) {
-        String randomValue = String.valueOf(replay.getInitData().getRandomValue());
-        List<String> battleNetIdsSorted = replay.getReplayDetails()
+        final String randomValue = String.valueOf(replay.getInitData().getRandomValue());
+        final List<String> battleNetIdsSorted = replay.getReplayDetails()
                 .getPlayers()
                 .stream()
                 .map(Player::getBNetId)
@@ -201,7 +201,7 @@ public class HotsLogsProvider extends Provider {
                 .sorted()
                 .map(String::valueOf)
                 .collect(Collectors.toList());
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         battleNetIdsSorted.forEach(builder::append);
         builder.append(randomValue);
         return builder.toString();

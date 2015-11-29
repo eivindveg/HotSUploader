@@ -52,7 +52,7 @@ public class SimpleHttpClient {
 
     public String simpleRequest(final URL url) throws IOException {
         LOG.info("Opening connection to " + url);
-        InputStream inputStream = url.openStream();
+        final InputStream inputStream = url.openStream();
         return IOUtils.readInputStream(inputStream);
     }
 }

@@ -57,15 +57,15 @@ public class OSXService implements PlatformService {
 
     @Override
     public URL getLogoUrl() {
-        String logoVariant = isMacMenuBarDarkMode() ? "" : "-black";
+        final String logoVariant = isMacMenuBarDarkMode() ? "" : "-black";
         return getClass().getResource(
                 "/images/logo-desktop" + logoVariant + ".png");
     }
 
     @Override
     public TrayIcon getTrayIcon(final Stage primaryStage) throws PlatformNotSupportedException {
-        URL imageURL = getLogoUrl();
-        EventType<KeyEvent> keyPressed = KeyEvent.KEY_PRESSED;
+        final URL imageURL = getLogoUrl();
+        final EventType<KeyEvent> keyPressed = KeyEvent.KEY_PRESSED;
         primaryStage.addEventHandler(keyPressed, event -> {
             if (event.isMetaDown()) {
                 if (event.getCode() == KeyCode.Q) {

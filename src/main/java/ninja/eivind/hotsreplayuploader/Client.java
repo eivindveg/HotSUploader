@@ -75,18 +75,18 @@ public class Client extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        URL logo = platformService.getLogoUrl();
-        Image image = new Image(logo.toString());
+        final URL logo = platformService.getLogoUrl();
+        final Image image = new Image(logo.toString());
         primaryStage.getIcons().add(image);
         primaryStage.setResizable(false);
         addToTray(primaryStage);
 
         // Set window title
-        String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
+        final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
         primaryStage.setTitle(windowTitle);
 
         fxmlLoader.setLocation(getClass().getResource("/ninja/eivind/hotsreplayuploader/window/Home.fxml"));
-        Parent root = fxmlLoader.load();
+        final Parent root = fxmlLoader.load();
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
@@ -110,7 +110,7 @@ public class Client extends Application {
                 }
             });
 
-            SystemTray systemTray = SystemTray.getSystemTray();
+            final SystemTray systemTray = SystemTray.getSystemTray();
             systemTray.add(trayIcon);
 
         } catch (PlatformNotSupportedException | AWTException e) {

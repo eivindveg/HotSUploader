@@ -31,10 +31,10 @@ public class ReplayFileComparator implements Comparator<ReplayFile> {
             return 0;
         }
 
-        File file1 = o1.getFile();
-        File file2 = o2.getFile();
+        final File file1 = o1.getFile();
+        final File file2 = o2.getFile();
 
-        int modified = -Long.compare(file1.lastModified(), file2.lastModified());
+        final int modified = -Long.compare(file1.lastModified(), file2.lastModified());
         if(modified != 0) {
             return modified;
         }

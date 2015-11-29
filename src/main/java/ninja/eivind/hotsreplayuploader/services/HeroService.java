@@ -46,7 +46,7 @@ public class HeroService extends ScheduledService<List<HotSLogsHero>> {
 
     @Override
     protected Task<List<HotSLogsHero>> createTask() {
-        HeroListTask heroListTask = new HeroListTask(httpClient);
+        final HeroListTask heroListTask = new HeroListTask(httpClient);
         heroListTask.setOnSucceeded(event -> {
             getOnSucceeded().handle(event);
             LOG.info("Successfully retrieved Heroes from HotSLogs.com");

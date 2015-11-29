@@ -57,18 +57,18 @@ public class ReleaseManager {
     }
 
     private GitHubRelease buildCurrentRelease() {
-        String htmlUrl = getCurrentReleaseString();
+        final String htmlUrl = getCurrentReleaseString();
         return new GitHubRelease(CURRENT_VERSION, htmlUrl, false);
     }
 
     public Optional<GitHubRelease> getNewerVersionIfAny() {
-        ReleaseComparator releaseComparator = new ReleaseComparator();
+        final ReleaseComparator releaseComparator = new ReleaseComparator();
         try {
-            List<GitHubRelease> latest = getLatest();
+            final List<GitHubRelease> latest = getLatest();
             latest.sort(releaseComparator);
 
-            GitHubRelease latestRelease = latest.get(0);
-            int compare = releaseComparator.compare(currentRelease, latestRelease);
+            final GitHubRelease latestRelease = latest.get(0);
+            final int compare = releaseComparator.compare(currentRelease, latestRelease);
             if (!latest.isEmpty() && compare > 0) {
                 LOG.info("Newer  release is: " + latestRelease);
                 return Optional.of(latestRelease);
@@ -82,10 +82,10 @@ public class ReleaseManager {
     }
 
     private List<GitHubRelease> getLatest() throws IOException {
-        ArrayList<GitHubRelease> releases = new ArrayList<>();
+        final ArrayList<GitHubRelease> releases = new ArrayList<>();
 
-        String apiUrl = getAllReleasesString();
-        String response = httpClient.simpleRequest(apiUrl);
+        final String apiUrl = getAllReleasesString();
+        final String response = httpClient.simpleRequest(apiUrl);
         releases.addAll(Arrays.asList(objectMapper.readValue(response, GitHubRelease[].class)));
         return releases;
     }

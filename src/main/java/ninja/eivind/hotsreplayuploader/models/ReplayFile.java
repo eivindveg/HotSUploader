@@ -62,8 +62,8 @@ public class ReplayFile implements Serializable {
     }
 
     public static List<ReplayFile> fromDirectory(File file) {
-        List<ReplayFile> replayFiles = new ArrayList<>();
-        File[] children = file.listFiles((dir, name) -> name.endsWith(".StormReplay"));
+        final List<ReplayFile> replayFiles = new ArrayList<>();
+        final File[] children = file.listFiles((dir, name) -> name.endsWith(".StormReplay"));
         for (final File child : children) {
             if (child.isDirectory()) {
                 replayFiles.addAll(fromDirectory(child));

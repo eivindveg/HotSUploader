@@ -61,7 +61,7 @@ public class CustomListCell extends ListCell<ReplayFile> {
         exceptionImageView.setFitHeight(20);
         exceptionImageView.setFitWidth(20);
 
-        HBox hBox = new HBox(updateImageView, deleteImageView);
+        final HBox hBox = new HBox(updateImageView, deleteImageView);
         content = new BorderPane(null, null, hBox, null, label);
         content.setMaxWidth(Double.MAX_VALUE);
         content.setPrefWidth(USE_COMPUTED_SIZE);
@@ -90,7 +90,7 @@ public class CustomListCell extends ListCell<ReplayFile> {
         } else {
             label.setGraphic(exceptionImageView);
             label.setText(item.getFile().getName());
-            BooleanProperty failedProperty = item.getFailedProperty();
+            final BooleanProperty failedProperty = item.getFailedProperty();
             exceptionImageView.setImage(failedProperty.get() ? exceptionImage : null);
             failedProperty.addListener((observable, oldValue, newValue) -> {
                 if(newValue != null && newValue) {

@@ -38,7 +38,7 @@ public class HeroListTask extends Task<List<HotSLogsHero>> {
     protected List<HotSLogsHero> call() throws Exception {
         final String result = httpClient.simpleRequest(API_ROUTE);
         final HotSLogsHero[] heroes = new ObjectMapper().readValue(result, HotSLogsHero[].class);
-        List<HotSLogsHero> heroList = Arrays.asList(heroes);
+        final List<HotSLogsHero> heroList = Arrays.asList(heroes);
         heroList.sort((o1, o2) -> o1.getPrimaryName().compareTo(o2.getPrimaryName()));
         return heroList;
     }

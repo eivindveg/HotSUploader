@@ -53,8 +53,8 @@ public class StormHandler {
             applicationHome = buildApplicationHome();
 
             // Migration logic; should be removed somewhere around version 2.X(not 2.0) or 3.0
-            File parentFile = applicationHome.getParentFile();
-            File oldDirectory = new File(parentFile, "HotSLogs UploaderFX");
+            final File parentFile = applicationHome.getParentFile();
+            final File oldDirectory = new File(parentFile, "HotSLogs UploaderFX");
             if (oldDirectory.exists()) {
                 if (!oldDirectory.delete()) {
                     LOG.warn("Could not delete old replay properties folder");
@@ -84,13 +84,13 @@ public class StormHandler {
     }
 
     private List<File> getAccountDirectories(final File root) {
-        List<File> hotsAccounts = new ArrayList<>();
+        final List<File> hotsAccounts = new ArrayList<>();
         File[] files = root.listFiles((dir, name) -> name.matches(ACCOUNT_FOLDER_FILTER));
         if (files == null) {
             files = new File[0];
         }
         for (final File file : files) {
-            File[] hotsFolders = file.listFiles((dir, name) -> name.matches(hotsAccountFilter));
+            final File[] hotsFolders = file.listFiles((dir, name) -> name.matches(hotsAccountFilter));
             Arrays.stream(hotsFolders)
                     .map(folder -> new File(folder, "Replays"))
                     .map(folder -> new File(folder, "Multiplayer"))
@@ -100,7 +100,7 @@ public class StormHandler {
     }
 
     public List<String> getAccountStringUris() {
-        File[] array = platformService.getHotSHome().listFiles();
+        final File[] array = platformService.getHotSHome().listFiles();
         if(array == null) {
             return Collections.emptyList();
         }

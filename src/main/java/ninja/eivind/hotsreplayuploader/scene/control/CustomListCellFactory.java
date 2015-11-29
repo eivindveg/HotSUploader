@@ -36,12 +36,12 @@ public class CustomListCellFactory implements Callback<ListView<ReplayFile>, Lis
 
     public CustomListCellFactory(UploaderService uploaderService) {
         this.uploaderService = uploaderService;
-        URL updateResource = getClass().getResource("update.png");
-        URL deleteResource = getClass().getResource("delete.png");
-        URL failedResource = getClass().getResource("failed.png");
-        String updateUrl = updateResource.toExternalForm();
-        String deleteUrl = deleteResource.toExternalForm();
-        String failedUrl = failedResource.toExternalForm();
+        final URL updateResource = getClass().getResource("update.png");
+        final URL deleteResource = getClass().getResource("delete.png");
+        final URL failedResource = getClass().getResource("failed.png");
+        final String updateUrl = updateResource.toExternalForm();
+        final String deleteUrl = deleteResource.toExternalForm();
+        final String failedUrl = failedResource.toExternalForm();
         updateImage = new Image(updateUrl);
         deleteImage = new Image(deleteUrl);
         failedImage = new Image(failedUrl);

@@ -69,7 +69,7 @@ public class WatchHandler implements Runnable {
                 if (!handleEvent(watchEvent)) {
                     continue;
                 }
-                boolean valid = key.reset();
+                final boolean valid = key.reset();
                 if (!valid) {
                     break;
                 }
@@ -84,19 +84,19 @@ public class WatchHandler implements Runnable {
 
     @SuppressWarnings("unchecked")
     private boolean handleEvent(WatchEvent<?> watchEvent) {
-        WatchEvent.Kind<?> kind = watchEvent.kind();
+        final WatchEvent.Kind<?> kind = watchEvent.kind();
         if (kind == OVERFLOW) {
             return false;
         }
-        WatchEvent<Path> event = (WatchEvent<Path>) watchEvent;
+        final WatchEvent<Path> event = (WatchEvent<Path>) watchEvent;
         final Path fileName = event.context();
         LOG.info("Received " + kind + " for path " + fileName);
 
-        File file = new File(path.toFile(), fileName.toString());
+        final File file = new File(path.toFile(), fileName.toString());
         if (!file.getName().endsWith(".StormReplay")) {
             return false;
         }
-        ReplayFile replayFile = getReplayFileForEvent(kind, file);
+        final ReplayFile replayFile = getReplayFileForEvent(kind, file);
         Platform.runLater(() -> {
             fileListeners.forEach(fileListener -> fileListener.handle(replayFile));
             LOG.info("File " + replayFile + " registered with listeners.");
@@ -105,7 +105,7 @@ public class WatchHandler implements Runnable {
     }
 
     private ReplayFile getReplayFileForEvent(final WatchEvent.Kind<?> kind, final File file) {
-        Handler handler;
+        final Handler handler;
         if (kind == ENTRY_MODIFY) {
             handler = new ModificationHandler(file);
         } else {
@@ -147,7 +147,7 @@ public class WatchHandler implements Runnable {
             } catch (InterruptedException e) {
                 LOG.warn("Thread interrupted while awaiting file stabilization.", e);
             }
-            File file = new File(getTarget().toString());
+            final File file = new File(getTarget().toString());
             return new ReplayFile(file);
         }
     }

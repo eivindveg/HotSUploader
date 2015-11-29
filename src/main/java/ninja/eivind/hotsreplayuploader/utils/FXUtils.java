@@ -30,7 +30,7 @@ public final class FXUtils {
     }
 
     public static <T> void autoCompleteComboBox(ComboBox<T> comboBox, AutoCompleteMode mode) {
-        ObservableList<T> data = comboBox.getItems();
+        final ObservableList<T> data = comboBox.getItems();
 
         comboBox.setEditable(true);
         comboBox.getEditor().focusedProperty().addListener(observable -> {
@@ -68,20 +68,20 @@ public final class FXUtils {
                     return;
                 }
 
-                ObservableList<T> list = FXCollections.observableArrayList();
+                final ObservableList<T> list = FXCollections.observableArrayList();
                 for (T aData : data) {
                     if (shouldDataBeAddedToInput(aData)) {
                         list.add(aData);
                     }
                 }
-                String t = comboBox.getEditor().getText();
+                final String text = comboBox.getEditor().getText();
 
                 comboBox.setItems(list);
-                comboBox.getEditor().setText(t);
+                comboBox.getEditor().setText(text);
                 if (!moveCaretToPos) {
                     caretPos = -1;
                 }
-                moveCaret(t.length());
+                moveCaret(text.length());
                 if (!list.isEmpty()) {
                     comboBox.show();
                 }
@@ -93,14 +93,14 @@ public final class FXUtils {
             }
 
             private boolean inputStartsWith(T aData) {
-                String dataValue = aData.toString().toLowerCase();
-                String inputValue = comboBox.getEditor().getText().toLowerCase();
+                final String dataValue = aData.toString().toLowerCase();
+                final String inputValue = comboBox.getEditor().getText().toLowerCase();
                 return dataValue.startsWith(inputValue);
             }
 
             private boolean inputContains(T aData) {
-                String dataValue = aData.toString().toLowerCase();
-                String inputValue = comboBox.getEditor().getText().toLowerCase();
+                final String dataValue = aData.toString().toLowerCase();
+                final String inputValue = comboBox.getEditor().getText().toLowerCase();
                 return dataValue.contains(inputValue);
             }
 

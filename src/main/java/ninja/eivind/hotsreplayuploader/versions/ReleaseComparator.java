@@ -39,8 +39,8 @@ public class ReleaseComparator implements Comparator<GitHubRelease> {
             return -1;
         }
 
-        String release1Version = stripVersion(release1.getTagName());
-        String release2Version = stripVersion(release2.getTagName());
+        final String release1Version = stripVersion(release1.getTagName());
+        final String release2Version = stripVersion(release2.getTagName());
 
         return -release1Version.compareTo(release2Version);
     }

@@ -49,7 +49,7 @@ public class ImageButton extends Button {
      * Set an icon for this {@link Button} to a specified {@link Image}.
      */
     protected void setGraphic(Image image) {
-        ImageView imageView = new ImageView(image);
+        final ImageView imageView = new ImageView(image);
         imageView.setFitHeight(height);
         imageView.setFitWidth(width);
         super.setGraphic(imageView);

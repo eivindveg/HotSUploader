@@ -107,8 +107,8 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
 
     private List<ReplayFile> refreshAll(List<ReplayFile> replayFiles) {
         try {
-            List<ReplayFile> collect = new ArrayList<>();
-            List<ReplayFile> fromDb = dao.queryForAll();
+            final List<ReplayFile> collect = new ArrayList<>();
+            final List<ReplayFile> fromDb = dao.queryForAll();
             collect.addAll(fromDb);
             replayFiles.stream().filter(file -> !fromDb.contains(file)).forEach(collect::add);
             return collect;
@@ -119,9 +119,9 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
 
     @Override
     public void deleteByFileName(ReplayFile file) {
-        SelectArg selectArg = new SelectArg("fileName", file.getFileName());
+        final SelectArg selectArg = new SelectArg("fileName", file.getFileName());
         try {
-            DeleteBuilder<ReplayFile, Long> deleteBuilder = dao.deleteBuilder();
+            final DeleteBuilder<ReplayFile, Long> deleteBuilder = dao.deleteBuilder();
             deleteBuilder.where()
                     .eq("fileName", selectArg);
             dao.delete(deleteBuilder.prepare());

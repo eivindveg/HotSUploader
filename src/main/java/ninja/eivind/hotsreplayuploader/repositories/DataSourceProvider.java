@@ -38,7 +38,7 @@ public class DataSourceProvider implements Provider<DataSource> {
     public DataSource get() {
         final File database = new File(platformService.getApplicationHome(), "database");
         final JdbcDataSource dataSource = new JdbcDataSource();
-        String databaseName;
+        final String databaseName;
         if (releaseManager == null || releaseManager.getCurrentVersion().equals("Development")) {
             databaseName = database.toString() + "-dev";
         } else {
@@ -56,7 +56,7 @@ public class DataSourceProvider implements Provider<DataSource> {
     }
 
     private void migrateDataSource(JdbcDataSource dataSource) {
-        Flyway flyway = new Flyway();
+        final Flyway flyway = new Flyway();
 
         flyway.setDataSource(dataSource);
 

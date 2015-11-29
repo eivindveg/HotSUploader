@@ -51,7 +51,7 @@ public interface PlatformService {
         final MenuItem exitItem = new MenuItem("Exit");
 
         // Declare shared action for showItem and trayicon click
-        Runnable openAction = () -> Platform.runLater(() -> {
+        final Runnable openAction = () -> Platform.runLater(() -> {
             primaryStage.setIconified(false);
             primaryStage.show();
             primaryStage.toFront();
@@ -72,9 +72,7 @@ public interface PlatformService {
             }
         });
         showItem.addActionListener(e -> openAction.run());
-        exitItem.addActionListener(event -> {
-            shutdown();
-        });
+        exitItem.addActionListener(event -> shutdown());
         return trayIcon;
 
     }

@@ -46,7 +46,7 @@ public class FileUtils {
                 throw new IOException("File '" + file + "' cannot be written to");
             }
         } else {
-            File parent = file.getParentFile();
+            final File parent = file.getParentFile();
             if (parent != null) {
                 if (!parent.mkdirs() && !parent.isDirectory()) {
                     throw new IOException("Directory '" + parent + "' could not be created");

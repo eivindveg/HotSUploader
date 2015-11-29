@@ -55,9 +55,9 @@ public class AccountDirectoryWatcher implements Closeable {
         watchDirectories.stream().map(file -> Paths.get(file.toString())).forEach(path -> {
             try {
                 LOG.info("\t" + path);
-                WatchHandler watchHandler = new WatchHandler(stormHandler, path);
+                final WatchHandler watchHandler = new WatchHandler(stormHandler, path);
                 watchHandlers.add(watchHandler);
-                Thread thread = new Thread(watchHandler);
+                final Thread thread = new Thread(watchHandler);
                 thread.start();
                 threads.add(thread);
             } catch (IOException e) {

@@ -52,10 +52,10 @@ public class AccountService extends ScheduledService<List<Account>> {
         return new Task<List<Account>>() {
             @Override
             protected List<Account> call() throws Exception {
-                List<String> accountUris = stormHandler.getAccountStringUris();
-                List<Account> value = new ArrayList<>();
+                final List<String> accountUris = stormHandler.getAccountStringUris();
+                final List<Account> value = new ArrayList<>();
                 for (final String accountUri : accountUris) {
-                    String response = httpClient.simpleRequest(accountUri);
+                    final String response = httpClient.simpleRequest(accountUri);
                     value.add(mapper.readValue(response, Account.class));
                 }
                 return value;

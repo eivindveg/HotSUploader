@@ -45,15 +45,15 @@ public class UploadTask extends Task<ReplayFile> {
         LOG.info("Uploading replay " + take);
         providers.forEach(provider -> {
 
-            StormParser parser = new StormParser(take.getFile());
-            Replay replay = parser.parseReplay();
-            Status preStatus = provider.getPreStatus(replay);
+            final StormParser parser = new StormParser(take.getFile());
+            final Replay replay = parser.parseReplay();
+            final Status preStatus = provider.getPreStatus(replay);
             if(preStatus == Status.UPLOADED || preStatus == Status.UNSUPPORTED_GAME_MODE) {
                 LOG.info("Parsed preStatus reported no need to upload "
                         + take.getFile() + " for provider " + provider.getName());
                 applyStatus(provider, preStatus);
             } else {
-                Status upload = provider.upload(take);
+                final Status upload = provider.upload(take);
                 if (upload == null) {
                     throw new RuntimeException("Failed");
                 }
