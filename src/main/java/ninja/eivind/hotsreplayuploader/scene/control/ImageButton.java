@@ -33,8 +33,8 @@ public class ImageButton extends Button {
     /**
      * Create an {@link ImageButton} with the specified height and width.
      *
-     * @param height
-     * @param width
+     * @param height height of the {@link Button}
+     * @param width width of the {@link Button}
      */
     public ImageButton(double height, double width) {
         this.height = height;
