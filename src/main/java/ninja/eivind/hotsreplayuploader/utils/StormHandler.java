@@ -39,32 +39,11 @@ public class StormHandler {
     private final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
     private final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
 
-    private File applicationHome;
     private File hotsHome;
     @Inject
     private PlatformService platformService;
 
     public StormHandler() {
-    }
-
-    public File getApplicationHome() {
-        if (applicationHome == null) {
-            applicationHome = buildApplicationHome();
-
-            // Migration logic; should be removed somewhere around version 2.X(not 2.0) or 3.0
-            final File parentFile = applicationHome.getParentFile();
-            final File oldDirectory = new File(parentFile, "HotSLogs UploaderFX");
-            if (oldDirectory.exists()) {
-                if (!oldDirectory.delete()) {
-                    LOG.warn("Could not delete old replay properties folder");
-                }
-            }
-        }
-        return applicationHome;
-    }
-
-    private File buildApplicationHome() {
-        return platformService.getApplicationHome();
     }
 
     public File getHotSHome() {
