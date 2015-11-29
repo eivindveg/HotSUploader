@@ -37,13 +37,11 @@ public class WatchHandler implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(WatchHandler.class);
     private final WatchService watchService;
-    private final StormHandler stormHandler;
     private final List<FileListener> fileListeners;
     private final Path path;
 
-    public WatchHandler(final StormHandler stormHandler, final Path path) throws IOException {
+    public WatchHandler(final Path path) throws IOException {
         fileListeners = new ArrayList<>();
-        this.stormHandler = stormHandler;
         this.path = path;
         watchService = FileSystems.getDefault().newWatchService();
         path.register(watchService, ENTRY_CREATE);
