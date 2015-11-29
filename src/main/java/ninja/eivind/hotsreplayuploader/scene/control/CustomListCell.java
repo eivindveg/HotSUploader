@@ -45,7 +45,7 @@ public class CustomListCell extends ListCell<ReplayFile> {
     private ReplayFile lastItem;
 
     protected CustomListCell(Image updateImage, Image deleteImage,
-            Image exceptionImage, UploaderService uploaderService) {
+                             Image exceptionImage, UploaderService uploaderService) {
         super();
         this.updateImage = updateImage;
         this.deleteImage = deleteImage;
@@ -70,7 +70,7 @@ public class CustomListCell extends ListCell<ReplayFile> {
     @Override
     public void updateSelected(boolean selected) {
         super.updateSelected(selected);
-        if(selected && lastItem != null && lastItem.getStatus() == Status.EXCEPTION) {
+        if (selected && lastItem != null && lastItem.getStatus() == Status.EXCEPTION) {
             updateImageView.setGraphic(updateImage);
             deleteImageView.setGraphic(deleteImage);
         } else {
@@ -93,7 +93,7 @@ public class CustomListCell extends ListCell<ReplayFile> {
             final BooleanProperty failedProperty = item.getFailedProperty();
             exceptionImageView.setImage(failedProperty.get() ? exceptionImage : null);
             failedProperty.addListener((observable, oldValue, newValue) -> {
-                if(newValue != null && newValue) {
+                if (newValue != null && newValue) {
                     exceptionImageView.setImage(exceptionImage);
                 }
             });

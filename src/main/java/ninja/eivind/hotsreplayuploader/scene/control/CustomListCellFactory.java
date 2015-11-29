@@ -47,6 +47,7 @@ public class CustomListCellFactory implements Callback<ListView<ReplayFile>, Lis
         failedImage = new Image(failedUrl);
         ///svgPath
     }
+
     @Override
     public ListCell<ReplayFile> call(ListView<ReplayFile> param) {
         return new CustomListCell(updateImage, deleteImage, failedImage, uploaderService);

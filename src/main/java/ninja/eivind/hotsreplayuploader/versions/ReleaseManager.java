@@ -15,9 +15,7 @@
 package ninja.eivind.hotsreplayuploader.versions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
-import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +32,9 @@ import java.util.Optional;
  */
 public class ReleaseManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ReleaseManager.class);
-    /**implementation version will be set by the maven build, so may be null at development**/
+    /**
+     * implementation version will be set by the maven build, so may be null at development
+     **/
     protected static final String CURRENT_VERSION
             = ReleaseManager.class.getPackage().getImplementationVersion();
     protected static final String GITHUB_MAINTAINER = "eivindveg";
@@ -44,10 +43,10 @@ public class ReleaseManager {
             = "https://api.github.com/repos/{maintainer}/{repository}/releases";
     protected static final String GITHUB_FORMAT_VERSION
             = "http://github.com/{maintainer}/{repository}/releases/tag/{version}";
+    private static final Logger LOG = LoggerFactory.getLogger(ReleaseManager.class);
+    private final GitHubRelease currentRelease;
     @Inject
     private ObjectMapper objectMapper;
-    private final GitHubRelease currentRelease;
-
     @Inject
     private SimpleHttpClient httpClient;
 

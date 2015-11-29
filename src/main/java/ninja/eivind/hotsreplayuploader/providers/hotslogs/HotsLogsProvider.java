@@ -20,8 +20,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
-import ninja.eivind.mpq.models.MpqException;
-import ninja.eivind.stormparser.StormParser;
 import ninja.eivind.stormparser.models.Player;
 import ninja.eivind.stormparser.models.Replay;
 import org.slf4j.Logger;
@@ -84,7 +82,7 @@ public class HotsLogsProvider extends Provider {
     public Status getPreStatus(final Replay replay) {
 
         // Temporary fix for computer players found until the parser supports this
-        if(replayHasComputerPlayers(replay)) {
+        if (replayHasComputerPlayers(replay)) {
             LOG.info("Computer players for found for replay, tagging as uploaded.");
             return Status.UNSUPPORTED_GAME_MODE;
         }
@@ -93,7 +91,7 @@ public class HotsLogsProvider extends Provider {
             LOG.info("Calculated matchId to be" + matchId);
             final String uri = BASE_URL + "&ReplayHash=" + matchId;
             final String result = getHttpClient().simpleRequest(uri).toLowerCase();
-            if(result.equals("duplicate")) {
+            if (result.equals("duplicate")) {
                 return Status.UPLOADED;
             }
         } catch (NoSuchAlgorithmException e) {

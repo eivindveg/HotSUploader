@@ -20,7 +20,6 @@ import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.stormparser.models.Replay;
 
 import java.io.Closeable;
-import java.io.IOException;
 
 /**
  * Defines an interface for uploading a {@link ReplayFile}
@@ -30,6 +29,7 @@ public abstract class Provider implements Closeable {
 
     private final String name;
     private SimpleHttpClient httpClient = new SimpleHttpClient();
+
     public Provider(String name) {
         this.name = name;
     }

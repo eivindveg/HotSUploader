@@ -28,6 +28,7 @@ public class IOUtils {
 
     /**
      * Convenience method for readings an {@link InputStream}, that contains UTF-8 encoded text.
+     *
      * @param inputStream with UTF-8 encoded content
      * @return the stream's content
      * @throws IOException

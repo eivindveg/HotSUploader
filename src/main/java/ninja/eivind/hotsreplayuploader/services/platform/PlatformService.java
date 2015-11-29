@@ -18,7 +18,6 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;

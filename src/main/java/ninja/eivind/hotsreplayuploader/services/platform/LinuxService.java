@@ -41,7 +41,7 @@ public class LinuxService implements PlatformService {
     @Override
     public File getHotSHome() {
         final File file = new File(USER_HOME, "Heroes of the Storm/Accounts/");
-        if(file.exists()) {
+        if (file.exists()) {
             return file;
         } else {
             return new File(USER_HOME, "Documents/Heroes of the Storm/Accounts/");

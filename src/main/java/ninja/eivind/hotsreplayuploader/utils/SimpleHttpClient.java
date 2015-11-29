@@ -27,8 +27,8 @@ import java.net.URL;
  */
 public class SimpleHttpClient {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SimpleHttpClient.class);
     public static final String SPACE = "%20";
+    private static final Logger LOG = LoggerFactory.getLogger(SimpleHttpClient.class);
 
     /**
      * Encodes a given String url into a valid URI if possible

@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * {@link Task} for uploading a replay to a {@link Collection} of {@link Provider}s
@@ -48,7 +47,7 @@ public class UploadTask extends Task<ReplayFile> {
             final StormParser parser = new StormParser(take.getFile());
             final Replay replay = parser.parseReplay();
             final Status preStatus = provider.getPreStatus(replay);
-            if(preStatus == Status.UPLOADED || preStatus == Status.UNSUPPORTED_GAME_MODE) {
+            if (preStatus == Status.UPLOADED || preStatus == Status.UNSUPPORTED_GAME_MODE) {
                 LOG.info("Parsed preStatus reported no need to upload "
                         + take.getFile() + " for provider " + provider.getName());
                 applyStatus(provider, preStatus);

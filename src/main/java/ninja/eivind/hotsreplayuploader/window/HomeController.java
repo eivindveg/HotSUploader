@@ -26,11 +26,11 @@ import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 import ninja.eivind.hotsreplayuploader.di.JavaFXController;
 import ninja.eivind.hotsreplayuploader.models.Account;
-import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.hotsreplayuploader.models.LeaderboardRanking;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.HeroConverter;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
+import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotsLogsProvider;
 import ninja.eivind.hotsreplayuploader.scene.control.CustomListCellFactory;
 import ninja.eivind.hotsreplayuploader.services.AccountService;
@@ -58,23 +58,40 @@ public class HomeController implements JavaFXController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
 
-    @FXML private VBox updatePane;
-    @FXML private Label newVersionLabel;
-    @FXML private Hyperlink updateLink;
-    @FXML private ListView<ReplayFile> newReplaysView;
-    @FXML private Label status;
-    @FXML private Label qmMmr;
-    @FXML private Label hlMmr;
-    @FXML private Label tlMmr;
-    @FXML private ImageView logo;
-    @FXML private Button playerSearch;
-    @FXML private TextField playerSearchInput;
-    @FXML private Button viewProfile;
-    @FXML private ComboBox<Account> accountSelect;
-    @FXML private Button lookupHero;
-    @FXML private ComboBox<HotSLogsHero> heroName;
-    @FXML private Label newReplaysCount;
-    @FXML private Label uploadedReplays;
+    @FXML
+    private VBox updatePane;
+    @FXML
+    private Label newVersionLabel;
+    @FXML
+    private Hyperlink updateLink;
+    @FXML
+    private ListView<ReplayFile> newReplaysView;
+    @FXML
+    private Label status;
+    @FXML
+    private Label qmMmr;
+    @FXML
+    private Label hlMmr;
+    @FXML
+    private Label tlMmr;
+    @FXML
+    private ImageView logo;
+    @FXML
+    private Button playerSearch;
+    @FXML
+    private TextField playerSearchInput;
+    @FXML
+    private Button viewProfile;
+    @FXML
+    private ComboBox<Account> accountSelect;
+    @FXML
+    private Button lookupHero;
+    @FXML
+    private ComboBox<HotSLogsHero> heroName;
+    @FXML
+    private Label newReplaysCount;
+    @FXML
+    private Label uploadedReplays;
 
     @Inject
     private UploaderService uploaderService;

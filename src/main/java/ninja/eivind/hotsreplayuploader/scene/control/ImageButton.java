@@ -32,6 +32,7 @@ public class ImageButton extends Button {
 
     /**
      * Create an {@link ImageButton} with the specified height and width.
+     *
      * @param height
      * @param width
      */

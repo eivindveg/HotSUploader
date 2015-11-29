@@ -42,7 +42,7 @@ public class DataSourceProvider implements Provider<DataSource> {
         if (releaseManager == null || releaseManager.getCurrentVersion().equals("Development")) {
             databaseName = database.toString() + "-dev";
         } else {
-            databaseName  = database.toString();
+            databaseName = database.toString();
         }
 
         final String url = "jdbc:h2:" + databaseName;

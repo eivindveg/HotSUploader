@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -101,7 +100,7 @@ public class StormHandler {
 
     public List<String> getAccountStringUris() {
         final File[] array = platformService.getHotSHome().listFiles();
-        if(array == null) {
+        if (array == null) {
             return Collections.emptyList();
         }
         return Arrays.stream(array)
