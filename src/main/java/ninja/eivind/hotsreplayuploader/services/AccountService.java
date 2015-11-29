@@ -34,7 +34,6 @@ import java.util.List;
  */
 public class AccountService extends ScheduledService<List<Account>> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccountService.class);
     @Inject
     private StormHandler stormHandler;
     @Inject
