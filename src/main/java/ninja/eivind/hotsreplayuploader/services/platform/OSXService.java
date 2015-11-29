@@ -65,6 +65,11 @@ public class OSXService implements PlatformService {
     @Override
     public TrayIcon getTrayIcon(final Stage primaryStage) throws PlatformNotSupportedException {
         final URL imageURL = getLogoUrl();
+
+        //don't close the window on clicking x, just hide
+        primaryStage.setOnCloseRequest(primaryStage.getOnHiding());
+
+        //register key handlers to react on standard shortcuts
         final EventType<KeyEvent> keyPressed = KeyEvent.KEY_PRESSED;
         primaryStage.addEventHandler(keyPressed, event -> {
             if (event.isMetaDown()) {
