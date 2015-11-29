@@ -36,6 +36,6 @@ public class SingletonListProviderRepository implements ProviderRepository, Clos
 
     @Override
     public void close() {
-        all.forEach(one -> one.close());
+        all.forEach(Provider::close);
     }
 }
