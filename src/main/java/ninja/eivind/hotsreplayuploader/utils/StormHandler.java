@@ -14,6 +14,8 @@
 
 package ninja.eivind.hotsreplayuploader.utils;
 
+import ninja.eivind.hotsreplayuploader.models.Account;
+import ninja.eivind.hotsreplayuploader.models.Player;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 
 import javax.inject.Inject;
@@ -21,7 +23,6 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,48 +51,64 @@ public class StormHandler {
         return hotsHome;
     }
 
-    private File buildHotSHome() {
-        return platformService.getHotSHome();
-    }
+    /**
+     * Retrieves a {@link List} of {@link File}s, which represent
+     * the replay file directory for a specific {@link Account}.
+     * @return {@link List} of directories or an empty {@link List}
+     */
+    public List<File> getReplayDirectories() {
+        final List<File> replayDirectories = new ArrayList<>();
 
-    public List<File> getHotSAccountDirectories() {
-        return getAccountDirectories(getHotSHome());
-    }
-
-    private List<File> getAccountDirectories(final File root) {
-        final List<File> hotsAccounts = new ArrayList<>();
-        File[] files = root.listFiles((dir, name) -> name.matches(ACCOUNT_FOLDER_FILTER));
-        if (files == null) {
-            files = new File[0];
-        }
-        for (final File file : files) {
-            final File[] hotsFolders = file.listFiles((dir, name) -> name.matches(hotsAccountFilter));
-            Arrays.stream(hotsFolders)
+        getAccountDirectories().stream()
                     .map(folder -> new File(folder, "Replays"))
                     .map(folder -> new File(folder, "Multiplayer"))
-                    .forEach(hotsAccounts::add);
-        }
-        return hotsAccounts;
+                    .forEach(replayDirectories::add);
+        return replayDirectories;
     }
 
+    /**
+     * Builds a {@link List} of URIs to the HOTSlogs API, which
+     * can be used to retrieve {@link Player} information.
+     * @return {@link List} of uris or an empty {@link List}
+     */
     public List<String> getAccountStringUris() {
-        final File[] array = platformService.getHotSHome().listFiles();
-        if (array == null) {
-            return Collections.emptyList();
-        }
-        return Arrays.stream(array)
-                .flatMap(file -> Arrays.stream(file.list((dir, name) -> name.matches(hotsAccountFilter))))
+        final List<File> accountDirectories = getAccountDirectories();
+
+        return accountDirectories.stream()
                 .map(folder -> {
-                    String[] split = folder.replace("-Hero", "").split("-");
+                    String[] split = folder.getName().replace("-Hero", "").split("-");
                     StringBuilder accountNameBuilder = new StringBuilder();
                     for (final String s : split) {
                         accountNameBuilder.append("/").append(s);
                     }
+
                     return "https://www.hotslogs.com/API/Players" + accountNameBuilder.toString();
                 }).collect(Collectors.toList());
     }
 
     public String getHotSAccountFilter() {
         return hotsAccountFilter;
+    }
+
+    private File buildHotSHome() {
+        return platformService.getHotSHome();
+    }
+
+    /**
+     * Retrieves a {@link List} of {@link File}s, each containing files for a specific {@link Account}.
+     * @return {@link List} of directories or an empty {@link List}
+     */
+    private List<File> getAccountDirectories() {
+        final List<File> hotsAccounts = new ArrayList<>();
+        File[] files = getHotSHome().listFiles((dir, name) -> name.matches(ACCOUNT_FOLDER_FILTER));
+        if (files == null) {
+            files = new File[0];
+        }
+        for (final File file : files) {
+            final File[] hotsFolders = file.listFiles((dir, name) -> name.matches(hotsAccountFilter));
+            Arrays.stream(hotsFolders).forEach(hotsAccounts::add);
+        }
+
+        return hotsAccounts;
     }
 }
