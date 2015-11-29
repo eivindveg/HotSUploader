@@ -81,7 +81,7 @@ public interface PlatformService {
 
     /**
      * Shuts down the application by delegating service cleanups
-     * to the Application Thread, may also kill the VM depending on the OS.
+     * to the Application Thread.
      */
     default void shutdown() {
         // let JavaFX shut close its services gracefully

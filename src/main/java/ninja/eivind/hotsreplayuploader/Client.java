@@ -60,11 +60,9 @@ public class Client extends Application {
 
     @Override
     public void stop() throws Exception {
-        if (trayIcon != null) {
-            SystemTray.getSystemTray().remove(trayIcon);
-        }
         context.dispose();
         super.stop();
+        System.exit(0);
     }
 
     @Override

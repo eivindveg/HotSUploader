@@ -56,16 +56,6 @@ public class OSXService implements PlatformService {
     }
 
     @Override
-    public void shutdown()
-    {
-        //politely call the default cleanup routine
-        PlatformService.super.shutdown();
-        //event threads like AWT are still keeping the application alive, kill them
-        System.exit(0);
-    }
-
-
-    @Override
     public URL getLogoUrl() {
         String logoVariant = isMacMenuBarDarkMode() ? "" : "-black";
         return getClass().getResource(
