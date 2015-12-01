@@ -25,4 +25,4 @@ This is a Maven project. You must have the Java 8 SDK installed in order to buil
 ## Maintainers
 [eivindveg](/../../../../eivindveg) - Windows, Linux and general development
 
-[zhedar](/../../../../zhedar) - OSX and general development
+[zhedar](/../../../../../zhedar) - OSX and general development
