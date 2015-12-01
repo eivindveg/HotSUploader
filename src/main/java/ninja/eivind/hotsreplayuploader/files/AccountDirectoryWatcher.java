@@ -43,7 +43,7 @@ public class AccountDirectoryWatcher implements Closeable {
 
     @Inject
     public AccountDirectoryWatcher(StormHandler stormHandler) {
-        watchDirectories = new HashSet<>(stormHandler.getHotSAccountDirectories());
+        watchDirectories = new HashSet<>(stormHandler.getReplayDirectories());
         threads = new HashSet<>();
         beginWatch();
     }
