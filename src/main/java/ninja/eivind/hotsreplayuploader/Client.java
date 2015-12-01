@@ -52,7 +52,6 @@ public class Client extends Application {
     private PlatformService platformService;
     @Inject
     private StatusBinder statusBinder;
-    private TrayIcon trayIcon;
 
     public static void main(String... args) {
         launch(Client.class, args);
@@ -80,6 +79,7 @@ public class Client extends Application {
         primaryStage.getIcons().add(image);
         primaryStage.setResizable(false);
         addToTray(primaryStage);
+        platformService.setupWindowBehaviour(primaryStage);
 
         // Set window title
         final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
@@ -94,9 +94,7 @@ public class Client extends Application {
 
     private void addToTray(final Stage primaryStage) {
         try {
-            platformService.setupWindowBehaviour(primaryStage);
-
-            trayIcon = platformService.getTrayIcon(primaryStage);
+            TrayIcon trayIcon = platformService.getTrayIcon(primaryStage);
 
             // update tooltip when the statusbinder changes status
             statusBinder.message().addListener((observable, oldValue, newValue) -> {
