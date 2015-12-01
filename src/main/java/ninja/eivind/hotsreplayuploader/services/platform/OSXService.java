@@ -34,11 +34,6 @@ import java.util.concurrent.TimeUnit;
 public class OSXService implements PlatformService {
     private static final Logger LOG = LoggerFactory.getLogger(OSXService.class);
     private final String libraryPath = "/Library/Application Support";
-    private Desktop desktop;
-
-    public OSXService() {
-        desktop = Desktop.getDesktop();
-    }
 
     @Override
     public File getApplicationHome() {
@@ -52,7 +47,7 @@ public class OSXService implements PlatformService {
 
     @Override
     public void browse(final URI uri) throws IOException {
-        desktop.browse(uri);
+        Desktop.getDesktop().browse(uri);
     }
 
     @Override
