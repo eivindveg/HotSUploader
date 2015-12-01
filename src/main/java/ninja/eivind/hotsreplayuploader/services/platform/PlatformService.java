@@ -39,6 +39,18 @@ public interface PlatformService {
 
     File getHotSHome();
 
+    /**
+     * Defines how the application reacts on window events like closing or hiding.
+     * @param primaryStage the main stage
+     */
+    default void setupWindowBehaviour(Stage primaryStage) {
+        Platform.setImplicitExit(false);
+        primaryStage.setOnHiding(value -> {
+            primaryStage.setIconified(true);
+            value.consume();
+        });
+    }
+
     default TrayIcon getTrayIcon(Stage primaryStage) throws PlatformNotSupportedException {
         throw new PlatformNotSupportedException("Not implemented in " + getClass());
     }

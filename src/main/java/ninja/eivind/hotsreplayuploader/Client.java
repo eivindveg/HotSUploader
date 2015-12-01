@@ -94,14 +94,9 @@ public class Client extends Application {
 
     private void addToTray(final Stage primaryStage) {
         try {
+            platformService.setupWindowBehaviour(primaryStage);
 
             trayIcon = platformService.getTrayIcon(primaryStage);
-            // deal with window events
-            Platform.setImplicitExit(false);
-            primaryStage.setOnHiding(value -> {
-                primaryStage.setIconified(true);
-                value.consume();
-            });
 
             // update tooltip when the statusbinder changes status
             statusBinder.message().addListener((observable, oldValue, newValue) -> {

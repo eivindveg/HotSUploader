@@ -63,8 +63,9 @@ public class OSXService implements PlatformService {
     }
 
     @Override
-    public TrayIcon getTrayIcon(final Stage primaryStage) throws PlatformNotSupportedException {
-        final URL imageURL = getLogoUrl();
+    public void setupWindowBehaviour(Stage primaryStage)
+    {
+        PlatformService.super.setupWindowBehaviour(primaryStage);
 
         //don't close the window on clicking x, just hide
         primaryStage.setOnCloseRequest(primaryStage.getOnHiding());
@@ -82,7 +83,11 @@ public class OSXService implements PlatformService {
                 }
             }
         });
+    }
 
+    @Override
+    public TrayIcon getTrayIcon(final Stage primaryStage) throws PlatformNotSupportedException {
+        final URL imageURL = getLogoUrl();
         return buildTrayIcon(imageURL, primaryStage);
     }
 
