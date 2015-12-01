@@ -35,9 +35,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 /**
@@ -60,7 +60,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
 
     public UploaderService() throws IOException {
         LOG.info("Instantiating " + getClass().getSimpleName());
-        uploadQueue = new ArrayBlockingQueue<>(2500);
+        uploadQueue = new LinkedBlockingQueue<>();
         files = FXCollections.observableArrayList();
         LOG.info("Instantiated " + getClass().getSimpleName());
     }
