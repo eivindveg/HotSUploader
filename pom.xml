@@ -114,7 +114,10 @@
 
                     <jvmArgs>
                         <jvmArg>
-                            -Xmx100M
+                            -Xmx75M
+                        </jvmArg>
+                        <jvmArg>
+                            -Xms25M
                         </jvmArg>
                     </jvmArgs>
                 </configuration>
