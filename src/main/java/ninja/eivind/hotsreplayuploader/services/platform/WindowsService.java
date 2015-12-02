@@ -80,6 +80,11 @@ public class WindowsService implements PlatformService {
         return getClass().getResource("/images/logo-desktop.png");
     }
 
+    @Override
+    public boolean isPreloaderSupported() {
+        return true;
+    }
+
     private File findMyDocuments() throws FileNotFoundException {
         Process p = null;
         String myDocuments = null;

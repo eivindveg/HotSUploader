@@ -100,4 +100,6 @@ public interface PlatformService {
     void browse(URI uri) throws IOException;
 
     URL getLogoUrl();
+
+    boolean isPreloaderSupported();
 }

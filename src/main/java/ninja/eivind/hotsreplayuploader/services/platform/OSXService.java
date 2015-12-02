@@ -81,6 +81,11 @@ public class OSXService implements PlatformService {
     }
 
     @Override
+    public boolean isPreloaderSupported() {
+        return false;
+    }
+
+    @Override
     public TrayIcon getTrayIcon(final Stage primaryStage) throws PlatformNotSupportedException {
         final URL imageURL = getLogoUrl();
         return buildTrayIcon(imageURL, primaryStage);
