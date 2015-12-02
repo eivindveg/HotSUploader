@@ -110,7 +110,6 @@
                     <nativeReleaseVersion>${releaseVersion}</nativeReleaseVersion>
                     <identifier>${project.build.finalName}</identifier>
                     <css2bin>true</css2bin>
-                    <preLoader>ninja.eivind.hotsreplayuploader.ClientPreloader</preLoader>
 
                     <jvmArgs>
                         <jvmArg>
