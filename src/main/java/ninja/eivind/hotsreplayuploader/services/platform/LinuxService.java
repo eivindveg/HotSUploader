@@ -61,4 +61,9 @@ public class LinuxService implements PlatformService {
     public URL getLogoUrl() {
         return getClass().getResource("/images/logo-desktop.png");
     }
+
+    @Override
+    public boolean isPreloaderSupported() {
+        return false;
+    }
 }

@@ -15,6 +15,7 @@
 package ninja.eivind.hotsreplayuploader;
 
 import com.gluonhq.ignite.DIContext;
+import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +28,7 @@ import ninja.eivind.hotsreplayuploader.di.GuiceModule;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceProvider;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
 import org.slf4j.Logger;
@@ -54,7 +56,14 @@ public class Client extends Application {
     private StatusBinder statusBinder;
 
     public static void main(String... args) {
-        launch(Client.class, args);
+        PlatformService platformService = new PlatformServiceProvider().get();
+        if (platformService.isPreloaderSupported()) {
+            LOG.info("Launching with preloader.");
+            LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
+        } else {
+            LOG.info("Launching without preloader.");
+            launch(Client.class, args);
+        }
     }
 
     @Override
