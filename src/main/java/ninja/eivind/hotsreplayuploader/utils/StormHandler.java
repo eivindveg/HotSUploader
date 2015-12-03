@@ -14,17 +14,15 @@
 
 package ninja.eivind.hotsreplayuploader.utils;
 
+import ninja.eivind.hotsreplayuploader.models.Account;
+import ninja.eivind.hotsreplayuploader.models.Player;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,36 +34,14 @@ import java.util.stream.Collectors;
 @Singleton
 public class StormHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StormHandler.class);
     private final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
     private final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
 
-    private File applicationHome;
     private File hotsHome;
     @Inject
     private PlatformService platformService;
 
     public StormHandler() {
-    }
-
-    public File getApplicationHome() {
-        if (applicationHome == null) {
-            applicationHome = buildApplicationHome();
-
-            // Migration logic; should be removed somewhere around version 2.X(not 2.0) or 3.0
-            File parentFile = applicationHome.getParentFile();
-            File oldDirectory = new File(parentFile, "HotSLogs UploaderFX");
-            if (oldDirectory.exists()) {
-                if (!oldDirectory.delete()) {
-                    LOG.warn("Could not delete old replay properties folder");
-                }
-            }
-        }
-        return applicationHome;
-    }
-
-    private File buildApplicationHome() {
-        return platformService.getApplicationHome();
     }
 
     public File getHotSHome() {
@@ -75,48 +51,64 @@ public class StormHandler {
         return hotsHome;
     }
 
-    private File buildHotSHome() {
-        return platformService.getHotSHome();
-    }
+    /**
+     * Retrieves a {@link List} of {@link File}s, which represent
+     * the replay file directory for a specific {@link Account}.
+     * @return {@link List} of directories or an empty {@link List}
+     */
+    public List<File> getReplayDirectories() {
+        final List<File> replayDirectories = new ArrayList<>();
 
-    public List<File> getHotSAccountDirectories() {
-        return getAccountDirectories(getHotSHome());
-    }
-
-    private List<File> getAccountDirectories(final File root) {
-        List<File> hotsAccounts = new ArrayList<>();
-        File[] files = root.listFiles((dir, name) -> name.matches(ACCOUNT_FOLDER_FILTER));
-        if (files == null) {
-            files = new File[0];
-        }
-        for (final File file : files) {
-            File[] hotsFolders = file.listFiles((dir, name) -> name.matches(hotsAccountFilter));
-            Arrays.stream(hotsFolders)
+        getAccountDirectories().stream()
                     .map(folder -> new File(folder, "Replays"))
                     .map(folder -> new File(folder, "Multiplayer"))
-                    .forEach(hotsAccounts::add);
-        }
-        return hotsAccounts;
+                    .forEach(replayDirectories::add);
+        return replayDirectories;
     }
 
+    /**
+     * Builds a {@link List} of URIs to the HOTSlogs API, which
+     * can be used to retrieve {@link Player} information.
+     * @return {@link List} of uris or an empty {@link List}
+     */
     public List<String> getAccountStringUris() {
-        File[] array = platformService.getHotSHome().listFiles();
-        if(array == null) {
-            return Collections.emptyList();
-        }
-        return Arrays.stream(array)
-                .flatMap(file -> Arrays.stream(file.list((dir, name) -> name.matches(hotsAccountFilter))))
+        final List<File> accountDirectories = getAccountDirectories();
+
+        return accountDirectories.stream()
                 .map(folder -> {
-                    String[] split = folder.replace("-Hero", "").split("-");
+                    String[] split = folder.getName().replace("-Hero", "").split("-");
                     StringBuilder accountNameBuilder = new StringBuilder();
                     for (final String s : split) {
                         accountNameBuilder.append("/").append(s);
                     }
+
                     return "https://www.hotslogs.com/API/Players" + accountNameBuilder.toString();
                 }).collect(Collectors.toList());
     }
 
     public String getHotSAccountFilter() {
         return hotsAccountFilter;
+    }
+
+    private File buildHotSHome() {
+        return platformService.getHotSHome();
+    }
+
+    /**
+     * Retrieves a {@link List} of {@link File}s, each containing files for a specific {@link Account}.
+     * @return {@link List} of directories or an empty {@link List}
+     */
+    private List<File> getAccountDirectories() {
+        final List<File> hotsAccounts = new ArrayList<>();
+        File[] files = getHotSHome().listFiles((dir, name) -> name.matches(ACCOUNT_FOLDER_FILTER));
+        if (files == null) {
+            files = new File[0];
+        }
+        for (final File file : files) {
+            final File[] hotsFolders = file.listFiles((dir, name) -> name.matches(hotsAccountFilter));
+            Arrays.stream(hotsFolders).forEach(hotsAccounts::add);
+        }
+
+        return hotsAccounts;
     }
 }

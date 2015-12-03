@@ -42,9 +42,9 @@ public class ClientPreloader extends Preloader {
         LOG.info("Preloading application");
         primaryStage.initStyle(StageStyle.UNDECORATED);
 
-        Parent root = FXMLLoader.load(getClass().getResource("window/Preloader.fxml"));
+        final Parent root = FXMLLoader.load(getClass().getResource("window/Preloader.fxml"));
 
-        Scene scene = new Scene(root);
+        final Scene scene = new Scene(root);
 
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();

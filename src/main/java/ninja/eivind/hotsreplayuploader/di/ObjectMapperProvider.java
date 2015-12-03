@@ -31,8 +31,6 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
     @Override
     public ObjectMapper get() {
         LOG.info("Building ObjectMapper");
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        return mapper;
+        return new ObjectMapper().registerModule(new JavaTimeModule());
     }
 }

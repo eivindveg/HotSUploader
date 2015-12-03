@@ -15,6 +15,7 @@
 package ninja.eivind.hotsreplayuploader;
 
 import com.gluonhq.ignite.DIContext;
+import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +28,7 @@ import ninja.eivind.hotsreplayuploader.di.GuiceModule;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceProvider;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
 import org.slf4j.Logger;
@@ -52,10 +54,16 @@ public class Client extends Application {
     private PlatformService platformService;
     @Inject
     private StatusBinder statusBinder;
-    private TrayIcon trayIcon;
 
     public static void main(String... args) {
-        launch(Client.class, args);
+        PlatformService platformService = new PlatformServiceProvider().get();
+        if (platformService.isPreloaderSupported()) {
+            LOG.info("Launching with preloader.");
+            LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
+        } else {
+            LOG.info("Launching without preloader.");
+            launch(Client.class, args);
+        }
     }
 
     @Override
@@ -70,23 +78,24 @@ public class Client extends Application {
         context.init();
 
         //add a shutdown hook to be really sure, resources are closed properly
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> context.dispose()));
+        Runtime.getRuntime().addShutdownHook(new Thread(context::dispose));
     }
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        URL logo = platformService.getLogoUrl();
-        Image image = new Image(logo.toString());
+        final URL logo = platformService.getLogoUrl();
+        final Image image = new Image(logo.toString());
         primaryStage.getIcons().add(image);
         primaryStage.setResizable(false);
         addToTray(primaryStage);
+        platformService.setupWindowBehaviour(primaryStage);
 
         // Set window title
-        String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
+        final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
         primaryStage.setTitle(windowTitle);
 
         fxmlLoader.setLocation(getClass().getResource("/ninja/eivind/hotsreplayuploader/window/Home.fxml"));
-        Parent root = fxmlLoader.load();
+        final Parent root = fxmlLoader.load();
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
@@ -94,14 +103,7 @@ public class Client extends Application {
 
     private void addToTray(final Stage primaryStage) {
         try {
-
-            trayIcon = platformService.getTrayIcon(primaryStage);
-            // deal with window events
-            Platform.setImplicitExit(false);
-            primaryStage.setOnHiding(value -> {
-                primaryStage.setIconified(true);
-                value.consume();
-            });
+            TrayIcon trayIcon = platformService.getTrayIcon(primaryStage);
 
             // update tooltip when the statusbinder changes status
             statusBinder.message().addListener((observable, oldValue, newValue) -> {
@@ -110,7 +112,7 @@ public class Client extends Application {
                 }
             });
 
-            SystemTray systemTray = SystemTray.getSystemTray();
+            final SystemTray systemTray = SystemTray.getSystemTray();
             systemTray.add(trayIcon);
 
         } catch (PlatformNotSupportedException | AWTException e) {

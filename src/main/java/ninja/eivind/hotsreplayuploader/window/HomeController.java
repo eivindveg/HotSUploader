@@ -26,11 +26,11 @@ import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 import ninja.eivind.hotsreplayuploader.di.JavaFXController;
 import ninja.eivind.hotsreplayuploader.models.Account;
-import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.hotsreplayuploader.models.LeaderboardRanking;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.HeroConverter;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
+import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotsLogsProvider;
 import ninja.eivind.hotsreplayuploader.scene.control.CustomListCellFactory;
 import ninja.eivind.hotsreplayuploader.services.AccountService;
@@ -58,23 +58,40 @@ public class HomeController implements JavaFXController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
 
-    @FXML private VBox updatePane;
-    @FXML private Label newVersionLabel;
-    @FXML private Hyperlink updateLink;
-    @FXML private ListView<ReplayFile> newReplaysView;
-    @FXML private Label status;
-    @FXML private Label qmMmr;
-    @FXML private Label hlMmr;
-    @FXML private Label tlMmr;
-    @FXML private ImageView logo;
-    @FXML private Button playerSearch;
-    @FXML private TextField playerSearchInput;
-    @FXML private Button viewProfile;
-    @FXML private ComboBox<Account> accountSelect;
-    @FXML private Button lookupHero;
-    @FXML private ComboBox<HotSLogsHero> heroName;
-    @FXML private Label newReplaysCount;
-    @FXML private Label uploadedReplays;
+    @FXML
+    private VBox updatePane;
+    @FXML
+    private Label newVersionLabel;
+    @FXML
+    private Hyperlink updateLink;
+    @FXML
+    private ListView<ReplayFile> newReplaysView;
+    @FXML
+    private Label status;
+    @FXML
+    private Label qmMmr;
+    @FXML
+    private Label hlMmr;
+    @FXML
+    private Label tlMmr;
+    @FXML
+    private ImageView logo;
+    @FXML
+    private Button playerSearch;
+    @FXML
+    private TextField playerSearchInput;
+    @FXML
+    private Button viewProfile;
+    @FXML
+    private ComboBox<Account> accountSelect;
+    @FXML
+    private Button lookupHero;
+    @FXML
+    private ComboBox<HotSLogsHero> heroName;
+    @FXML
+    private Label newReplaysCount;
+    @FXML
+    private Label uploadedReplays;
 
     @Inject
     private UploaderService uploaderService;
@@ -108,14 +125,14 @@ public class HomeController implements JavaFXController {
     }
 
     private void checkNewVersion() {
-        Task<Optional<GitHubRelease>> task = new Task<Optional<GitHubRelease>>() {
+        final Task<Optional<GitHubRelease>> task = new Task<Optional<GitHubRelease>>() {
             @Override
             protected Optional<GitHubRelease> call() throws Exception {
                 return releaseManager.getNewerVersionIfAny();
             }
         };
         task.setOnSucceeded(event -> {
-            Optional<GitHubRelease> newerVersionIfAny = task.getValue();
+            final Optional<GitHubRelease> newerVersionIfAny = task.getValue();
             if (newerVersionIfAny.isPresent()) {
                 displayUpdateMessage(newerVersionIfAny.get());
             }
@@ -126,7 +143,7 @@ public class HomeController implements JavaFXController {
     private void displayUpdateMessage(final GitHubRelease newerVersionIfAny) {
         newVersionLabel.setText(newerVersionIfAny.getTagName());
         updateLink.setOnMouseClicked(value -> {
-            String htmlUrl = newerVersionIfAny.getHtmlUrl();
+            final String htmlUrl = newerVersionIfAny.getHtmlUrl();
             try {
                 platformService.browse(SimpleHttpClient.encode(htmlUrl));
             } catch (IOException e) {
@@ -153,7 +170,7 @@ public class HomeController implements JavaFXController {
     }
 
     private void doOpenHotsLogs() {
-        String url = "https://www.hotslogs.com/Default";
+        final String url = "https://www.hotslogs.com/Default";
         try {
             platformService.browse(SimpleHttpClient.encode(url));
         } catch (IOException e) {
@@ -171,12 +188,12 @@ public class HomeController implements JavaFXController {
 
     @FXML
     private void doLookupHero() {
-        HotSLogsHero hero = this.heroName.getValue();
+        final HotSLogsHero hero = this.heroName.getValue();
         if (hero == null) {
             return;
         }
-        String heroName = hero.getPrimaryName();
-        String url = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName;
+        final String heroName = hero.getPrimaryName();
+        final String url = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName;
         if (heroName.equals("")) {
             return;
         } else {
@@ -191,8 +208,8 @@ public class HomeController implements JavaFXController {
 
     @FXML
     private void doPlayerSearch() {
-        String playerName = playerSearchInput.getText().replaceAll(" ", "");
-        String url = "https://www.hotslogs.com/PlayerSearch?Name=" + playerName;
+        final String playerName = playerSearchInput.getText().replaceAll(" ", "");
+        final String url = "https://www.hotslogs.com/PlayerSearch?Name=" + playerName;
         if (playerName.equals("")) {
             return;
         } else {
@@ -207,11 +224,11 @@ public class HomeController implements JavaFXController {
 
     @FXML
     private void doViewProfile() {
-        Account account = accountSelect.getValue();
+        final Account account = accountSelect.getValue();
         if (account == null) {
             return;
         }
-        String url = "https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId();
+        final String url = "https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId();
         try {
             platformService.browse(SimpleHttpClient.encode(url));
         } catch (IOException e) {
@@ -285,7 +302,7 @@ public class HomeController implements JavaFXController {
         accountSelect.getItems().setAll(newAccounts);
         if (reference != null) {
             final Account finalReference = reference;
-            Optional<Account> optionalAccount = accountSelect.getItems()
+            final Optional<Account> optionalAccount = accountSelect.getItems()
                     .stream()
                     .filter(account -> account.getPlayerId().equals(finalReference.getPlayerId()))
                     .findFirst();
@@ -313,7 +330,7 @@ public class HomeController implements JavaFXController {
     }
 
     private void bindList() {
-        ObservableList<ReplayFile> files = uploaderService.getFiles();
+        final ObservableList<ReplayFile> files = uploaderService.getFiles();
         newReplaysCount.setText(String.valueOf(files.size()));
         files.addListener((ListChangeListener<ReplayFile>) c -> newReplaysCount.setText(String.valueOf(files.size())));
         newReplaysView.setItems(files.sorted(new ReplayFileComparator()));
@@ -323,25 +340,25 @@ public class HomeController implements JavaFXController {
     }
 
     private void setIdle() {
-        String idle = "Idle";
+        final String idle = "Idle";
         statusBinder.message().setValue(idle);
         status.textFillProperty().setValue(Paint.valueOf("#38d3ff"));
     }
 
     private void setMaintenance() {
-        String maintenance = "Maintenance";
+        final String maintenance = "Maintenance";
         statusBinder.message().setValue(maintenance);
         status.textFillProperty().setValue(Paint.valueOf("#FF0000"));
     }
 
     private void setUploading() {
-        String uploading = "Uploading";
+        final String uploading = "Uploading";
         statusBinder.message().setValue(uploading);
         status.textFillProperty().setValue(Paint.valueOf("#00B000"));
     }
 
     private void setError() {
-        String connectionError = "Connection error";
+        final String connectionError = "Connection error";
         statusBinder.message().setValue(connectionError);
         status.textFillProperty().setValue(Paint.valueOf("#FF0000"));
     }

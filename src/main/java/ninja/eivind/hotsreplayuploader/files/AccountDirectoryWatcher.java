@@ -38,14 +38,12 @@ public class AccountDirectoryWatcher implements Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountDirectoryWatcher.class);
     private final Set<File> watchDirectories;
-    private StormHandler stormHandler;
     private Set<WatchHandler> watchHandlers = new HashSet<>();
     private Collection<Thread> threads;
 
     @Inject
     public AccountDirectoryWatcher(StormHandler stormHandler) {
-        this.stormHandler = stormHandler;
-        watchDirectories = new HashSet<>(stormHandler.getHotSAccountDirectories());
+        watchDirectories = new HashSet<>(stormHandler.getReplayDirectories());
         threads = new HashSet<>();
         beginWatch();
     }
@@ -55,9 +53,9 @@ public class AccountDirectoryWatcher implements Closeable {
         watchDirectories.stream().map(file -> Paths.get(file.toString())).forEach(path -> {
             try {
                 LOG.info("\t" + path);
-                WatchHandler watchHandler = new WatchHandler(stormHandler, path);
+                final WatchHandler watchHandler = new WatchHandler(path);
                 watchHandlers.add(watchHandler);
-                Thread thread = new Thread(watchHandler);
+                final Thread thread = new Thread(watchHandler);
                 thread.start();
                 threads.add(thread);
             } catch (IOException e) {

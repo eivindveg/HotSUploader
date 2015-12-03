@@ -29,18 +29,21 @@ public interface FileRepository {
     /**
      * Deletes a {@link ReplayFile}'s physical {@link File}
      * and it's saved upload status information.
+     *
      * @param replayFile to delete
      */
     void deleteReplay(ReplayFile replayFile);
 
     /**
      * Persists or updates the status of a {@link ReplayFile}.
+     *
      * @param file the affected replay
      */
     void updateReplay(ReplayFile file);
 
     /**
      * Retrieves all available {@link ReplayFile}s
+     *
      * @return {@link List} of {@link ReplayFile}s
      */
     List<ReplayFile> getAll();

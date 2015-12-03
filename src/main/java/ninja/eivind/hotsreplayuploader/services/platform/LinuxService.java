@@ -40,8 +40,8 @@ public class LinuxService implements PlatformService {
 
     @Override
     public File getHotSHome() {
-        File file = new File(USER_HOME, "Heroes of the Storm/Accounts/");
-        if(file.exists()) {
+        final File file = new File(USER_HOME, "Heroes of the Storm/Accounts/");
+        if (file.exists()) {
             return file;
         } else {
             return new File(USER_HOME, "Documents/Heroes of the Storm/Accounts/");
@@ -60,5 +60,10 @@ public class LinuxService implements PlatformService {
     @Override
     public URL getLogoUrl() {
         return getClass().getResource("/images/logo-desktop.png");
+    }
+
+    @Override
+    public boolean isPreloaderSupported() {
+        return false;
     }
 }

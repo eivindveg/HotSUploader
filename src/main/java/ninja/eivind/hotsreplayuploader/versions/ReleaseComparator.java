@@ -18,10 +18,10 @@ import java.util.Comparator;
 
 /**
  * {@link Comparator} for ordering {@link GitHubRelease}s. Will take several matters into consideration:
- * <p>
+ * <p/>
  * The version string
  * Prerelease status
- * <p>
+ * <p/>
  * The end result will be releases before pre-releases, sorted by version String
  */
 public class ReleaseComparator implements Comparator<GitHubRelease> {
@@ -39,8 +39,8 @@ public class ReleaseComparator implements Comparator<GitHubRelease> {
             return -1;
         }
 
-        String release1Version = stripVersion(release1.getTagName());
-        String release2Version = stripVersion(release2.getTagName());
+        final String release1Version = stripVersion(release1.getTagName());
+        final String release2Version = stripVersion(release2.getTagName());
 
         return -release1Version.compareTo(release2Version);
     }

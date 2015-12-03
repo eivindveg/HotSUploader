@@ -34,11 +34,6 @@ import java.util.concurrent.TimeUnit;
 public class OSXService implements PlatformService {
     private static final Logger LOG = LoggerFactory.getLogger(OSXService.class);
     private final String libraryPath = "/Library/Application Support";
-    private Desktop desktop;
-
-    public OSXService() {
-        desktop = Desktop.getDesktop();
-    }
 
     @Override
     public File getApplicationHome() {
@@ -52,20 +47,26 @@ public class OSXService implements PlatformService {
 
     @Override
     public void browse(final URI uri) throws IOException {
-        desktop.browse(uri);
+        Desktop.getDesktop().browse(uri);
     }
 
     @Override
     public URL getLogoUrl() {
-        String logoVariant = isMacMenuBarDarkMode() ? "" : "-black";
+        final String logoVariant = isMacMenuBarDarkMode() ? "" : "-black";
         return getClass().getResource(
                 "/images/logo-desktop" + logoVariant + ".png");
     }
 
     @Override
-    public TrayIcon getTrayIcon(final Stage primaryStage) throws PlatformNotSupportedException {
-        URL imageURL = getLogoUrl();
-        EventType<KeyEvent> keyPressed = KeyEvent.KEY_PRESSED;
+    public void setupWindowBehaviour(Stage primaryStage)
+    {
+        PlatformService.super.setupWindowBehaviour(primaryStage);
+
+        //don't close the window on clicking x, just hide
+        primaryStage.setOnCloseRequest(primaryStage.getOnHiding());
+
+        //register key handlers to react on standard shortcuts
+        final EventType<KeyEvent> keyPressed = KeyEvent.KEY_PRESSED;
         primaryStage.addEventHandler(keyPressed, event -> {
             if (event.isMetaDown()) {
                 if (event.getCode() == KeyCode.Q) {
@@ -77,7 +78,16 @@ public class OSXService implements PlatformService {
                 }
             }
         });
+    }
 
+    @Override
+    public boolean isPreloaderSupported() {
+        return false;
+    }
+
+    @Override
+    public TrayIcon getTrayIcon(final Stage primaryStage) throws PlatformNotSupportedException {
+        final URL imageURL = getLogoUrl();
         return buildTrayIcon(imageURL, primaryStage);
     }
 

@@ -28,12 +28,13 @@ public class IOUtils {
 
     /**
      * Convenience method for readings an {@link InputStream}, that contains UTF-8 encoded text.
+     *
      * @param inputStream with UTF-8 encoded content
      * @return the stream's content
      * @throws IOException
      */
     public static String readInputStream(final InputStream inputStream) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
         try (InputStreamReader in = new InputStreamReader(inputStream, Charset.forName("UTF-8"))) {
             final char[] buffer = new char[4096];
             int n;

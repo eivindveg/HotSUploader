@@ -15,7 +15,6 @@
 package ninja.eivind.hotsreplayuploader.utils;
 
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
-import ninja.eivind.hotsreplayuploader.models.Status;
 
 import java.io.File;
 import java.util.Comparator;
@@ -27,15 +26,15 @@ import java.util.Comparator;
 public class ReplayFileComparator implements Comparator<ReplayFile> {
     @Override
     public int compare(ReplayFile o1, ReplayFile o2) {
-        if(o1 == o2) {
+        if (o1 == o2) {
             return 0;
         }
 
-        File file1 = o1.getFile();
-        File file2 = o2.getFile();
+        final File file1 = o1.getFile();
+        final File file2 = o2.getFile();
 
-        int modified = -Long.compare(file1.lastModified(), file2.lastModified());
-        if(modified != 0) {
+        final int modified = -Long.compare(file1.lastModified(), file2.lastModified());
+        if (modified != 0) {
             return modified;
         }
 

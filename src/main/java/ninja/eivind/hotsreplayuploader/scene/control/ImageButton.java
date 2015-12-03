@@ -32,8 +32,9 @@ public class ImageButton extends Button {
 
     /**
      * Create an {@link ImageButton} with the specified height and width.
-     * @param height
-     * @param width
+     *
+     * @param height height of the {@link Button}
+     * @param width width of the {@link Button}
      */
     public ImageButton(double height, double width) {
         this.height = height;
@@ -49,7 +50,7 @@ public class ImageButton extends Button {
      * Set an icon for this {@link Button} to a specified {@link Image}.
      */
     protected void setGraphic(Image image) {
-        ImageView imageView = new ImageView(image);
+        final ImageView imageView = new ImageView(image);
         imageView.setFitHeight(height);
         imageView.setFitWidth(width);
         super.setGraphic(imageView);

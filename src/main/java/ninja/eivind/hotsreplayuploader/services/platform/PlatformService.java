@@ -18,7 +18,6 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -40,6 +39,18 @@ public interface PlatformService {
 
     File getHotSHome();
 
+    /**
+     * Defines how the application reacts on window events like closing or hiding.
+     * @param primaryStage the main stage
+     */
+    default void setupWindowBehaviour(Stage primaryStage) {
+        Platform.setImplicitExit(false);
+        primaryStage.setOnHiding(value -> {
+            primaryStage.setIconified(true);
+            value.consume();
+        });
+    }
+
     default TrayIcon getTrayIcon(Stage primaryStage) throws PlatformNotSupportedException {
         throw new PlatformNotSupportedException("Not implemented in " + getClass());
     }
@@ -51,7 +62,7 @@ public interface PlatformService {
         final MenuItem exitItem = new MenuItem("Exit");
 
         // Declare shared action for showItem and trayicon click
-        Runnable openAction = () -> Platform.runLater(() -> {
+        final Runnable openAction = () -> Platform.runLater(() -> {
             primaryStage.setIconified(false);
             primaryStage.show();
             primaryStage.toFront();
@@ -72,9 +83,7 @@ public interface PlatformService {
             }
         });
         showItem.addActionListener(e -> openAction.run());
-        exitItem.addActionListener(event -> {
-            shutdown();
-        });
+        exitItem.addActionListener(event -> shutdown());
         return trayIcon;
 
     }
@@ -91,4 +100,6 @@ public interface PlatformService {
     void browse(URI uri) throws IOException;
 
     URL getLogoUrl();
+
+    boolean isPreloaderSupported();
 }

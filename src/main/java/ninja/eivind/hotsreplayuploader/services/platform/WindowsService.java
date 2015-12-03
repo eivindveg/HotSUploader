@@ -66,7 +66,7 @@ public class WindowsService implements PlatformService {
 
     @Override
     public TrayIcon getTrayIcon(Stage primaryStage) {
-        URL imageURL = getLogoUrl();
+        final URL imageURL = getLogoUrl();
         return buildTrayIcon(imageURL, primaryStage);
     }
 
@@ -80,6 +80,11 @@ public class WindowsService implements PlatformService {
         return getClass().getResource("/images/logo-desktop.png");
     }
 
+    @Override
+    public boolean isPreloaderSupported() {
+        return true;
+    }
+
     private File findMyDocuments() throws FileNotFoundException {
         Process p = null;
         String myDocuments = null;
@@ -89,11 +94,11 @@ public class WindowsService implements PlatformService {
             p.waitFor();
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
-                StringBuilder builder = new StringBuilder();
+                final StringBuilder builder = new StringBuilder();
                 reader.lines().forEach(builder::append);
                 final String[] values = builder.toString().trim().split("\\s\\s+");
                 for (final String value : values) {
-                    Matcher matcher = pathPattern.matcher(value);
+                    final Matcher matcher = pathPattern.matcher(value);
                     if (matcher.matches()) {
                         myDocuments = matcher.group();
                         break;

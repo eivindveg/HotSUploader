@@ -45,7 +45,7 @@ public class CustomListCell extends ListCell<ReplayFile> {
     private ReplayFile lastItem;
 
     protected CustomListCell(Image updateImage, Image deleteImage,
-            Image exceptionImage, UploaderService uploaderService) {
+                             Image exceptionImage, UploaderService uploaderService) {
         super();
         this.updateImage = updateImage;
         this.deleteImage = deleteImage;
@@ -61,7 +61,7 @@ public class CustomListCell extends ListCell<ReplayFile> {
         exceptionImageView.setFitHeight(20);
         exceptionImageView.setFitWidth(20);
 
-        HBox hBox = new HBox(updateImageView, deleteImageView);
+        final HBox hBox = new HBox(updateImageView, deleteImageView);
         content = new BorderPane(null, null, hBox, null, label);
         content.setMaxWidth(Double.MAX_VALUE);
         content.setPrefWidth(USE_COMPUTED_SIZE);
@@ -70,7 +70,7 @@ public class CustomListCell extends ListCell<ReplayFile> {
     @Override
     public void updateSelected(boolean selected) {
         super.updateSelected(selected);
-        if(selected && lastItem != null && lastItem.getStatus() == Status.EXCEPTION) {
+        if (selected && lastItem != null && lastItem.getStatus() == Status.EXCEPTION) {
             updateImageView.setGraphic(updateImage);
             deleteImageView.setGraphic(deleteImage);
         } else {
@@ -90,10 +90,10 @@ public class CustomListCell extends ListCell<ReplayFile> {
         } else {
             label.setGraphic(exceptionImageView);
             label.setText(item.getFile().getName());
-            BooleanProperty failedProperty = item.getFailedProperty();
+            final BooleanProperty failedProperty = item.getFailedProperty();
             exceptionImageView.setImage(failedProperty.get() ? exceptionImage : null);
             failedProperty.addListener((observable, oldValue, newValue) -> {
-                if(newValue != null && newValue) {
+                if (newValue != null && newValue) {
                     exceptionImageView.setImage(exceptionImage);
                 }
             });

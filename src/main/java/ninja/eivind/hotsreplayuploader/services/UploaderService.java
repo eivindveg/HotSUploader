@@ -35,9 +35,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 /**
@@ -60,8 +61,9 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
 
     public UploaderService() throws IOException {
         LOG.info("Instantiating " + getClass().getSimpleName());
-        uploadQueue = new ArrayBlockingQueue<>(2500);
+        uploadQueue = new LinkedBlockingQueue<>();
         files = FXCollections.observableArrayList();
+        setExecutor(Executors.newCachedThreadPool());
         LOG.info("Instantiated " + getClass().getSimpleName());
     }
 
@@ -79,7 +81,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
 
     private void registerInitial() {
         LOG.info("Registering initial replays.");
-        List<ReplayFile> fileList = fileRepository.getAll();
+        final List<ReplayFile> fileList = fileRepository.getAll();
         uploadQueue.addAll(
                 fileList.stream()
                         .filter(replayFile -> replayFile.getStatus() == Status.NEW)
@@ -122,21 +124,20 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
             };
         }
         try {
-            ReplayFile take = uploadQueue.take();
-            UploadTask uploadTask = new UploadTask(providerRepository.getAll(), take);
+            final ReplayFile take = uploadQueue.take();
+            final UploadTask uploadTask = new UploadTask(providerRepository.getAll(), take);
             final Status oldStatus = take.getStatus();
 
             uploadTask.setOnSucceeded(event -> {
                 try {
-                    ReplayFile replayFile = uploadTask.get();
-                    Status status = replayFile.getStatus();
+                    final ReplayFile replayFile = uploadTask.get();
+                    final Status status = replayFile.getStatus();
                     if (status == oldStatus) {
                         return;
                     }
                     switch (status) {
                         case UPLOADED:
-                            int oldCount = Integer.valueOf(uploadedCount.getValue());
-                            int newCount = oldCount + 1;
+                            final int newCount = Integer.valueOf(uploadedCount.getValue()) + 1;
                             LOG.info("Upload count updated to " + newCount);
                             uploadedCount.setValue(String.valueOf(newCount));
                         case UNSUPPORTED_GAME_MODE:

@@ -27,8 +27,8 @@ import java.net.URL;
  */
 public class SimpleHttpClient {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SimpleHttpClient.class);
     public static final String SPACE = "%20";
+    private static final Logger LOG = LoggerFactory.getLogger(SimpleHttpClient.class);
 
     /**
      * Encodes a given String url into a valid URI if possible
@@ -52,7 +52,7 @@ public class SimpleHttpClient {
 
     public String simpleRequest(final URL url) throws IOException {
         LOG.info("Opening connection to " + url);
-        InputStream inputStream = url.openStream();
+        final InputStream inputStream = url.openStream();
         return IOUtils.readInputStream(inputStream);
     }
 }

@@ -54,8 +54,8 @@ public class GuiceModule extends AbstractModule {
         bindListener(new AbstractMatcher<TypeLiteral<?>>() {
             @Override
             public boolean matches(final TypeLiteral<?> typeLiteral) {
-                Class<?> rawType = typeLiteral.getRawType();
-                boolean assignableFrom = Initializable.class.isAssignableFrom(rawType);
+                final Class<?> rawType = typeLiteral.getRawType();
+                final boolean assignableFrom = Initializable.class.isAssignableFrom(rawType);
                 LOG.info("Type " + rawType + " is " + (assignableFrom ? "" : "not ") + "Initializable.");
                 return assignableFrom;
             }
