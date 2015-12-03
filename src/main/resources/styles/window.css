@@ -28,6 +28,12 @@
     -fx-border-width: 0.0;
 }
 
+.combo-box .list-cell {
+    -fx-background: white;
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+}
+
 .choice-box {
     -fx-padding: 0.05em 0 0 0;
 }
@@ -133,4 +139,26 @@
 
 .counter {
     -fx-padding: 5px 0 5px 15px;
+}
+
+.progress-bar > .track {
+    -fx-background-color: -fx-text-base-color;
+    -fx-background-radius: 2.0;
+    -fx-padding: 0.0;
+}
+
+.progress-bar > .bar {
+    -fx-background-color: -fx-hots-background;
+    -fx-background-radius: 2.0;
+    -fx-background-insets: 0.0;
+    -fx-border-width: 0.0;
+    -fx-effect: null;
+}
+
+.progress-bar:indeterminate > .bar {
+    -fx-background-color: -fx-hots-secondary;
+    -fx-background-radius: 2.0;
+    -fx-background-insets: 0.0;
+    -fx-border-width: 0.0;
+    -fx-effect: null;
 }
