@@ -131,25 +131,14 @@ public class HomeController implements JavaFXController {
                 return releaseManager.getNewerVersionIfAny();
             }
         };
-        task.setOnSucceeded(event -> {
-            final Optional<GitHubRelease> newerVersionIfAny = task.getValue();
-            if (newerVersionIfAny.isPresent()) {
-                displayUpdateMessage(newerVersionIfAny.get());
-            }
-        });
+        task.setOnSucceeded(event -> task.getValue().
+                ifPresent(version -> displayUpdateMessage(version)));
         new Thread(task).start();
     }
 
     private void displayUpdateMessage(final GitHubRelease newerVersionIfAny) {
         newVersionLabel.setText(newerVersionIfAny.getTagName());
-        updateLink.setOnMouseClicked(value -> {
-            final String htmlUrl = newerVersionIfAny.getHtmlUrl();
-            try {
-                platformService.browse(SimpleHttpClient.encode(htmlUrl));
-            } catch (IOException e) {
-                handleConnectionException(e, htmlUrl);
-            }
-        });
+        updateLink.setOnMouseClicked(value -> safeBrowse(newerVersionIfAny.getHtmlUrl()));
         updatePane.setVisible(true);
     }
 
@@ -165,17 +154,16 @@ public class HomeController implements JavaFXController {
         heroService.start();
     }
 
-    private void handleConnectionException(IOException e, String url) {
-        LOG.error("Could not open " + url + " in browser.", e);
-    }
-
-    private void doOpenHotsLogs() {
-        final String url = "https://www.hotslogs.com/Default";
+    private void safeBrowse(String url) {
         try {
             platformService.browse(SimpleHttpClient.encode(url));
         } catch (IOException e) {
-            handleConnectionException(e, url);
+            LOG.error("Could not open " + url + " in browser.", e);
         }
+    }
+
+    private void doOpenHotsLogs() {
+        safeBrowse("https://www.hotslogs.com/Default");
     }
 
     private void setPlayerSearchActions() {
@@ -199,11 +187,8 @@ public class HomeController implements JavaFXController {
         } else {
             this.heroName.setValue(null);
         }
-        try {
-            platformService.browse(SimpleHttpClient.encode(url));
-        } catch (IOException e) {
-            handleConnectionException(e, url);
-        }
+
+        safeBrowse(url);
     }
 
     @FXML
@@ -215,11 +200,8 @@ public class HomeController implements JavaFXController {
         } else {
             playerSearchInput.setText("");
         }
-        try {
-            platformService.browse(SimpleHttpClient.encode(url));
-        } catch (IOException e) {
-            handleConnectionException(e, url);
-        }
+
+        safeBrowse(url);
     }
 
     @FXML
@@ -228,12 +210,9 @@ public class HomeController implements JavaFXController {
         if (account == null) {
             return;
         }
-        final String url = "https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId();
-        try {
-            platformService.browse(SimpleHttpClient.encode(url));
-        } catch (IOException e) {
-            handleConnectionException(e, url);
-        }
+
+        String url = "https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId();
+        safeBrowse(url);
     }
 
     private void setupAccounts() {
@@ -294,23 +273,13 @@ public class HomeController implements JavaFXController {
     }
 
     private void updatePlayers(final List<Account> newAccounts) {
-        Account reference = null;
-        if (!accountSelect.getItems().isEmpty()) {
-            reference = accountSelect.getValue();
-        }
-
         accountSelect.getItems().setAll(newAccounts);
-        if (reference != null) {
-            final Account finalReference = reference;
-            final Optional<Account> optionalAccount = accountSelect.getItems()
-                    .stream()
-                    .filter(account -> account.getPlayerId().equals(finalReference.getPlayerId()))
-                    .findFirst();
-            if (optionalAccount.isPresent()) {
-                accountSelect.setValue(optionalAccount.get());
-            }
-        } else if (!newAccounts.isEmpty()) {
-            accountSelect.setValue(newAccounts.get(0));
+
+        if (!accountSelect.getItems().isEmpty()) {
+            Account reference = Optional.ofNullable(accountSelect.getValue()).orElse(newAccounts.get(0));
+            accountSelect.getItems().stream()
+                    .filter(account -> account.getPlayerId().equals(reference.getPlayerId()))
+                    .findFirst().ifPresent(acc -> accountSelect.setValue(acc));
         }
     }
 
@@ -362,5 +331,4 @@ public class HomeController implements JavaFXController {
         statusBinder.message().setValue(connectionError);
         status.textFillProperty().setValue(Paint.valueOf("#FF0000"));
     }
-
 }
