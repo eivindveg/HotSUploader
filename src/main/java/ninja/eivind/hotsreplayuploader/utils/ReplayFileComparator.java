@@ -33,11 +33,6 @@ public class ReplayFileComparator implements Comparator<ReplayFile> {
         final File file1 = o1.getFile();
         final File file2 = o2.getFile();
 
-        final int modified = -Long.compare(file1.lastModified(), file2.lastModified());
-        if (modified != 0) {
-            return modified;
-        }
-
-        throw new IllegalStateException("No two different replays can be equal.");
+        return -Long.compare(file1.lastModified(), file2.lastModified());
     }
 }
