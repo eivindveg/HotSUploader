@@ -116,7 +116,7 @@ public class Client extends Application {
             systemTray.add(trayIcon);
 
         } catch (PlatformNotSupportedException | AWTException e) {
-            LOG.warn("Could not instantiate tray icon. Reverting to default behaviour", e);
+            LOG.warn("Could not instantiate tray icon. Reverting to default behaviour");
             primaryStage.setOnCloseRequest(event -> Platform.exit());
         }
     }
