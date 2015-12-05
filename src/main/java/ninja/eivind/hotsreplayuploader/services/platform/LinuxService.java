@@ -59,6 +59,7 @@ public class LinuxService implements PlatformService {
             while((line = br.readLine()) != null) {
                 // we want to find a line like:
                 // XDG_DOCUMENTS_DIR="$HOME/Documents"
+                line = line.trim();  // remove whitespace
                 if (line.charAt(0) == '#') continue;  // skip comments
                 // check for our magic line
                 if (line.startsWith("XDG_DOCUMENTS_DIR=\"$HOME/")) {
