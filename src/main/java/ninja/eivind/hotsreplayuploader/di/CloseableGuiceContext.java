@@ -32,6 +32,12 @@ public class CloseableGuiceContext extends GuiceContext {
     private static final Logger LOG = LoggerFactory.getLogger(CloseableGuiceContext.class);
 
     /**
+     * Simple flag, that gets set to true, if this context was already disposed.
+     * Used to prevent multiple closes and therefore spamming the logfile.
+     */
+    private boolean disposed;
+
+    /**
      * Create the Guice context
      *
      * @param contextRoot root object to inject
@@ -43,6 +49,9 @@ public class CloseableGuiceContext extends GuiceContext {
 
     @Override
     public void dispose() {
+        if(disposed)
+            return;
+
         injector.getAllBindings()
                 .values()
                 .stream()
@@ -56,5 +65,7 @@ public class CloseableGuiceContext extends GuiceContext {
                         LOG.error("Could not close closeable item", e);
                     }
                 });
+
+        disposed = true;
     }
 }
