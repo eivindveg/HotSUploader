@@ -75,6 +75,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
             files.add(file);
             uploadQueue.add(file);
         });
+
         registerInitial();
         LOG.info("Initialized " + getClass().getSimpleName());
     }
@@ -114,27 +115,13 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
 
     @Override
     protected Task<ReplayFile> createTask() {
-        if (isIdle()) {
-            return new Task<ReplayFile>() {
-                @Override
-                protected ReplayFile call() throws Exception {
-                    Thread.sleep(2000);
-                    return null;
-                }
-            };
-        }
-        try {
-            final ReplayFile take = uploadQueue.take();
-            final UploadTask uploadTask = new UploadTask(providerRepository.getAll(), take);
-            final Status oldStatus = take.getStatus();
+            final UploadTask uploadTask = new UploadTask(providerRepository.getAll(), uploadQueue);
 
             uploadTask.setOnSucceeded(event -> {
                 try {
                     final ReplayFile replayFile = uploadTask.get();
                     final Status status = replayFile.getStatus();
-                    if (status == oldStatus) {
-                        return;
-                    }
+
                     switch (status) {
                         case UPLOADED:
                             final int newCount = Integer.valueOf(uploadedCount.getValue()) + 1;
@@ -152,17 +139,11 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
                     }
                     fileRepository.updateReplay(replayFile);
                 } catch (InterruptedException | ExecutionException e) {
-                    LOG.error("Could not execute task success.", e);
+                    LOG.error("Could not execute task successfully.", e);
                 }
             });
-            uploadTask.setOnFailed(event -> {
-                LOG.error("UploadTask failed.", event.getSource().getException());
-                uploadQueue.add(take);
-            });
+
             return uploadTask;
-        } catch (InterruptedException e) {
-            return null;
-        }
     }
 
     public boolean isIdle() {

@@ -25,46 +25,56 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.concurrent.BlockingQueue;
 
 /**
- * {@link Task} for uploading a replay to a {@link Collection} of {@link Provider}s
+ * {@link Task} for uploading a replay to a {@link Collection} of {@link Provider}s.<br>
+ * Blocks if there are no replays to process.
  */
 public class UploadTask extends Task<ReplayFile> {
     private static final Logger LOG = LoggerFactory.getLogger(UploadTask.class);
     private final Collection<Provider> providers;
-    private final ReplayFile take;
+    private final BlockingQueue<ReplayFile> replayQueue;
 
-    public UploadTask(final Collection<Provider> providers, final ReplayFile take) {
+
+    public UploadTask(final Collection<Provider> providers, final BlockingQueue<ReplayFile> queue) {
         this.providers = providers;
-        this.take = take;
+        this.replayQueue = queue;
+
+        setOnFailed((event) -> {
+            LOG.error("UploadTask failed.", event.getSource().getException());
+        });
     }
 
     @Override
     protected ReplayFile call() throws Exception {
-        LOG.info("Uploading replay " + take);
-        providers.forEach(provider -> {
+        final ReplayFile replayFile = replayQueue.take();
 
-            final StormParser parser = new StormParser(take.getFile());
+        LOG.info("Uploading replay " + replayQueue);
+
+        providers.forEach(provider -> {
+            final StormParser parser = new StormParser(replayFile.getFile());
             final Replay replay = parser.parseReplay();
             final Status preStatus = provider.getPreStatus(replay);
             if (preStatus == Status.UPLOADED || preStatus == Status.UNSUPPORTED_GAME_MODE) {
                 LOG.info("Parsed preStatus reported no need to upload "
-                        + take.getFile() + " for provider " + provider.getName());
-                applyStatus(provider, preStatus);
+                        + replayFile + " for provider " + provider.getName());
+                applyStatus(replayFile, provider, preStatus);
             } else {
-                final Status upload = provider.upload(take);
+                final Status upload = provider.upload(replayFile);
                 if (upload == null) {
                     throw new RuntimeException("Failed");
                 }
-                applyStatus(provider, upload);
+                applyStatus(replayFile, provider, upload);
             }
             succeeded();
         });
-        return take;
+
+        return replayFile;
     }
 
-    private void applyStatus(final Provider provider, final Status status) {
-        final Collection<UploadStatus> uploadStatuses = take.getUploadStatuses();
+    private void applyStatus(final ReplayFile file, final Provider provider, final Status status) {
+        final Collection<UploadStatus> uploadStatuses = file.getUploadStatuses();
         final UploadStatus current = uploadStatuses.stream()
                 .filter(uploadStatus -> uploadStatus.getHost().equals(provider.getName()))
                 .findFirst()
