@@ -49,12 +49,13 @@ public class UploadTask extends Task<ReplayFile> {
     @Override
     protected ReplayFile call() throws Exception {
         final ReplayFile replayFile = replayQueue.take();
-
+        //take suceeded, so we now have a file to handle
         LOG.info("Uploading replay " + replayQueue);
 
+        final StormParser parser = new StormParser(replayFile.getFile());
+        final Replay replay = parser.parseReplay();
+
         providers.forEach(provider -> {
-            final StormParser parser = new StormParser(replayFile.getFile());
-            final Replay replay = parser.parseReplay();
             final Status preStatus = provider.getPreStatus(replay);
             if (preStatus == Status.UPLOADED || preStatus == Status.UNSUPPORTED_GAME_MODE) {
                 LOG.info("Parsed preStatus reported no need to upload "
