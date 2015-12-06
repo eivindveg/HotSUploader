@@ -77,7 +77,6 @@ public class LinuxService implements PlatformService {
                     break;
                 }
             }
-            br.close();
         } catch (IOException ioe) {
             LOG.error("Failed to read XDG user-dirs config file " + file.toString());
         } catch (StringIndexOutOfBoundsException e) {
