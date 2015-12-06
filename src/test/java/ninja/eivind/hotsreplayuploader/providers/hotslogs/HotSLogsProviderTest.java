@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -57,7 +59,10 @@ public class HotSLogsProviderTest {
 
     @Test
     public void testProviderDoesNotTryToUploadPresentReplay() {
-        final UploadTask uploadTask = new UploadTask(Collections.singletonList(new HotsLogsProvider()), replayFile);
+        final BlockingQueue<ReplayFile> queue = new LinkedBlockingQueue<>();
+        queue.add(replayFile);
+
+        final UploadTask uploadTask = new UploadTask(Collections.singletonList(provider), queue);
         uploadTask.run();
 
         verifyZeroInteractions(s3ClientMock);
