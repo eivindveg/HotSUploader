@@ -23,11 +23,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
-import javafx.util.StringConverter;
 import ninja.eivind.hotsreplayuploader.di.JavaFXController;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.models.LeaderboardRanking;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
+import ninja.eivind.hotsreplayuploader.models.stringconverters.AccountConverter;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.HeroConverter;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
@@ -154,7 +154,7 @@ public class HomeController implements JavaFXController {
         heroService.start();
     }
 
-    private void safeBrowse(String url) {
+    private void safeBrowse(final String url) {
         try {
             platformService.browse(SimpleHttpClient.encode(url));
         } catch (IOException e) {
@@ -216,20 +216,7 @@ public class HomeController implements JavaFXController {
     }
 
     private void setupAccounts() {
-        accountSelect.converterProperty().setValue(new StringConverter<Account>() {
-            @Override
-            public String toString(final Account object) {
-                if (object == null) {
-                    return "";
-                }
-                return object.getName();
-            }
-
-            @Override
-            public Account fromString(final String string) {
-                return null;
-            }
-        });
+        accountSelect.converterProperty().setValue(new AccountConverter());
         accountSelect.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() != -1) {
                 updateAccountView(accountSelect.getItems().get(newValue.intValue()));
@@ -242,34 +229,22 @@ public class HomeController implements JavaFXController {
     }
 
     private void updateAccountView(final Account account) {
-        final String ifNotPresent = "N/A";
         if (account == null) {
             return;
         }
 
-        final Optional<Integer> quickMatchMmr = readMmr(account.getLeaderboardRankings(), "QuickMatch");
-        applyToLabel(quickMatchMmr, qmMmr, ifNotPresent);
-
-        final Optional<Integer> heroLeagueMmr = readMmr(account.getLeaderboardRankings(), "HeroLeague");
-        applyToLabel(heroLeagueMmr, hlMmr, ifNotPresent);
-
-        final Optional<Integer> teamLeagueMmr = readMmr(account.getLeaderboardRankings(), "TeamLeague");
-        applyToLabel(teamLeagueMmr, tlMmr, ifNotPresent);
+        qmMmr.setText(readMmr(account.getLeaderboardRankings(), "QuickMatch"));
+        hlMmr.setText(readMmr(account.getLeaderboardRankings(), "HeroLeague"));
+        tlMmr.setText(readMmr(account.getLeaderboardRankings(), "TeamLeague"));
     }
 
-    private Optional<Integer> readMmr(final List<LeaderboardRanking> leaderboardRankings, final String mode) {
+    private String readMmr(final List<LeaderboardRanking> leaderboardRankings, final String mode) {
+        final String ifNotPresent = "N/A";
         return leaderboardRankings.stream()
                 .filter(ranking -> ranking.getGameMode().equals(mode))
                 .map(LeaderboardRanking::getCurrentMmr)
-                .findAny();
-    }
-
-    private void applyToLabel(final Optional<?> value, final Label applyTo, final String ifNotPresent) {
-        if (value.isPresent()) {
-            applyTo.setText(String.valueOf(value.get()));
-        } else {
-            applyTo.setText(ifNotPresent);
-        }
+                .map(i -> Integer.toString(i))
+                .findAny().orElse(ifNotPresent);
     }
 
     private void updatePlayers(final List<Account> newAccounts) {
@@ -308,27 +283,24 @@ public class HomeController implements JavaFXController {
         uploadedReplays.textProperty().bind(uploaderService.getUploadedCount());
     }
 
-    private void setIdle() {
-        final String idle = "Idle";
-        statusBinder.message().setValue(idle);
+    private void setStatus(final String description, final Paint color) {
+        statusBinder.message().setValue(description);
         status.textFillProperty().setValue(Paint.valueOf("#38d3ff"));
     }
 
+    private void setIdle() {
+        setStatus("Idle", Paint.valueOf("#38d3ff"));
+    }
+
     private void setMaintenance() {
-        final String maintenance = "Maintenance";
-        statusBinder.message().setValue(maintenance);
-        status.textFillProperty().setValue(Paint.valueOf("#FF0000"));
+        setStatus("Maintenance", Paint.valueOf("#FF0000"));
     }
 
     private void setUploading() {
-        final String uploading = "Uploading";
-        statusBinder.message().setValue(uploading);
-        status.textFillProperty().setValue(Paint.valueOf("#00B000"));
+        setStatus("Uploading", Paint.valueOf("#00B000"));
     }
 
     private void setError() {
-        final String connectionError = "Connection error";
-        statusBinder.message().setValue(connectionError);
-        status.textFillProperty().setValue(Paint.valueOf("#FF0000"));
+        setStatus("Connection error", Paint.valueOf("#FF0000"));
     }
 }
