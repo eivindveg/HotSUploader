@@ -60,8 +60,8 @@ public class LinuxService implements PlatformService {
             return xdgDocsPath;
         final String lineStart = "XDG_DOCUMENTS_DIR=\"$HOME/";
         final File file = new File(USER_HOME, ".config/user-dirs.dirs");
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
+        // try-with-resources
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while((line = br.readLine()) != null) {
                 // we want to find a line like:
