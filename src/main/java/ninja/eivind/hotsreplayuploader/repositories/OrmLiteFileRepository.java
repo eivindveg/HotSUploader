@@ -102,6 +102,7 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
                         }
                     }
                 })
+                .filter(file -> file != null) //dont list already deleted files
                 .collect(Collectors.toList());
     }
 
