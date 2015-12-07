@@ -22,6 +22,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -87,25 +88,22 @@ public class WindowsService implements PlatformService {
 
     private File findMyDocuments() throws FileNotFoundException {
         Process p = null;
-        String myDocuments = null;
         try {
             LOG.info("Querying registry for Documents folder location.");
             p = Runtime.getRuntime().exec("reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders\" /v personal");
             p.waitFor();
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
-                final StringBuilder builder = new StringBuilder();
-                reader.lines().forEach(builder::append);
-                final String[] values = builder.toString().trim().split("\\s\\s+");
-                for (final String value : values) {
-                    final Matcher matcher = pathPattern.matcher(value);
-                    if (matcher.matches()) {
-                        myDocuments = matcher.group();
-                        break;
-                    }
-                }
+                return reader.lines()
+                        .map(line -> line.split("\\s{2,}"))
+                        .flatMap(Arrays::stream)
+                        .map(pathPattern::matcher)
+                        .filter(Matcher::matches)
+                        .map(Matcher::group)
+                        .findAny()
+                        .map(File::new)
+                        .orElseGet(this::getDefaultMyDocumentsLocation);
             }
-
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
@@ -113,13 +111,13 @@ public class WindowsService implements PlatformService {
                 p.destroy();
             }
         }
+    }
 
-        if (myDocuments == null) {
-            LOG.warn("Could not reliably query register for My Documents folder. This usually means you have" +
-                    " a unicode name and standard location. Falling back to legacy selection:");
-            myDocuments = USER_HOME + "\\Documents";
-            LOG.warn("Result: " + myDocuments);
-        }
-        return new File(myDocuments);
+    private File getDefaultMyDocumentsLocation() {
+        LOG.warn("Could not reliably query register for My Documents folder. This usually means you have" +
+                " a unicode name and standard location. Falling back to legacy selection:");
+        File myDocuments = new File(USER_HOME + "\\Documents");
+        LOG.warn("Result: " + myDocuments);
+        return myDocuments;
     }
 }
