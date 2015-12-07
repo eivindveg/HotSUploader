@@ -171,6 +171,7 @@ public class HomeController implements JavaFXController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void doLookupHero() {
         final HotSLogsHero hero = this.heroName.getValue();
         if (hero == null) {
@@ -201,6 +202,7 @@ public class HomeController implements JavaFXController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void doViewProfile() {
         final Account account = accountSelect.getValue();
         if (account == null) {
