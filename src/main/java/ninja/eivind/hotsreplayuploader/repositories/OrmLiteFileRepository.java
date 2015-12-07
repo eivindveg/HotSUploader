@@ -15,7 +15,6 @@
 package ninja.eivind.hotsreplayuploader.repositories;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.spring.DaoFactory;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -24,14 +23,12 @@ import com.j256.ormlite.support.ConnectionSource;
 import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -73,10 +70,8 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     @Override
     public void updateReplay(final ReplayFile file) {
         try {
-            TransactionManager.callInTransaction(connectionSource, (Callable<Void>) () -> {
-                dao.createOrUpdate(file);
-                return null;
-            });
+            dao.createOrUpdate(file);
+            dao.refresh(file);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -94,12 +89,8 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
                     if (file.exists()) {
                         return replayFile;
                     } else {
-                        try {
-                            dao.delete(replayFile);
-                            return null;
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
-                        }
+                        deleteReplay(replayFile);
+                        return null;
                     }
                 })
                 .filter(file -> file != null) //dont list already deleted files
@@ -108,12 +99,21 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
 
     private List<ReplayFile> refreshAll(List<ReplayFile> replayFiles) {
         try {
-            final List<ReplayFile> collect = new ArrayList<>();
             final List<ReplayFile> fromDb = dao.queryForAll();
-            collect.addAll(fromDb);
-            replayFiles.stream().filter(file -> !fromDb.contains(file)).forEach(collect::add);
-            return collect;
-        } catch (SQLException e) {
+
+            dao.callBatchTasks(new Callable<Void>() {
+                public Void call() throws Exception {
+                    //create new db entities for new files
+                    replayFiles.stream()
+                        .filter(file -> !fromDb.contains(file))
+                        .forEach(file -> createReplay(file));
+                    return null;
+                }
+            });
+
+            //get all entities again, but fresh from the db
+            return dao.queryForAll();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -126,6 +126,14 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
             deleteBuilder.where()
                     .eq("fileName", selectArg);
             dao.delete(deleteBuilder.prepare());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void createReplay(final ReplayFile replayFile) {
+        try {
+            dao.create(replayFile);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
