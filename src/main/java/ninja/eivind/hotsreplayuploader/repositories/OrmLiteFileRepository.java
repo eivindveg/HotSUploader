@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 /**
@@ -100,13 +101,19 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
         try {
             final List<ReplayFile> fromDb = dao.queryForAll();
 
-            //create new db entities for new files
-            replayFiles.stream().
-                    filter(file -> !fromDb.contains(file))
-                    .forEach(file -> createReplay(file));
+            dao.callBatchTasks(new Callable<Void>() {
+                public Void call() throws Exception {
+                    //create new db entities for new files
+                    replayFiles.stream()
+                        .filter(file -> !fromDb.contains(file))
+                        .forEach(file -> createReplay(file));
+                    return null;
+                }
+            });
+
             //get all entities again, but fresh from the db
             return dao.queryForAll();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
