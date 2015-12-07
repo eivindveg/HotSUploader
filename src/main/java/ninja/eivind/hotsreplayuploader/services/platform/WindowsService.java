@@ -23,6 +23,7 @@ import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,6 +87,7 @@ public class WindowsService implements PlatformService {
         return true;
     }
 
+
     private File findMyDocuments() throws FileNotFoundException {
         Process p = null;
         try {
@@ -94,15 +96,13 @@ public class WindowsService implements PlatformService {
             p.waitFor();
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
-                return reader.lines()
+                return new File(reader.lines()
                         .map(line -> line.split("\\s{2,}"))
                         .flatMap(Arrays::stream)
-                        .map(pathPattern::matcher)
-                        .filter(Matcher::matches)
-                        .map(Matcher::group)
-                        .findAny()
-                        .map(File::new)
-                        .orElseGet(this::getDefaultMyDocumentsLocation);
+                        .filter(this::matches)
+                        .findFirst()
+                        .orElseGet(this::getDefaultMyDocumentsLocation));
+
             }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -113,11 +113,17 @@ public class WindowsService implements PlatformService {
         }
     }
 
-    private File getDefaultMyDocumentsLocation() {
+
+
+    private boolean matches(final String entry) {
+        return pathPattern.matcher(entry).matches();
+    }
+
+    private String getDefaultMyDocumentsLocation() {
         LOG.warn("Could not reliably query register for My Documents folder. This usually means you have" +
                 " a unicode name and standard location. Falling back to legacy selection:");
-        File myDocuments = new File(USER_HOME + "\\Documents");
-        LOG.warn("Result: " + myDocuments);
-        return myDocuments;
+        final String file = USER_HOME + "\\Documents";
+        LOG.warn("Result: " + file);
+        return file;
     }
 }
