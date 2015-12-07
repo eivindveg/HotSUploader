@@ -130,22 +130,6 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
         }
     }
 
-    private ReplayFile getByFileName(final ReplayFile replayFile) {
-        try {
-            final SelectArg selectArg = new SelectArg("fileName", replayFile.getFileName());
-            final PreparedQuery<ReplayFile> query = dao.queryBuilder()
-                    .where().eq("fileName", selectArg)
-                    .prepare();
-
-            return dao.query(query).stream()
-                    .findAny()
-                    .orElse(replayFile);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     @Override
     public void close() throws IOException {
         connectionSource.closeQuietly();

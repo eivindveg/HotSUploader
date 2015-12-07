@@ -77,15 +77,11 @@ public class HomeController implements JavaFXController {
     @FXML
     private ImageView logo;
     @FXML
-    private Button playerSearch;
-    @FXML
     private TextField playerSearchInput;
     @FXML
     private Button viewProfile;
     @FXML
     private ComboBox<Account> accountSelect;
-    @FXML
-    private Button lookupHero;
     @FXML
     private ComboBox<HotSLogsHero> heroName;
     @FXML

@@ -47,6 +47,14 @@ public class UploadStatus {
         this.status = status;
     }
 
+    public ReplayFile getReplayFile() {
+        return replayFile;
+    }
+
+    public void setReplayFile(final ReplayFile replayFile) {
+        this.replayFile = replayFile;
+    }
+
     public Long getId() {
         return id;
     }

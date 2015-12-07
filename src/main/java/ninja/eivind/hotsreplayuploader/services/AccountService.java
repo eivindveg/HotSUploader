@@ -34,6 +34,7 @@ import java.util.List;
  */
 public class AccountService extends ScheduledService<List<Account>> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AccountService.class);
     @Inject
     private StormHandler stormHandler;
     @Inject
@@ -51,9 +52,12 @@ public class AccountService extends ScheduledService<List<Account>> {
         return new Task<List<Account>>() {
             @Override
             protected List<Account> call() throws Exception {
+                LOG.info("Getting account strings from handler.");
                 final List<String> accountUris = stormHandler.getAccountStringUris();
                 final List<Account> value = new ArrayList<>();
+                LOG.info("Getting urls for accounts {}", accountUris);
                 for (final String accountUri : accountUris) {
+                    LOG.info("Fetching account info for {}", accountUri);
                     final String response = httpClient.simpleRequest(accountUri);
                     value.add(mapper.readValue(response, Account.class));
                 }

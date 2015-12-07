@@ -16,7 +16,6 @@ package ninja.eivind.hotsreplayuploader.files;
 
 import javafx.application.Platform;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
-import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,10 +51,8 @@ public class WatchHandler implements Runnable {
     public void run() {
         WatchKey key = null;
         while (true) {
-            if (key != null) {
-                if (!key.reset()) {
-                    break;
-                }
+            if (key != null && !key.reset()) {
+                break;
             }
             try {
                 key = watchService.take();
