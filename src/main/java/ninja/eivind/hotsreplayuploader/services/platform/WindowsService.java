@@ -14,17 +14,20 @@
 
 package ninja.eivind.hotsreplayuploader.services.platform;
 
+import com.jasongoodwin.monads.Try;
 import javafx.stage.Stage;
+import ninja.eivind.hotsreplayuploader.utils.CloseableProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -45,23 +48,21 @@ public class WindowsService implements PlatformService {
     @Override
     public File getApplicationHome() {
         if (documentsHome == null) {
-            try {
-                documentsHome = findMyDocuments();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            documentsHome = findMyDocumentsWithFallback();
         }
         return new File(documentsHome, APPLICATION_DIRECTORY_NAME);
+    }
+
+    private File findMyDocumentsWithFallback() {
+        return findMyDocuments()
+                .map(File::new)
+                .orElse(new File(getDefaultMyDocumentsLocation()));
     }
 
     @Override
     public File getHotSHome() {
         if (documentsHome == null) {
-            try {
-                documentsHome = findMyDocuments();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            documentsHome = findMyDocumentsWithFallback();
         }
         return new File(documentsHome, "Heroes of the Storm\\Accounts");
     }
@@ -88,31 +89,23 @@ public class WindowsService implements PlatformService {
     }
 
 
-    private File findMyDocuments() throws FileNotFoundException {
-        Process p = null;
-        try {
-            LOG.info("Querying registry for Documents folder location.");
-            p = Runtime.getRuntime().exec("reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders\" /v personal");
-            p.waitFor();
+    private Try<String> findMyDocuments() {
+        return Try.ofFailable(() -> {
+            try (CloseableProcess p = CloseableProcess.of(Runtime.getRuntime().exec("reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders\" /v personal"))) {
+                LOG.info("Querying registry for Documents folder location.");
+                p.waitFor();
 
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
-                return new File(reader.lines()
-                        .map(line -> line.split("\\s{2,}"))
-                        .flatMap(Arrays::stream)
-                        .filter(this::matches)
-                        .findFirst()
-                        .orElseGet(this::getDefaultMyDocumentsLocation));
-
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+                    return reader.lines()
+                            .map(line -> line.split("\\s{2,}"))
+                            .flatMap(Arrays::stream)
+                            .filter(WindowsService.this::matches)
+                            .findFirst()
+                            .orElseGet(WindowsService.this::getDefaultMyDocumentsLocation);
+                }
             }
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (p != null) {
-                p.destroy();
-            }
-        }
+        });
     }
-
 
 
     private boolean matches(final String entry) {
