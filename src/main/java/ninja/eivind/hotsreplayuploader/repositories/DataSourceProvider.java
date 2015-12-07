@@ -60,6 +60,8 @@ public class DataSourceProvider implements Provider<DataSource> {
 
         flyway.setDataSource(dataSource);
 
+        flyway.setValidateOnMigrate(false);
+
         flyway.migrate();
     }
 }
