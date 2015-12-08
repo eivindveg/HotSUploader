@@ -36,12 +36,11 @@ import java.util.List;
  */
 @DatabaseTable(tableName = "ReplayFile")
 public class ReplayFile implements Serializable {
-
     private static final Logger LOG = LoggerFactory.getLogger(ReplayFile.class);
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5416365418274150142L;
     private final BooleanProperty failedProperty = new SimpleBooleanProperty(null, "failed", false);
     @DatabaseField(generatedId = true)
-    private Long id;
+    private long id;
     private File file;
     @DatabaseField(width = 1023, unique = true)
     private String fileName;
@@ -57,10 +56,6 @@ public class ReplayFile implements Serializable {
         this.fileName = file.toString();
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     public static List<ReplayFile> fromDirectory(File file) {
         final List<ReplayFile> replayFiles = new ArrayList<>();
         final File[] children = file.listFiles((dir, name) -> name.endsWith(".StormReplay"));
@@ -73,14 +68,13 @@ public class ReplayFile implements Serializable {
         }
 
         return replayFiles;
-
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(final Long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 
