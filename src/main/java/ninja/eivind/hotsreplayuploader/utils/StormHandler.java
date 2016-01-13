@@ -91,7 +91,12 @@ public class StormHandler {
     }
 
     private File buildHotSHome() {
-        return platformService.getHotSHome();
+        String hotsHome = System.getProperty("hots.home");
+        if (hotsHome != null) {
+            return new File(hotsHome);
+        } else {
+            return platformService.getHotSHome();
+        }
     }
 
     /**
