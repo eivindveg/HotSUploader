@@ -22,12 +22,12 @@ public abstract class ErrorHandlerPopup extends PopupWindow implements ErrorHand
     private final Exception exception;
     private final Runnable errorHandler;
 
+    public ErrorHandlerPopup(final Exception exception, final Runnable errorHandler) {
+        this(exception.getMessage(), exception, errorHandler);
+    }
+
     public ErrorHandlerPopup(final String message, final Exception exception, final Runnable errorHandler) {
-        if (message != null) {
-            this.message = message;
-        } else {
-            this.message = exception.getMessage();
-        }
+        this.message = message;
         this.exception = exception;
         this.errorHandler = errorHandler;
     }
