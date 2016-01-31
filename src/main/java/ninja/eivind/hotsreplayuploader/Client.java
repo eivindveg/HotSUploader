@@ -23,6 +23,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import ninja.eivind.hotsreplayuploader.concurrent.tasks.SocketListenerTask;
 import ninja.eivind.hotsreplayuploader.di.CloseableGuiceContext;
 import ninja.eivind.hotsreplayuploader.di.GuiceModule;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
@@ -38,6 +39,7 @@ import javax.inject.Inject;
 import java.awt.*;
 import java.net.URL;
 import java.util.Collections;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Application entry point. Sets up the actions that connect to the underlying platform.
@@ -54,6 +56,8 @@ public class Client extends Application {
     private PlatformService platformService;
     @Inject
     private StatusBinder statusBinder;
+    @Inject
+    private ExecutorService executor;
 
     public static void main(String... args) {
         PlatformService platformService = new PlatformServiceProvider().get();
@@ -83,6 +87,8 @@ public class Client extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
+        startSocketListener(primaryStage);
+
         final URL logo = platformService.getLogoUrl();
         final Image image = new Image(logo.toString());
         primaryStage.getIcons().add(image);
@@ -99,6 +105,16 @@ public class Client extends Application {
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+    }
+
+    private void startSocketListener(final Stage primaryStage)
+    {
+        SocketListenerTask socketTask = new SocketListenerTask();
+            socketTask.setOnSucceeded((x) -> {
+                primaryStage.setIconified(false);
+                primaryStage.toFront();
+            });
+        executor.execute(socketTask);
     }
 
     private void addToTray(final Stage primaryStage) {

@@ -20,8 +20,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import ninja.eivind.hotsreplayuploader.versions.VersionHandshakeToken;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.InetAddress;
+import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Application preloader. This displays a splash screen while {@link Client} is loading.
@@ -33,7 +43,36 @@ public class ClientPreloader extends Preloader {
 
     @Override
     public void init() {
+        int port = 27000;
+        checkForActiveProcess(port);
+    }
 
+    private void checkForActiveProcess(int port)
+    {
+        final VersionHandshakeToken token = new VersionHandshakeToken();
+        final ObjectMapper mapper = new ObjectMapper();
+        try (Socket socket = new Socket(InetAddress.getLoopbackAddress(), port);
+             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+             DataInputStream dis = new DataInputStream(socket.getInputStream()))
+        {
+            dos.writeUTF(mapper.writeValueAsString(token));
+            String handshakeResponse = dis.readUTF();
+            VersionHandshakeToken tokenB = mapper.
+                    readValue(handshakeResponse, VersionHandshakeToken.class);
+
+            //same version, exit
+            if(token.equals(tokenB))
+                System.exit(0);
+
+
+        } catch (ConnectException e)
+        {
+            LOG.info("Couldn't establish connection to " +
+                        InetAddress.getLoopbackAddress() + ":" + port);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
