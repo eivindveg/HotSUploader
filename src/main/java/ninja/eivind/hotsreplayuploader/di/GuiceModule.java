@@ -22,6 +22,8 @@ import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 import com.j256.ormlite.support.ConnectionSource;
+
+import ninja.eivind.hotsreplayuploader.concurrent.ExecutorServiceProvider;
 import ninja.eivind.hotsreplayuploader.repositories.*;
 import ninja.eivind.hotsreplayuploader.services.UploaderService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
@@ -29,6 +31,7 @@ import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceProvider
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
 import javax.sql.DataSource;
 
 /**
@@ -49,6 +52,7 @@ public class GuiceModule extends AbstractModule {
         bind(ConnectionSource.class).toProvider(ConnectionSourceProvider.class).asEagerSingleton();
         bind(ProviderRepository.class).to(SingletonListProviderRepository.class).asEagerSingleton();
         bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class).asEagerSingleton();
+        bind(ExecutorService.class).toProvider(ExecutorServiceProvider.class).asEagerSingleton();
         LOG.info("IoC Container instantiated");
 
         bindListener(new AbstractMatcher<TypeLiteral<?>>() {

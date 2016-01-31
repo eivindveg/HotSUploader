@@ -49,6 +49,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Window controller for the application. Contains references to all the components exposed to the user. Sets up events
@@ -105,7 +106,8 @@ public class HomeController implements JavaFXController {
     private StatusBinder statusBinder;
     @Inject
     private HeroService heroService;
-
+    @Inject
+    private ExecutorService executor;
 
     @Override
     public void initialize() {
@@ -133,7 +135,7 @@ public class HomeController implements JavaFXController {
         };
         task.setOnSucceeded(event -> task.getValue().
                 ifPresent(version -> displayUpdateMessage(version)));
-        new Thread(task).start();
+        executor.execute(task);
     }
 
     private void displayUpdateMessage(final GitHubRelease newerVersionIfAny) {

@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
@@ -59,11 +59,14 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
     @Inject
     private ProviderRepository providerRepository;
 
+    @Inject
+    private ExecutorService executor;
+
     public UploaderService() throws IOException {
         LOG.info("Instantiating " + getClass().getSimpleName());
         uploadQueue = new LinkedBlockingQueue<>();
         files = FXCollections.observableArrayList();
-        setExecutor(Executors.newCachedThreadPool());
+        setExecutor(executor);
         LOG.info("Instantiated " + getClass().getSimpleName());
     }
 
