@@ -7,6 +7,9 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.concurrent.Task;
@@ -20,6 +23,8 @@ import ninja.eivind.hotsreplayuploader.versions.VersionHandshakeToken;
  */
 public class SocketListenerTask extends Task<Void>
 {
+    private static final Logger LOG = LoggerFactory.getLogger(SocketListenerTask.class);
+
     private long count = 0;
 
     @Override
@@ -44,14 +49,22 @@ public class SocketListenerTask extends Task<Void>
             DataInputStream dis = new DataInputStream(socket.getInputStream());
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream())) {
             String read = dis.readUTF();
+            dos.writeUTF(mapper.writeValueAsString(tokenA));
+
             VersionHandshakeToken tokenB = mapper.
                     readValue(read, VersionHandshakeToken.class);
 
-            //same version, verify and unhide stage
-            if(tokenA.equals(tokenB)) {
-                dos.writeUTF(mapper.writeValueAsString(tokenA));
-                updateProgress(count, count);
-            }
+            //reject wrong applications
+            if(!tokenA.getApplicationName().equals(tokenB.getApplicationName()))
+                return false;
+
+            if(tokenA.compareTo(tokenB) >= 0)  //same or newer version
+                updateProgress(count++, count);
+            else  //we're running an old version, terminate
+                return true;
+        }
+        catch (Exception e) {
+            LOG.error("Handshake failed", e);
         }
 
         return false;

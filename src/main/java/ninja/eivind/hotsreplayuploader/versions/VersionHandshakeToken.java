@@ -25,6 +25,8 @@ public class VersionHandshakeToken implements Comparable<VersionHandshakeToken>
     {
         applicationName = Constants.APPLICATION_NAME;
         version = ReleaseManager.class.getPackage().getImplementationVersion();
+        if(version == null)
+            version = "Snapshot";
     }
 
     public String getApplicationName()
