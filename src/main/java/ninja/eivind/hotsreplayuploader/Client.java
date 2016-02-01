@@ -109,12 +109,14 @@ public class Client extends Application {
 
     private void startSocketListener(final Stage primaryStage)
     {
-        SocketListenerTask socketTask = new SocketListenerTask();
-            socketTask.setOnSucceeded((x) -> {
-                primaryStage.setIconified(false);
-                primaryStage.toFront();
-            });
+        final SocketListenerTask socketTask = new SocketListenerTask();
+            socketTask.workDoneProperty().addListener((a,b,c) -> showWindow(primaryStage));
         executor.execute(socketTask);
+    }
+
+    private void showWindow(Stage primaryStage) {
+        primaryStage.setIconified(false);
+        primaryStage.toFront();
     }
 
     private void addToTray(final Stage primaryStage) {

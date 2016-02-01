@@ -12,8 +12,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
 import ninja.eivind.hotsreplayuploader.versions.VersionHandshakeToken;
 
+/**
+ * A {@link Task}, which constantly listens on a local port and indicates an already running
+ * instance of the program.<br>
+ * Propagates the command to bring the application to the front via
+ * changing the workDoneProperty and the shutdown command by succeeding.
+ */
 public class SocketListenerTask extends Task<Void>
 {
+    private long count = 0;
+
     @Override
     protected Void call() throws Exception
     {
@@ -25,8 +33,7 @@ public class SocketListenerTask extends Task<Void>
                     return null;
         }
 
-        //let task fail, if interrupted
-        throw new RuntimeException(); //TODO add message
+        throw new RuntimeException("Socket listener thread was interrupted.");
     }
 
     private boolean readSocket(ServerSocket ss) throws IOException {
@@ -43,11 +50,11 @@ public class SocketListenerTask extends Task<Void>
             //same version, verify and unhide stage
             if(tokenA.equals(tokenB)) {
                 dos.writeUTF(mapper.writeValueAsString(tokenA));
-                return false;
+                updateProgress(count, count);
             }
         }
 
-        return true;
+        return false;
     }
 
 }
