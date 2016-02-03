@@ -26,12 +26,10 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of a {@link FileRepository}, which is based on a database backend.<br>
@@ -79,40 +77,36 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
 
     @Override
     public List<ReplayFile> getAll() {
-        return accountDirectoryWatcher.getAllFiles()
+        //update the DB with any file changes first
+        accountDirectoryWatcher.getAllFiles()
                 .map(ReplayFile::fromDirectory)
-                .map(this::refreshAll)
-                // TODO Replace with SELECT IN statement. Needs readding of missing files. Improves performance
-                .flatMap(List::stream)
-                .map(replayFile -> {
-                    File file = replayFile.getFile();
-                    if (file.exists()) {
-                        return replayFile;
-                    } else {
-                        deleteReplay(replayFile);
-                        return null;
-                    }
-                })
-                .filter(file -> file != null) //dont list already deleted files
-                .collect(Collectors.toList());
+                .forEach(this::checkForDatabaseIntegrity);
+
+       //get a fully refreshed copy containing all changes from the db
+        try {
+            return dao.queryForAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private List<ReplayFile> refreshAll(List<ReplayFile> replayFiles) {
+    private void checkForDatabaseIntegrity(List<ReplayFile> replayFiles) {
         try {
             final List<ReplayFile> fromDb = dao.queryForAll();
 
+            //start a batch task to speed up initial startups
             dao.callBatchTasks(new Callable<Void>() {
                 public Void call() throws Exception {
-                    //create new db entities for new files
-                    replayFiles.stream()
-                        .filter(file -> !fromDb.contains(file))
-                        .forEach(file -> createReplay(file));
+                    for(ReplayFile replayFile : replayFiles) {
+                        if(!fromDb.contains(replayFile))
+                            createReplay(replayFile);
+                        else if(!replayFile.getFile().exists())
+                            deleteReplay(replayFile);
+                    }
+
                     return null;
                 }
             });
-
-            //get all entities again, but fresh from the db
-            return dao.queryForAll();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
