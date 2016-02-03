@@ -41,7 +41,7 @@ public class UploadTask extends Task<ReplayFile> {
         this.providers = providers;
         this.replayQueue = queue;
 
-        setOnFailed((event) -> {
+        setOnFailed(event -> {
             LOG.error("UploadTask failed.", event.getSource().getException());
         });
     }

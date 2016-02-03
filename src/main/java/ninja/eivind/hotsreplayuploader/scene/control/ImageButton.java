@@ -24,8 +24,8 @@ import javafx.scene.image.ImageView;
  */
 public class ImageButton extends Button {
 
-    private final String STYLE_NORMAL = "-fx-background-color: transparent; -fx-padding: 0;";
-    private final String STYLE_PRESSED = "-fx-background-color: transparent; -fx-padding: 1 -1 -1 1;";
+    private static final String STYLE_NORMAL = "-fx-background-color: transparent; -fx-padding: 0;";
+    private static final String STYLE_PRESSED = "-fx-background-color: transparent; -fx-padding: 1 -1 -1 1;";
 
     private final double height;
     private final double width;
@@ -42,8 +42,8 @@ public class ImageButton extends Button {
 
         setStyle(STYLE_NORMAL);
 
-        setOnMousePressed((event) -> setStyle(STYLE_PRESSED));
-        setOnMouseReleased((event) -> setStyle(STYLE_NORMAL));
+        setOnMousePressed(event -> setStyle(STYLE_PRESSED));
+        setOnMouseReleased(event -> setStyle(STYLE_NORMAL));
     }
 
     /**
