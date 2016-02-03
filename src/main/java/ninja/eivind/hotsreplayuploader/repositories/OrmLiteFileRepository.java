@@ -20,11 +20,14 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
+
 import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -38,7 +41,8 @@ import java.util.concurrent.Callable;
 @Singleton
 public class OrmLiteFileRepository implements FileRepository, Initializable, Closeable {
 
-    @Inject
+    private static final String FILE_NAME = "fileName";
+	@Inject
     private ConnectionSource connectionSource;
     private Dao<ReplayFile, Long> dao;
     @Inject
@@ -114,11 +118,11 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
 
     @Override
     public void deleteByFileName(ReplayFile file) {
-        final SelectArg selectArg = new SelectArg("fileName", file.getFileName());
+        final SelectArg selectArg = new SelectArg(FILE_NAME, file.getFileName());
         try {
             final DeleteBuilder<ReplayFile, Long> deleteBuilder = dao.deleteBuilder();
             deleteBuilder.where()
-                    .eq("fileName", selectArg);
+                    .eq(FILE_NAME, selectArg);
             dao.delete(deleteBuilder.prepare());
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -135,9 +139,9 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
 
     private ReplayFile getByFileName(final ReplayFile replayFile) {
         try {
-            final SelectArg selectArg = new SelectArg("fileName", replayFile.getFileName());
+            final SelectArg selectArg = new SelectArg(FILE_NAME, replayFile.getFileName());
             final PreparedQuery<ReplayFile> query = dao.queryBuilder()
-                    .where().eq("fileName", selectArg)
+                    .where().eq(FILE_NAME, selectArg)
                     .prepare();
 
             return dao.query(query).stream()
