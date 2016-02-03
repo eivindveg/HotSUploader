@@ -20,14 +20,11 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
-
 import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -42,7 +39,7 @@ import java.util.concurrent.Callable;
 public class OrmLiteFileRepository implements FileRepository, Initializable, Closeable {
 
     private static final String FILE_NAME = "fileName";
-	@Inject
+    @Inject
     private ConnectionSource connectionSource;
     private Dao<ReplayFile, Long> dao;
     @Inject
