@@ -153,7 +153,7 @@ public class HotsLogsProvider extends Provider {
         return getUUID(reArranged);
     }
 
-    private byte[] reArrangeForUUID(byte[] hashed) {
+    private static byte[] reArrangeForUUID(byte[] hashed) {
         return new byte[]{
                 hashed[3],
                 hashed[2],
@@ -175,7 +175,7 @@ public class HotsLogsProvider extends Provider {
         };
     }
 
-    private UUID getUUID(byte[] bytes) {
+    private static UUID getUUID(byte[] bytes) {
         long msb = 0;
         long lsb = 0;
         assert bytes.length == 16 : "data must be 16 bytes in length";
