@@ -16,7 +16,6 @@ package ninja.eivind.hotsreplayuploader.files;
 
 import javafx.application.Platform;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
-import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
