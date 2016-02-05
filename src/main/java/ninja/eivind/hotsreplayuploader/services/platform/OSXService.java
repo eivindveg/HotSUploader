@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class OSXService implements PlatformService {
     private static final Logger LOG = LoggerFactory.getLogger(OSXService.class);
-    private final String libraryPath = "/Library/Application Support";
+    private static final String libraryPath = "/Library/Application Support";
 
     @Override
     public File getApplicationHome() {

@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 @Singleton
 public class StormHandler {
 
-    private final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
-    private final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
+    private static final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
+    private static final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
 
     private File hotsHome;
     @Inject
