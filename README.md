@@ -9,11 +9,14 @@ HotS Replay Uploader is a JavaFX-based uploader for HotsLogs.com that aims to ma
 As Heroes of the Storm supports Windows and OSX, JavaFX was chosen due to the immediate simplicity of creating native installers for an event-driven cross platform application. Although there is no official game client for Linux distributions, the uploader is capable of running on most of them as well.
 
 ## Installation
-Links to install the Hots Replay Uploader can be found on the [release page for this project](https://github.com/eivindveg/HotSUploader/releases) at the bottom of each release.
+Links to install the Hots Replay Uploader can be found on the [release page](https://github.com/eivindveg/HotSUploader/releases) at the bottom of each release.
 
-You can also install with HomeBrew:
+###Homebrew
+If you're on OSX and use brew, you can also install with [Homebrew Cask](http://caskroom.io):  
+`brew cask install hots-replay-uploader`
 
-``brew cask install hots-replay-uploader``
+If you don't have Cask installed yet, you can get it via:  
+`brew tap caskroom/cask`
 
 ## Licenses
 [![YourKit, LLC](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com/)
