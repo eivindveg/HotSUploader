@@ -14,8 +14,6 @@
 
 package ninja.eivind.hotsreplayuploader;
 
-import com.gluonhq.ignite.DIContext;
-import com.gluonhq.ignite.spring.SpringContext;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -27,26 +25,31 @@ import javafx.stage.Stage;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
-import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceProvider;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceFactoryBean;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.inject.Inject;
 import java.awt.*;
 import java.net.URL;
-import java.util.Collections;
 
 /**
  * Application entry point. Sets up the actions that connect to the underlying platform.
  */
-public class Client extends Application {
+@SpringBootApplication
+public class Client extends Application implements ApplicationContextAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(Client.class);
-    private final DIContext context = new SpringContext(this, () -> Collections.singletonList(
-            getClass().getPackage().getName())
-    );
+
+    private static String[] launchArgs;
 
     @Inject
     private FXMLLoader fxmlLoader;
@@ -56,9 +59,11 @@ public class Client extends Application {
     private PlatformService platformService;
     @Inject
     private StatusBinder statusBinder;
+    private ConfigurableApplicationContext context;
 
     public static void main(String... args) {
-        PlatformService platformService = new PlatformServiceProvider().get();
+        launchArgs = args;
+        PlatformService platformService = new PlatformServiceFactoryBean().get();
         if (platformService.isPreloaderSupported()) {
             LOG.info("Launching with preloader.");
             LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
@@ -68,19 +73,22 @@ public class Client extends Application {
         }
     }
 
+
     @Override
     public void stop() throws Exception {
-        context.dispose();
+        context.close();
         super.stop();
         System.exit(0);
     }
 
+
     @Override
     public void init() {
-        context.init();
+        ConfigurableApplicationContext context = SpringApplication.run(Client.class, launchArgs);
+        context.getAutowireCapableBeanFactory().autowireBean(this);
 
         //add a shutdown hook to be really sure, resources are closed properly
-        Runtime.getRuntime().addShutdownHook(new Thread(context::dispose));
+        Runtime.getRuntime().addShutdownHook(new Thread(context::close));
     }
 
     @Override
@@ -123,4 +131,8 @@ public class Client extends Application {
         }
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.context = (ConfigurableApplicationContext) applicationContext;
+    }
 }

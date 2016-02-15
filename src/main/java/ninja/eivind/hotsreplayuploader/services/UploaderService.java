@@ -30,6 +30,7 @@ import ninja.eivind.hotsreplayuploader.repositories.ProviderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -45,7 +46,7 @@ import java.util.stream.Collectors;
  * {@link ScheduledService}, that is responsible for uploading {@link ReplayFile}s
  * to {@link Provider}s. Does also take care of updating the UI in the process.
  */
-@Singleton
+@Component
 public class UploaderService extends ScheduledService<ReplayFile> implements InitializingBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(UploaderService.class);

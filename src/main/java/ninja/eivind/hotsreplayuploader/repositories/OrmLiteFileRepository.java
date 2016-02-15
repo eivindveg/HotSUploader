@@ -21,7 +21,9 @@ import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,8 +37,8 @@ import java.util.concurrent.Callable;
  * Implementation of a {@link FileRepository}, which is based on a database backend.<br>
  * Uses ORMLite to abstract database access.
  */
-@Singleton
-public class OrmLiteFileRepository implements FileRepository, InitializingBean, Closeable {
+@Repository
+public class OrmLiteFileRepository implements FileRepository, InitializingBean, DisposableBean {
 
     @Inject
     private ConnectionSource connectionSource;
@@ -134,7 +136,7 @@ public class OrmLiteFileRepository implements FileRepository, InitializingBean, 
     }
 
     @Override
-    public void close() throws IOException {
+    public void destroy() throws IOException {
         connectionSource.closeQuietly();
     }
 }

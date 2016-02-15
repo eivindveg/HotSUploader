@@ -16,6 +16,8 @@ package ninja.eivind.hotsreplayuploader.repositories;
 
 import ninja.eivind.hotsreplayuploader.providers.Provider;
 import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotsLogsProvider;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.stereotype.Repository;
 
 import java.io.Closeable;
 import java.util.Collection;
@@ -25,7 +27,8 @@ import java.util.List;
 /**
  * Simple implementation containing only the {@link HotsLogsProvider}.
  */
-public class SingletonListProviderRepository implements ProviderRepository, Closeable {
+@Repository
+public class SingletonListProviderRepository implements ProviderRepository, Closeable, DisposableBean {
 
     private final List<Provider> all = Collections.singletonList(new HotsLogsProvider());
 
@@ -37,5 +40,10 @@ public class SingletonListProviderRepository implements ProviderRepository, Clos
     @Override
     public void close() {
         all.forEach(Provider::close);
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        close();
     }
 }
