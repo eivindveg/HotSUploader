@@ -40,6 +40,10 @@ public class JavaFXThreadingRule implements TestRule {
      */
     private static boolean jfxIsSetup;
 
+    public JavaFXThreadingRule() {
+        System.setProperty("java.awt.headless", "false");
+    }
+
     @Override
     public Statement apply(Statement statement, Description description) {
 
