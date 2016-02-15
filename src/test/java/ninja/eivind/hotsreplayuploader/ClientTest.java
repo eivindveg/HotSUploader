@@ -17,9 +17,14 @@ package ninja.eivind.hotsreplayuploader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import rules.JavaFXThreadingRule;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,10 +33,15 @@ import java.lang.reflect.Modifier;
 
 import static org.junit.Assert.*;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(Client.class)
 public class ClientTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientTest.class);
     private static Document parse;
+
+    @Rule
+    public JavaFXThreadingRule javaFXThreadingRule = new JavaFXThreadingRule();
 
     @BeforeClass
     public static void setUpClass() throws IOException {
