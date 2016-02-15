@@ -14,7 +14,6 @@
 
 package ninja.eivind.hotsreplayuploader.services;
 
-import com.google.inject.Inject;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
@@ -24,6 +23,7 @@ import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 

@@ -15,6 +15,7 @@
 package ninja.eivind.hotsreplayuploader;
 
 import com.gluonhq.ignite.DIContext;
+import com.gluonhq.ignite.spring.SpringContext;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -23,8 +24,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import ninja.eivind.hotsreplayuploader.di.CloseableGuiceContext;
-import ninja.eivind.hotsreplayuploader.di.GuiceModule;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
@@ -45,7 +44,10 @@ import java.util.Collections;
 public class Client extends Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(Client.class);
-    private final DIContext context = new CloseableGuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
+    private final DIContext context = new SpringContext(this, () -> Collections.singletonList(
+            getClass().getPackage().getName())
+    );
+
     @Inject
     private FXMLLoader fxmlLoader;
     @Inject

@@ -19,9 +19,10 @@ import com.j256.ormlite.spring.DaoFactory;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
-import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
+import org.springframework.beans.factory.InitializingBean;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.Closeable;
@@ -35,7 +36,7 @@ import java.util.concurrent.Callable;
  * Uses ORMLite to abstract database access.
  */
 @Singleton
-public class OrmLiteFileRepository implements FileRepository, Initializable, Closeable {
+public class OrmLiteFileRepository implements FileRepository, InitializingBean, Closeable {
 
     @Inject
     private ConnectionSource connectionSource;
@@ -47,7 +48,7 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
      * Initializes this object after all members have been injected. Called automatically by the IoC context.
      */
     @Override
-    public void initialize() {
+    public void afterPropertiesSet() {
         try {
             dao = DaoFactory.createDao(connectionSource, ReplayFile.class);
         } catch (SQLException e) {

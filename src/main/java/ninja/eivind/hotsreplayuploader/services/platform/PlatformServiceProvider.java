@@ -14,9 +14,10 @@
 
 package ninja.eivind.hotsreplayuploader.services.platform;
 
-import com.google.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Provider;
 
 public class PlatformServiceProvider implements Provider<PlatformService> {
 
