@@ -14,6 +14,7 @@
 
 package ninja.eivind.hotsreplayuploader;
 
+import javafx.concurrent.Task;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.BeforeClass;
@@ -30,6 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -46,6 +49,22 @@ public class ClientTest {
     @BeforeClass
     public static void setUpClass() throws IOException {
         parse = Jsoup.parse(new File("pom.xml"), "UTF-8");
+    }
+
+    @Test
+    public void testJavaFXIsAvailable() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(2);
+        Task<Void> javaFxTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                latch.countDown();
+                return null;
+            }
+        };
+        javaFxTask.setOnSucceeded((result) -> latch.countDown());
+        new Thread(javaFxTask).run();
+
+        latch.await(1, TimeUnit.SECONDS);
     }
 
     @Test
