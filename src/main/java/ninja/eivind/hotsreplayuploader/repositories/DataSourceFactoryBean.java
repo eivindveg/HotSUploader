@@ -21,6 +21,9 @@ import org.h2.jdbcx.JdbcDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -36,10 +39,28 @@ public class DataSourceFactoryBean implements Provider<DataSource>, FactoryBean<
     private PlatformService platformService;
     @Inject
     private ReleaseManager releaseManager;
+    @Inject
+    private Environment environment;
 
     @Override
     public DataSource get() {
         final File database = new File(platformService.getApplicationHome(), "database");
+        final DataSource dataSource;
+
+        if(environment.acceptsProfiles("test")) {
+            dataSource = new EmbeddedDatabaseBuilder()
+                    .setType(EmbeddedDatabaseType.H2)
+                    .build();
+        } else {
+            dataSource = getOrmLiteDataSource(database);
+        }
+
+        migrateDataSource(dataSource);
+
+        return dataSource;
+    }
+
+    private JdbcDataSource getOrmLiteDataSource(File database) {
         final JdbcDataSource dataSource = new JdbcDataSource();
         final String databaseName;
         if (releaseManager == null || releaseManager.getCurrentVersion().equals("Development")) {
@@ -47,18 +68,14 @@ public class DataSourceFactoryBean implements Provider<DataSource>, FactoryBean<
         } else {
             databaseName = database.toString();
         }
-
         final String url = "jdbc:h2:" + databaseName;
 
         LOG.info("Setting up DataSource with URL " + url);
         dataSource.setUrl(url);
-
-        migrateDataSource(dataSource);
-
         return dataSource;
     }
 
-    private void migrateDataSource(JdbcDataSource dataSource) {
+    private void migrateDataSource(DataSource dataSource) {
         final Flyway flyway = new Flyway();
 
         flyway.setDataSource(dataSource);

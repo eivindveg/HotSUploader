@@ -24,9 +24,13 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import rules.JavaFXThreadingRule;
 
+import javax.inject.Inject;
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -36,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
+@ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Client.class)
 public class ClientTest {
@@ -46,9 +51,17 @@ public class ClientTest {
     @Rule
     public JavaFXThreadingRule javaFXThreadingRule = new JavaFXThreadingRule();
 
+    @Inject
+    private DataSource dataSource;
+
     @BeforeClass
     public static void setUpClass() throws IOException {
         parse = Jsoup.parse(new File("pom.xml"), "UTF-8");
+    }
+
+    @Test
+    public void testDataSourceIsEmbedded() {
+        assertTrue("DataSource is an instance of EmbeddedDatabase", dataSource instanceof EmbeddedDatabase);
     }
 
     @Test
