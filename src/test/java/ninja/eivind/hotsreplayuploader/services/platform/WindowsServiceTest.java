@@ -42,4 +42,15 @@ public class WindowsServiceTest {
         final String actual = matchForPath.get();
         assertEquals("Path match is equal to inserted path.", expected, actual);
     }
+
+    @Test
+    public void testGetMatchForPath() {
+        final String expected = "Z:\\Users\\SomeUser\\Documents\\";
+        final Optional<String> matchForPath = windowsService.getMatchForPath(expected);
+
+        assertTrue("Path matches.", matchForPath.isPresent());
+
+        final String actual = matchForPath.get();
+        assertEquals("Path match is equal to inserted path.", expected, actual);
+    }
 }
