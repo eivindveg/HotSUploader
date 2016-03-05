@@ -18,8 +18,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
@@ -56,9 +54,17 @@ public class WindowsServiceTest {
 
     @Test
     public void testGetMatchForPathDoesNotAllowNonCompliantUnicode() {
-            final String expected = "C:\\Users\\Eivind Vegsundv�g\\Documents\\";
-            final Optional<String> matchForPath = windowsService.getMatchForPath(expected);
+        final String expected = "C:\\Users\\Eivind Vegsundv�g\\Documents\\";
+        final Optional<String> matchForPath = windowsService.getMatchForPath(expected);
 
-            assertFalse("Path matches.", matchForPath.isPresent());
+        assertFalse("Path matches.", matchForPath.isPresent());
+    }
+
+    @Test
+    public void testGetMatchForPathDoesNotMatchNonPaths() {
+        final String expected = "N:ot\\A\\Path\\";
+
+        final Optional<String> matchForPath = windowsService.getMatchForPath(expected);
+        assertFalse("Path matches.", matchForPath.isPresent());
     }
 }
