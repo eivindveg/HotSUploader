@@ -17,6 +17,7 @@ package ninja.eivind.hotsreplayuploader.repositories;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.spring.DaoFactory;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
 import ninja.eivind.hotsreplayuploader.di.Initializable;
@@ -37,6 +38,7 @@ import java.util.concurrent.Callable;
 @Singleton
 public class OrmLiteFileRepository implements FileRepository, Initializable, Closeable {
 
+    private static final String FILE_NAME = "fileName";
     @Inject
     private ConnectionSource connectionSource;
     private Dao<ReplayFile, Long> dao;
@@ -113,11 +115,11 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
 
     @Override
     public void deleteByFileName(ReplayFile file) {
-        final SelectArg selectArg = new SelectArg("fileName", file.getFileName());
+        final SelectArg selectArg = new SelectArg(FILE_NAME, file.getFileName());
         try {
             final DeleteBuilder<ReplayFile, Long> deleteBuilder = dao.deleteBuilder();
             deleteBuilder.where()
-                    .eq("fileName", selectArg);
+                    .eq(FILE_NAME, selectArg);
             dao.delete(deleteBuilder.prepare());
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -130,6 +132,22 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private ReplayFile getByFileName(final ReplayFile replayFile) {
+        try {
+            final SelectArg selectArg = new SelectArg(FILE_NAME, replayFile.getFileName());
+            final PreparedQuery<ReplayFile> query = dao.queryBuilder()
+                    .where().eq(FILE_NAME, selectArg)
+                    .prepare();
+
+            return dao.query(query).stream()
+                    .findAny()
+                    .orElse(replayFile);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override

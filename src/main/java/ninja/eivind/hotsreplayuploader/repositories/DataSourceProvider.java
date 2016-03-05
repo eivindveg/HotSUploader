@@ -55,7 +55,7 @@ public class DataSourceProvider implements Provider<DataSource> {
         return dataSource;
     }
 
-    private void migrateDataSource(JdbcDataSource dataSource) {
+    private static void migrateDataSource(JdbcDataSource dataSource) {
         final Flyway flyway = new Flyway();
 
         flyway.setDataSource(dataSource);
