@@ -15,6 +15,7 @@
 package ninja.eivind.hotsreplayuploader.repositories;
 
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
+import ninja.eivind.hotsreplayuploader.models.Status;
 
 import java.io.File;
 import java.util.List;
@@ -49,4 +50,6 @@ public interface FileRepository {
     List<ReplayFile> getAll();
 
     void deleteByFileName(ReplayFile file);
+
+    ReplayFile findById(long id);
 }

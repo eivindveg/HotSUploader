@@ -44,6 +44,13 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     @Inject
     private AccountDirectoryWatcher accountDirectoryWatcher;
 
+    public OrmLiteFileRepository() {
+    }
+
+    public OrmLiteFileRepository(ConnectionSource connectionSource) {
+        this.connectionSource = connectionSource;
+    }
+
     /**
      * Initializes this object after all members have been injected. Called automatically by the IoC context.
      */
@@ -120,6 +127,15 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
             deleteBuilder.where()
                     .eq("fileName", selectArg);
             dao.delete(deleteBuilder.prepare());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public ReplayFile findById(long id) {
+        try {
+            return dao.queryForId(id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
