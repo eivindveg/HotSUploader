@@ -49,7 +49,7 @@ public class OrmLiteFileRepositoryTest {
         final UploadStatus status = new UploadStatus("test", Status.EXCEPTION);
         replayFile.addStatuses(Collections.singletonList(status));
         repository.updateReplay(replayFile);
-        assertNotNull(replayFile.getStatus());
+        assertNotEquals(0, replayFile.getId());
 
         status.setStatus(Status.UPLOADED);
         repository.updateReplay(replayFile);
