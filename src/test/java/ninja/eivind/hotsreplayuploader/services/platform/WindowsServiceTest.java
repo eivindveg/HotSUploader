@@ -53,4 +53,12 @@ public class WindowsServiceTest {
         final String actual = matchForPath.get();
         assertEquals("Path match is equal to inserted path.", expected, actual);
     }
+
+    @Test
+    public void testGetMatchForPathDoesNotAllowNonCompliantUnicode() {
+            final String expected = "C:\\Users\\Eivind Vegsundv�g\\Documents\\";
+            final Optional<String> matchForPath = windowsService.getMatchForPath(expected);
+
+            assertFalse("Path matches.", matchForPath.isPresent());
+    }
 }
