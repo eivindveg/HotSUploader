@@ -45,7 +45,7 @@ public class ReleaseComparator implements Comparator<GitHubRelease> {
         return -release1Version.compareTo(release2Version);
     }
 
-    private String stripVersion(final String tagName) {
+    private static String stripVersion(final String tagName) {
         return tagName.replaceFirst("v", "").replaceAll("-\\w*", "");
     }
 }

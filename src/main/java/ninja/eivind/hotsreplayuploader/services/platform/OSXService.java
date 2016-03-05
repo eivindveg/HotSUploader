@@ -98,7 +98,7 @@ public class OSXService implements PlatformService {
      * @return true if <code>defaults read -g AppleInterfaceStyle</code>
      * has an exit status of <code>0</code> (i.e. _not_ returning "key not found").
      */
-    private boolean isMacMenuBarDarkMode() {
+    private static boolean isMacMenuBarDarkMode() {
         try {
             /* check for exit status only.
              * Once there are more modes than "dark" and "default",
