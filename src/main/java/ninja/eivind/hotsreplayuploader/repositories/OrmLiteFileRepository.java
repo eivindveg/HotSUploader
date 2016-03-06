@@ -23,6 +23,8 @@ import com.j256.ormlite.support.ConnectionSource;
 import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
+import ninja.eivind.hotsreplayuploader.models.UploadStatus;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.Closeable;
@@ -43,6 +45,7 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     private Dao<ReplayFile, Long> dao;
     @Inject
     private AccountDirectoryWatcher accountDirectoryWatcher;
+    private Dao<UploadStatus, Long> statusDao;
 
     public OrmLiteFileRepository() {
     }
@@ -58,6 +61,7 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     public void initialize() {
         try {
             dao = DaoFactory.createDao(connectionSource, ReplayFile.class);
+            statusDao = DaoFactory.createDao(connectionSource, UploadStatus.class);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -76,6 +80,9 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     public void updateReplay(final ReplayFile file) {
         try {
             dao.createOrUpdate(file);
+            for (UploadStatus uploadStatus : file.getUploadStatuses()) {
+                statusDao.createOrUpdate(uploadStatus);
+            }
             dao.refresh(file);
         } catch (SQLException e) {
             throw new RuntimeException(e);
