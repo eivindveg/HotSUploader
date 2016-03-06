@@ -138,4 +138,11 @@ public class ReplayFile implements Serializable {
     public String getFileName() {
         return fileName;
     }
+
+    public UploadStatus getUploadStatusForProvider(String provider) {
+        return getUploadStatuses().stream()
+                .filter(status -> status.getHost().equals(provider))
+                .findFirst()
+                .orElse(null);
+    }
 }

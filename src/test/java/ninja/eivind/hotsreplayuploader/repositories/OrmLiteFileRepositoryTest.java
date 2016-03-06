@@ -46,12 +46,17 @@ public class OrmLiteFileRepositoryTest {
     @Test
     public void testUpdateReplay() throws Exception {
         final ReplayFile replayFile = new ReplayFile(mock(File.class));
+        repository.updateReplay(replayFile);
         final UploadStatus status = new UploadStatus("test", Status.EXCEPTION);
         replayFile.addStatuses(Collections.singletonList(status));
+        status.setReplayFile(replayFile);
         repository.updateReplay(replayFile);
         assertNotEquals(0, replayFile.getId());
+        assertNotNull("Status was persisted.", status.getId());
 
-        status.setStatus(Status.UPLOADED);
+        final UploadStatus persistentStatus = replayFile.getUploadStatusForProvider("test");
+        assertNotNull(persistentStatus);
+        persistentStatus.setStatus(Status.UPLOADED);
         repository.updateReplay(replayFile);
 
         final Status expected = Status.UPLOADED;
