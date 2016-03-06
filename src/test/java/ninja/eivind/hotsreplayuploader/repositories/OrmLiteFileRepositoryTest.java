@@ -51,11 +51,11 @@ public class OrmLiteFileRepositoryTest {
         replayFile.addStatuses(Collections.singletonList(status));
         status.setReplayFile(replayFile);
         repository.updateReplay(replayFile);
-        assertNotEquals(0, replayFile.getId());
+        assertNotEquals("ReplayFile was assigned an ID.", 0, replayFile.getId());
         assertNotNull("Status was persisted.", status.getId());
 
         final UploadStatus persistentStatus = replayFile.getUploadStatusForProvider("test");
-        assertNotNull(persistentStatus);
+        assertNotNull("The persistent status was refreshed.", persistentStatus);
         persistentStatus.setStatus(Status.UPLOADED);
         repository.updateReplay(replayFile);
 
