@@ -46,6 +46,16 @@
 
     <name>HotS Replay Uploader</name>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>oss-sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <finalName>${project.name}</finalName>
 
@@ -105,7 +115,7 @@
             <plugin>
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>8.2.0</version>
+                <version>9.0.0-SNAPSHOT</version>
                 <configuration>
                 	<updateExistingJar>true</updateExistingJar>
                     <mainClass>${mainClass}</mainClass>
