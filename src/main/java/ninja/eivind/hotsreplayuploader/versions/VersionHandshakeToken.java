@@ -80,4 +80,8 @@ public class VersionHandshakeToken implements Comparable<VersionHandshakeToken>
     {
         return -version.compareTo(o.version); //TODO use release comparator?
     }
+
+    public boolean isLessThan(VersionHandshakeToken tokenB) {
+        return compareTo(tokenB) == -1;
+    }
 }
