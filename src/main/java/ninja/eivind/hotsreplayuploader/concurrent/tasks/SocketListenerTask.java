@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -38,7 +37,7 @@ public class SocketListenerTask extends Task<Void> {
         throw new RuntimeException("Socket listener thread was interrupted.");
     }
 
-    private boolean readSocket(ServerSocket ss) throws IOException {
+    private boolean readSocket(ServerSocket ss) {
         VersionHandshakeToken tokenA = new VersionHandshakeToken();
         ObjectMapper mapper = new ObjectMapper();
 
