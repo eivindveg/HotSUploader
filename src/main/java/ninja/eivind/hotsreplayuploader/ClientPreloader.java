@@ -14,6 +14,7 @@
 
 package ninja.eivind.hotsreplayuploader;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Preloader;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,6 +22,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ninja.eivind.hotsreplayuploader.versions.VersionHandshakeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -28,10 +31,6 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Application preloader. This displays a splash screen while {@link Client} is loading.
@@ -42,13 +41,21 @@ public class ClientPreloader extends Preloader {
     private Stage preloaderStage;
 
     @Override
-    public void init() {
-        int port = 27000;
-        checkForActiveProcess(port);
+    public void stop() throws Exception {
+        super.stop();
+
+        System.exit(0);
     }
 
-    private void checkForActiveProcess(int port)
-    {
+    @Override
+    public void init() throws Exception {
+        int port = 27000;
+        if (checkForActiveProcess(port)) {
+            stop();
+        }
+    }
+
+    private boolean checkForActiveProcess(int port) {
         final VersionHandshakeToken token = new VersionHandshakeToken();
         final ObjectMapper mapper = new ObjectMapper();
         try (Socket socket = new Socket(InetAddress.getLoopbackAddress(), port);
@@ -61,16 +68,19 @@ public class ClientPreloader extends Preloader {
                     readValue(handshakeResponse, VersionHandshakeToken.class);
 
             //same version, exit
-            if(token.equals(tokenB))
-                System.exit(0);
-
+            if (token.equals(tokenB)) {
+                return true;
+            } else if (token.isLessThan(tokenB)) {
+                return true;
+            }
 
         } catch (ConnectException e) {
             LOG.info("Couldn't establish connection to " +
-                        InetAddress.getLoopbackAddress() + ":" + port);
-        } catch(IOException e) {
+                    InetAddress.getLoopbackAddress() + ":" + port);
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     @Override
