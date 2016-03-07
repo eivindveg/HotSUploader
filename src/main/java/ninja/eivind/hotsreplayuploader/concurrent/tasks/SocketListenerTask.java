@@ -29,9 +29,11 @@ public class SocketListenerTask extends Task<Void> {
         InetAddress loopback = InetAddress.getLoopbackAddress();
 
         try (ServerSocket ss = new ServerSocket(Constants.PROCESS_COMMUNICATION_PORT, 5, loopback)) {
-            while (!Thread.currentThread().isInterrupted())
-                if (readSocket(ss))
+            while (!Thread.currentThread().isInterrupted()) {
+                if (readSocket(ss)) {
                     return null;
+                }
+            }
         }
 
         throw new RuntimeException("Socket listener thread was interrupted.");
@@ -51,13 +53,17 @@ public class SocketListenerTask extends Task<Void> {
                     readValue(read, VersionHandshakeToken.class);
 
             //reject wrong applications
-            if (!tokenA.getApplicationName().equals(tokenB.getApplicationName()))
+            if (!tokenA.getApplicationName().equals(tokenB.getApplicationName())) {
                 return false;
+            }
 
             if (tokenA.compareTo(tokenB) >= 0)  //same or newer version
+            {
                 updateProgress(count++, count);
-            else  //we're running an old version, terminate
+            } else {
+                //we're running an old version, terminate
                 return true;
+            }
         } catch (Exception e) {
             LOG.error("Handshake failed", e);
         }
