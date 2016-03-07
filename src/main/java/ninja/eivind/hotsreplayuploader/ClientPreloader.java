@@ -53,8 +53,8 @@ public class ClientPreloader extends Preloader {
         final ObjectMapper mapper = new ObjectMapper();
         try (Socket socket = new Socket(InetAddress.getLoopbackAddress(), port);
              DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-             DataInputStream dis = new DataInputStream(socket.getInputStream()))
-        {
+             DataInputStream dis = new DataInputStream(socket.getInputStream())) {
+
             dos.writeUTF(mapper.writeValueAsString(token));
             String handshakeResponse = dis.readUTF();
             VersionHandshakeToken tokenB = mapper.
@@ -65,12 +65,10 @@ public class ClientPreloader extends Preloader {
                 System.exit(0);
 
 
-        } catch (ConnectException e)
-        {
+        } catch (ConnectException e) {
             LOG.info("Couldn't establish connection to " +
                         InetAddress.getLoopbackAddress() + ":" + port);
-        }
-        catch(IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
