@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import ninja.eivind.hotsreplayuploader.utils.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,7 @@ public class SocketListenerTask extends Task<Void>
     {
         InetAddress loopback = InetAddress.getLoopbackAddress();
 
-        try(ServerSocket ss = new ServerSocket(27000, 5, loopback)) {
+        try(ServerSocket ss = new ServerSocket(Constants.PROCESS_COMMUNICATION_PORT, 5, loopback)) {
             while(!Thread.currentThread().isInterrupted())
                 if(readSocket(ss))
                     return null;

@@ -21,6 +21,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import ninja.eivind.hotsreplayuploader.utils.Constants;
 import ninja.eivind.hotsreplayuploader.versions.VersionHandshakeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,7 @@ public class ClientPreloader extends Preloader {
 
     @Override
     public void init() throws Exception {
-        int port = 27000;
+        int port = Constants.PROCESS_COMMUNICATION_PORT;
         if (checkForActiveProcess(port)) {
             stop();
         }

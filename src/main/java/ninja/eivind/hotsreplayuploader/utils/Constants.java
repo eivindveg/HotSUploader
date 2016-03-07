@@ -21,6 +21,8 @@ public final class Constants {
 
     public static final String APPLICATION_NAME = "HotS Replay Uploader";
 
+    public static final int PROCESS_COMMUNICATION_PORT = 27000;
+
     private Constants() {
     }
 }
