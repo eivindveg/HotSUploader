@@ -16,32 +16,27 @@ package ninja.eivind.hotsreplayuploader.versions;
 
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 
-public class VersionHandshakeToken implements Comparable<VersionHandshakeToken>
-{
+public class VersionHandshakeToken implements Comparable<VersionHandshakeToken> {
     private String applicationName;
     private String version;
 
-    public VersionHandshakeToken()
-    {
+    public VersionHandshakeToken() {
         applicationName = Constants.APPLICATION_NAME;
         version = ReleaseManager.class.getPackage().getImplementationVersion();
-        if(version == null)
+        if (version == null)
             version = "Snapshot";
     }
 
-    public String getApplicationName()
-    {
+    public String getApplicationName() {
         return applicationName;
     }
 
-    public String getVersion()
-    {
+    public String getVersion() {
         return version;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result
@@ -51,8 +46,7 @@ public class VersionHandshakeToken implements Comparable<VersionHandshakeToken>
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
@@ -60,14 +54,12 @@ public class VersionHandshakeToken implements Comparable<VersionHandshakeToken>
         if (getClass() != obj.getClass())
             return false;
         VersionHandshakeToken other = (VersionHandshakeToken) obj;
-        if (applicationName == null)
-        {
+        if (applicationName == null) {
             if (other.applicationName != null)
                 return false;
         } else if (!applicationName.equals(other.applicationName))
             return false;
-        if (version == null)
-        {
+        if (version == null) {
             if (other.version != null)
                 return false;
         } else if (!version.equals(other.version))
@@ -76,8 +68,7 @@ public class VersionHandshakeToken implements Comparable<VersionHandshakeToken>
     }
 
     @Override
-    public int compareTo(VersionHandshakeToken o)
-    {
+    public int compareTo(VersionHandshakeToken o) {
         return -version.compareTo(o.version); //TODO use release comparator?
     }
 
