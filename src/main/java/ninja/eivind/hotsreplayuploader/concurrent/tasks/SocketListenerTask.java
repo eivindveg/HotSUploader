@@ -57,8 +57,7 @@ public class SocketListenerTask extends Task<Void> {
                 return false;
             }
 
-            if (tokenA.compareTo(tokenB) >= 0)  //same or newer version
-            {
+            if (tokenA.compareTo(tokenB) >= 0) { //same or newer version
                 updateProgress(count++, count);
             } else {
                 //we're running an old version, terminate
