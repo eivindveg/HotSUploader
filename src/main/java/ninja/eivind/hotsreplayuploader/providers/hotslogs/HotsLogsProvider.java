@@ -147,7 +147,7 @@ public class HotsLogsProvider extends Provider {
 
     }
 
-    private UUID getUUIDForString(String concatenatedString) throws NoSuchAlgorithmException {
+    private static UUID getUUIDForString(String concatenatedString) throws NoSuchAlgorithmException {
         final byte[] hashed = MessageDigest.getInstance("MD5").digest(concatenatedString.getBytes());
         final byte[] reArranged = reArrangeForUUID(hashed);
         return getUUID(reArranged);

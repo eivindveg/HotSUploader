@@ -48,8 +48,7 @@ public class ReplayFile implements Serializable {
     @ForeignCollectionField(eager = true)
     private Collection<UploadStatus> uploadStatuses = new ArrayList<>();
 
-    public ReplayFile() {
-    }
+    public ReplayFile() {}
 
     public ReplayFile(final File file) {
         this.file = file;
@@ -89,8 +88,12 @@ public class ReplayFile implements Serializable {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         final ReplayFile that = (ReplayFile) o;
 
@@ -106,7 +109,7 @@ public class ReplayFile implements Serializable {
     @JsonIgnore
     public Status getStatus() {
         // TODO MAKE MULTIPROVIDER-FRIENDLY
-        if (uploadStatuses.size() < 1) {
+        if (uploadStatuses.isEmpty()) {
             LOG.warn(this + " has no statuses.");
             return Status.NEW;
         }
