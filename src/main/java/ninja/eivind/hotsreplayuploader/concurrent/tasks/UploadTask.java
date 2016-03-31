@@ -53,9 +53,12 @@ public class UploadTask extends Task<ReplayFile> {
                 preStatus = provider.getPreStatus(replay);
             } catch (MpqException e) {
                 LOG.warn("Could not parse replay, deferring to upload." + take, e);
-                preStatus = Status.NEW;
+
+                preStatus = Status.EXCEPTION;
             }
-            if (preStatus == Status.UPLOADED || preStatus == Status.UNSUPPORTED_GAME_MODE) {
+            if (preStatus == Status.UPLOADED ||
+                preStatus == Status.UNSUPPORTED_GAME_MODE ||
+                preStatus == Status.EXCEPTION) {
                 LOG.info("Parsed preStatus reported no need to upload "
                         + take.getFile() + " for provider " + provider.getName());
                 applyStatus(provider, preStatus);
