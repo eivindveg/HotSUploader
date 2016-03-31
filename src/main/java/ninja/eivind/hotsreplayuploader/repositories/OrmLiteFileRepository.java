@@ -111,12 +111,10 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
             //start a batch task to speed up initial startups
             dao.callBatchTasks(new Callable<Void>() {
                 public Void call() throws Exception {
-                    for(ReplayFile replayFile : replayFiles) {
-                        if(!fromDb.contains(replayFile))
-                            createReplay(replayFile);
-                        else if(!replayFile.getFile().exists())
-                            deleteReplay(replayFile);
-                    }
+                    //create a db entry for every new physical file
+                    replayFiles.stream().filter(r -> !fromDb.contains(r)).forEach(r -> createReplay(r));
+                    //remove non-existing files from the db
+                    fromDb.stream().filter(r -> !replayFiles.contains(r)).forEach(r -> deleteReplay(r));
 
                     return null;
                 }
