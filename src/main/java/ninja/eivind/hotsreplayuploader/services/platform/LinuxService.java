@@ -67,7 +67,9 @@ public class LinuxService implements PlatformService {
                 // we want to find a line like:
                 // XDG_DOCUMENTS_DIR="$HOME/Documents"
                 line = line.trim();  // remove whitespace
-                if (line.charAt(0) == '#') continue;  // skip comments
+                if (line.charAt(0) == '#') {
+                    continue;  // skip comments
+                }
                 // check for our magic line
                 if (line.startsWith(lineStart)) {
                     // cut the contents of line, after "...$HOME/" up to last symbol "
@@ -82,7 +84,7 @@ public class LinuxService implements PlatformService {
         } catch (StringIndexOutOfBoundsException e) {
             LOG.error("Error parsing XDG user-dirs config file " + file.toString());
         }
-        return (xdgDocsPath != null ? xdgDocsPath : XDG_DEFAULT_DOCS_PATH);
+        return xdgDocsPath != null ? xdgDocsPath : XDG_DEFAULT_DOCS_PATH;
     }
 
     @Override
