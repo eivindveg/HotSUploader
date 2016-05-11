@@ -56,9 +56,7 @@ public class UploadTask extends Task<ReplayFile> {
 
                 preStatus = Status.EXCEPTION;
             }
-            if (preStatus == Status.UPLOADED ||
-                preStatus == Status.UNSUPPORTED_GAME_MODE ||
-                preStatus == Status.EXCEPTION) {
+            if (preStatus == Status.UPLOADED || preStatus == Status.UNSUPPORTED_GAME_MODE) {
                 LOG.info("Parsed preStatus reported no need to upload "
                         + take.getFile() + " for provider " + provider.getName());
                 applyStatus(provider, preStatus);
