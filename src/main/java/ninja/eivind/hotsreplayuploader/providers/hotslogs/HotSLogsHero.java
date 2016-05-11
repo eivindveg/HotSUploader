@@ -14,12 +14,14 @@
 
 package ninja.eivind.hotsreplayuploader.providers.hotslogs;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ninja.eivind.hotsreplayuploader.models.Hero;
 
 /**
  * API object retrieved from HotSLogs.com calls, which represents a playable hero primarily by its name.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class HotSLogsHero implements Hero {
 
     @JsonProperty("PrimaryName")
