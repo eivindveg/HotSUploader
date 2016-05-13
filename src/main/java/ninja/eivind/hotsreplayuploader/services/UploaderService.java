@@ -125,6 +125,11 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
         }
         try {
             final ReplayFile take = uploadQueue.take();
+            if(!take.getFile().exists()) {
+                fileRepository.deleteReplay(take);
+                files.remove(take);
+                return createTask();
+            }
             final UploadTask uploadTask = new UploadTask(providerRepository.getAll(), take);
             final Status oldStatus = take.getStatus();
 
