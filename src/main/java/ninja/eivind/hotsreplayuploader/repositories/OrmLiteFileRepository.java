@@ -111,15 +111,13 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
             final List<ReplayFile> fromDb = dao.queryForAll();
 
             //start a batch task to speed up initial startups
-            dao.callBatchTasks(new Callable<Void>() {
-                public Void call() throws Exception {
-                    //create a db entry for every new physical file
-                    replayFiles.stream().filter(r -> !fromDb.contains(r)).forEach(r -> createReplay(r));
-                    //remove non-existing files from the db
-                    fromDb.stream().filter(r -> !replayFiles.contains(r)).forEach(r -> deleteReplay(r));
+            dao.callBatchTasks((Callable<Void>) () -> {
+                //create a db entry for every new physical file
+                replayFiles.stream().filter(r -> !fromDb.contains(r)).forEach(this::createReplay);
+                //remove non-existing files from the db
+                fromDb.stream().filter(r -> !replayFiles.contains(r)).forEach(this::deleteReplay);
 
-                    return null;
-                }
+                return null;
             });
         } catch (Exception e) {
             throw new RuntimeException(e);
