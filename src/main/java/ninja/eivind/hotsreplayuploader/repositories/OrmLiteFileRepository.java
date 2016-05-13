@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of a {@link FileRepository}, which is based on a database backend.<br>
@@ -92,9 +93,10 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     @Override
     public List<ReplayFile> getAll() {
         //update the DB with any file changes first
-        accountDirectoryWatcher.getAllFiles()
+        checkForDatabaseIntegrity(accountDirectoryWatcher.getAllFiles()
                 .map(ReplayFile::fromDirectory)
-                .forEach(this::checkForDatabaseIntegrity);
+                .flatMap(List::stream)
+                .collect(Collectors.toList()));
 
        //get a fully refreshed copy containing all changes from the db
         try {
