@@ -19,6 +19,7 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
+import ninja.eivind.mpq.models.MpqException;
 import ninja.eivind.stormparser.StormParser;
 import ninja.eivind.stormparser.models.Replay;
 import org.slf4j.Logger;
@@ -45,8 +46,16 @@ public class UploadTask extends Task<ReplayFile> {
         providers.forEach(provider -> {
 
             final StormParser parser = new StormParser(take.getFile());
-            final Replay replay = parser.parseReplay();
-            final Status preStatus = provider.getPreStatus(replay);
+            Replay replay = null;
+            Status preStatus;
+            try {
+                replay = parser.parseReplay();
+                preStatus = provider.getPreStatus(replay);
+            } catch (MpqException e) {
+                LOG.warn("Could not parse replay, deferring to upload." + take, e);
+
+                preStatus = Status.EXCEPTION;
+            }
             if (preStatus == Status.UPLOADED || preStatus == Status.UNSUPPORTED_GAME_MODE) {
                 LOG.info("Parsed preStatus reported no need to upload "
                         + take.getFile() + " for provider " + provider.getName());
