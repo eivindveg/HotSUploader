@@ -103,7 +103,7 @@ public class StormHandler {
         File[] files = getReplayDirectory(dir).listFiles();
         if (files == null || files.length < 1) return Long.MIN_VALUE;
         return Arrays.stream(files)
-                .mapToLong(f -> f.lastModified())
+                .mapToLong(File::lastModified)
                 .max().orElse(Long.MIN_VALUE);
     }
 
