@@ -100,8 +100,11 @@ public class StormHandler {
     }
 
     private static long maxLastModified(File dir) {
-        return Arrays.stream(getReplayDirectory(dir).listFiles())
-                .mapToLong(f -> f.lastModified()).max().orElse(Long.MIN_VALUE);
+        File[] files = getReplayDirectory(dir).listFiles();
+        if (files == null || files.length < 1) return Long.MIN_VALUE;
+        return Arrays.stream(files)
+                .mapToLong(f -> f.lastModified())
+                .max().orElse(Long.MIN_VALUE);
     }
 
     /**
