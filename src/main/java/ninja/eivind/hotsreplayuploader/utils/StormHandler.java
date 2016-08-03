@@ -57,13 +57,13 @@ public class StormHandler {
      * @return {@link List} of directories or an empty {@link List}
      */
     public List<File> getReplayDirectories() {
-        final List<File> replayDirectories = new ArrayList<>();
+        return getAccountDirectories().stream()
+                .map(StormHandler::getReplayDirectory)
+                .collect(Collectors.toList());
+    }
 
-        getAccountDirectories().stream()
-                    .map(folder -> new File(folder, "Replays"))
-                    .map(folder -> new File(folder, "Multiplayer"))
-                    .forEach(replayDirectories::add);
-        return replayDirectories;
+    private static File getReplayDirectory(File dir) {
+        return new File(dir, "Replays" + File.separator + "Multiplayer");
     }
 
     /**
@@ -99,6 +99,14 @@ public class StormHandler {
         }
     }
 
+    private static long maxLastModified(File dir) {
+        File[] files = getReplayDirectory(dir).listFiles();
+        if (files == null || files.length < 1) return Long.MIN_VALUE;
+        return Arrays.stream(files)
+                .mapToLong(File::lastModified)
+                .max().orElse(Long.MIN_VALUE);
+    }
+
     /**
      * Retrieves a {@link List} of {@link File}s, each containing files for a specific {@link Account}.
      * @return {@link List} of directories or an empty {@link List}
@@ -114,6 +122,8 @@ public class StormHandler {
             Arrays.stream(hotsFolders).forEach(hotsAccounts::add);
         }
 
-        return hotsAccounts;
+         return hotsAccounts.stream()
+                .sorted((f1, f2) -> Long.compare(maxLastModified(f2), maxLastModified(f1)))
+                .collect(Collectors.toList());
     }
 }
