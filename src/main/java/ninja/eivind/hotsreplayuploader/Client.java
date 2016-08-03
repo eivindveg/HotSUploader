@@ -83,22 +83,27 @@ public class Client extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        final URL logo = platformService.getLogoUrl();
-        final Image image = new Image(logo.toString());
-        primaryStage.getIcons().add(image);
-        primaryStage.setResizable(false);
-        addToTray(primaryStage);
-        platformService.setupWindowBehaviour(primaryStage);
+        try {
+            final URL logo = platformService.getLogoUrl();
+            final Image image = new Image(logo.toString());
+            primaryStage.getIcons().add(image);
+            primaryStage.setResizable(false);
+            addToTray(primaryStage);
+            platformService.setupWindowBehaviour(primaryStage);
 
-        // Set window title
-        final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
-        primaryStage.setTitle(windowTitle);
+            // Set window title
+            final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
+            primaryStage.setTitle(windowTitle);
 
-        fxmlLoader.setLocation(getClass().getResource("/ninja/eivind/hotsreplayuploader/window/Home.fxml"));
-        final Parent root = fxmlLoader.load();
+            fxmlLoader.setLocation(getClass().getResource("/ninja/eivind/hotsreplayuploader/window/Home.fxml"));
+            final Parent root = fxmlLoader.load();
 
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+            primaryStage.setScene(new Scene(root));
+            primaryStage.show();
+        } catch (Throwable e) {
+            LOG.error("Failed to start application", e);
+            throw new RuntimeException(e);
+        }
     }
 
     private void addToTray(final Stage primaryStage) {
