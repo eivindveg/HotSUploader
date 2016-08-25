@@ -69,6 +69,9 @@ public class HotsLogsProvider extends Provider {
         }
 
         final File file = replayFile.getFile();
+        if(!(file.exists() && file.canRead())) {
+            return Status.EXCEPTION;
+        }
 
         final String fileName = UUID.randomUUID() + ".StormReplay";
         LOG.info("Assigning remote file name " + fileName + " to " + replayFile);
@@ -147,13 +150,13 @@ public class HotsLogsProvider extends Provider {
 
     }
 
-    private UUID getUUIDForString(String concatenatedString) throws NoSuchAlgorithmException {
+    private static UUID getUUIDForString(String concatenatedString) throws NoSuchAlgorithmException {
         final byte[] hashed = MessageDigest.getInstance("MD5").digest(concatenatedString.getBytes());
         final byte[] reArranged = reArrangeForUUID(hashed);
         return getUUID(reArranged);
     }
 
-    private byte[] reArrangeForUUID(byte[] hashed) {
+    private static byte[] reArrangeForUUID(byte[] hashed) {
         return new byte[]{
                 hashed[3],
                 hashed[2],
@@ -175,7 +178,7 @@ public class HotsLogsProvider extends Provider {
         };
     }
 
-    private UUID getUUID(byte[] bytes) {
+    private static UUID getUUID(byte[] bytes) {
         long msb = 0;
         long lsb = 0;
         assert bytes.length == 16 : "data must be 16 bytes in length";

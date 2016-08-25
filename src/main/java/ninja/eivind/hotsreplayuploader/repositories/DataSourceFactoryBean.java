@@ -75,7 +75,7 @@ public class DataSourceFactoryBean implements Provider<DataSource>, FactoryBean<
         return dataSource;
     }
 
-    private void migrateDataSource(DataSource dataSource) {
+    private static void migrateDataSource(DataSource dataSource) {
         final Flyway flyway = new Flyway();
 
         flyway.setDataSource(dataSource);

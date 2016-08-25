@@ -12,11 +12,8 @@ As Heroes of the Storm supports Windows and OSX, JavaFX was chosen due to the im
 Links to install the Hots Replay Uploader can be found on the [release page](https://github.com/eivindveg/HotSUploader/releases) at the bottom of each release.
 
 ###Homebrew
-If you're on OSX and use brew, you can also install with [Homebrew Cask](http://caskroom.io):  
-`brew cask install hots-replay-uploader`
-
-If you don't have Cask installed yet, you can get it via:  
-`brew tap caskroom/cask`
+If you're on OSX and use [Homebrew](http://brew.sh), you can also install with :  
+`brew cask install hots-replay-uploader` (Homebrew will automatically tap [Homebrew Cask](http://caskroom.io))
 
 ## Licenses
 [![YourKit, LLC](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com/)

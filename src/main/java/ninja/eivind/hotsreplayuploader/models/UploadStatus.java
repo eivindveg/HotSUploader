@@ -74,4 +74,8 @@ public class UploadStatus {
     public void setStatus(final Status status) {
         this.status = status;
     }
+
+    public void setReplayFile(ReplayFile replayFile) {
+        this.replayFile = replayFile;
+    }
 }

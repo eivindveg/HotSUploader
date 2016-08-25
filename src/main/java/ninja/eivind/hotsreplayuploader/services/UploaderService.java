@@ -116,13 +116,32 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
 
     @Override
     protected Task<ReplayFile> createTask() {
+        if (isIdle()) {
+            return new Task<ReplayFile>() {
+                @Override
+                protected ReplayFile call() throws Exception {
+                    Thread.sleep(2000);
+                    return null;
+                }
+            };
+        }
+        try {
+            final ReplayFile take = uploadQueue.take();
+            if (!take.getFile().exists()) {
+                fileRepository.deleteReplay(take);
+                files.remove(take);
+                return createTask();
+            }
             final UploadTask uploadTask = new UploadTask(providerRepository.getAll(), uploadQueue);
+            final Status oldStatus = take.getStatus();
 
             uploadTask.setOnSucceeded(event -> {
                 try {
                     final ReplayFile replayFile = uploadTask.get();
                     final Status status = replayFile.getStatus();
-
+                    if (status == oldStatus) {
+                        return;
+                    }
                     switch (status) {
                         case UPLOADED:
                             final int newCount = Integer.valueOf(uploadedCount.getValue()) + 1;
@@ -143,8 +162,15 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
                     LOG.error("Could not execute task successfully.", e);
                 }
             });
-
+            uploadTask.setOnFailed(event -> {
+                LOG.error("UploadTask failed.", event.getSource().getException());
+                uploadQueue.add(take);
+            });
             return uploadTask;
+        } catch (InterruptedException e) {
+            LOG.warn("Service interrupted while waiting for task", e);
+            return null;
+        }
     }
 
     public boolean isIdle() {

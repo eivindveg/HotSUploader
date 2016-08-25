@@ -51,4 +51,6 @@ public interface FileRepository {
     List<ReplayFile> getAll();
 
     void deleteByFileName(ReplayFile file);
+
+    ReplayFile findById(long id);
 }

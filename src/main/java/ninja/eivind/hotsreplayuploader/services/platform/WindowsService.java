@@ -22,6 +22,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,10 +33,8 @@ public class WindowsService implements PlatformService {
 
     private static final Logger LOG = LoggerFactory.getLogger(WindowsService.class);
     private Desktop desktop;
-
-    private Pattern pathPattern = Pattern.compile("[A-Z]:(\\\\|\\w+| )+");
+    private Pattern pathPattern = Pattern.compile("[A-Z]:\\\\(\\\\|(\\w+|\\.)| )+");
     private File documentsHome;
-
     public WindowsService() {
         desktop = Desktop.getDesktop();
     }
@@ -98,9 +97,9 @@ public class WindowsService implements PlatformService {
                 reader.lines().forEach(builder::append);
                 final String[] values = builder.toString().trim().split("\\s\\s+");
                 for (final String value : values) {
-                    final Matcher matcher = pathPattern.matcher(value);
-                    if (matcher.matches()) {
-                        myDocuments = matcher.group();
+                    Optional<String> matchForPath = getMatchForPath(value);
+                    if(matchForPath.isPresent()) {
+                        myDocuments = matchForPath.get();
                         break;
                     }
                 }
@@ -121,5 +120,14 @@ public class WindowsService implements PlatformService {
             LOG.warn("Result: " + myDocuments);
         }
         return new File(myDocuments);
+    }
+
+    protected Optional<String> getMatchForPath(final String path) {
+        final Matcher matcher = pathPattern.matcher(path);
+
+        if(matcher.matches()) {
+            return Optional.of(matcher.group());
+        }
+        return Optional.empty();
     }
 }

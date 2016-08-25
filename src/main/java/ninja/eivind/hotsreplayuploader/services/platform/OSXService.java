@@ -33,16 +33,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class OSXService implements PlatformService {
     private static final Logger LOG = LoggerFactory.getLogger(OSXService.class);
-    private static final String libraryPath = "/Library/Application Support";
+    private static final String LIBRARY_PATH = "/Library/Application Support";
 
     @Override
     public File getApplicationHome() {
-        return new File(USER_HOME + "/" + libraryPath + "/" + APPLICATION_DIRECTORY_NAME);
+        return new File(USER_HOME + "/" + LIBRARY_PATH + "/" + APPLICATION_DIRECTORY_NAME);
     }
 
     @Override
     public File getHotSHome() {
-        return new File(USER_HOME + "/" + libraryPath + "/" + "Blizzard/Heroes of the Storm/Accounts/");
+        return new File(USER_HOME + "/" + LIBRARY_PATH + "/" + "Blizzard/Heroes of the Storm/Accounts/");
     }
 
     @Override
@@ -98,7 +98,7 @@ public class OSXService implements PlatformService {
      * @return true if <code>defaults read -g AppleInterfaceStyle</code>
      * has an exit status of <code>0</code> (i.e. _not_ returning "key not found").
      */
-    private boolean isMacMenuBarDarkMode() {
+    private static boolean isMacMenuBarDarkMode() {
         try {
             /* check for exit status only.
              * Once there are more modes than "dark" and "default",
