@@ -20,23 +20,47 @@ import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.sql.DataSource;
 import java.io.File;
 
-public class DataSourceProvider implements Provider<DataSource> {
+@Component
+public class DataSourceFactoryBean implements Provider<DataSource>, FactoryBean<DataSource> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataSourceProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DataSourceFactoryBean.class);
     @Inject
     private PlatformService platformService;
     @Inject
     private ReleaseManager releaseManager;
+    @Inject
+    private Environment environment;
 
     @Override
     public DataSource get() {
         final File database = new File(platformService.getApplicationHome(), "database");
+        final DataSource dataSource;
+
+        if(environment.acceptsProfiles("test")) {
+            dataSource = new EmbeddedDatabaseBuilder()
+                    .setType(EmbeddedDatabaseType.H2)
+                    .build();
+        } else {
+            dataSource = getOrmLiteDataSource(database);
+        }
+
+        migrateDataSource(dataSource);
+
+        return dataSource;
+    }
+
+    private JdbcDataSource getOrmLiteDataSource(File database) {
         final JdbcDataSource dataSource = new JdbcDataSource();
         final String databaseName;
         if (releaseManager == null || releaseManager.getCurrentVersion().equals("Development")) {
@@ -44,18 +68,14 @@ public class DataSourceProvider implements Provider<DataSource> {
         } else {
             databaseName = database.toString();
         }
-
         final String url = "jdbc:h2:" + databaseName;
 
         LOG.info("Setting up DataSource with URL " + url);
         dataSource.setUrl(url);
-
-        migrateDataSource(dataSource);
-
         return dataSource;
     }
 
-    private static void migrateDataSource(JdbcDataSource dataSource) {
+    private static void migrateDataSource(DataSource dataSource) {
         final Flyway flyway = new Flyway();
 
         flyway.setDataSource(dataSource);
@@ -63,5 +83,20 @@ public class DataSourceProvider implements Provider<DataSource> {
         flyway.setValidateOnMigrate(false);
 
         flyway.migrate();
+    }
+
+    @Override
+    public DataSource getObject() throws Exception {
+        return get();
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return DataSource.class;
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return true;
     }
 }

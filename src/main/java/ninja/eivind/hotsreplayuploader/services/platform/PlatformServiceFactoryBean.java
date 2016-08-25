@@ -14,13 +14,17 @@
 
 package ninja.eivind.hotsreplayuploader.services.platform;
 
-import com.google.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.stereotype.Component;
 
-public class PlatformServiceProvider implements Provider<PlatformService> {
+import javax.inject.Provider;
 
-    private static final Logger LOG = LoggerFactory.getLogger(PlatformServiceProvider.class);
+@Component
+public class PlatformServiceFactoryBean implements Provider<PlatformService>, FactoryBean<PlatformService> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PlatformServiceFactoryBean.class);
     private static final String OS_NAME = System.getProperty("os.name");
 
     @Override
@@ -35,5 +39,20 @@ public class PlatformServiceProvider implements Provider<PlatformService> {
         } else {
             throw new PlatformNotSupportedException("Operating system not supported");
         }
+    }
+
+    @Override
+    public PlatformService getObject() throws Exception {
+        return get();
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return PlatformService.class;
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return true;
     }
 }

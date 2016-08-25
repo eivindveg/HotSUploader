@@ -40,7 +40,7 @@ public class OrmLiteFileRepositoryTest {
         TableUtils.createTable(connectionSource, UploadStatus.class);
 
         repository = new OrmLiteFileRepository(connectionSource);
-        repository.initialize();
+        repository.afterPropertiesSet();
     }
 
     @Test

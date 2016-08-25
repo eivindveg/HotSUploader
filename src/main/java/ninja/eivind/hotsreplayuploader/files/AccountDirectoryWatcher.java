@@ -17,6 +17,7 @@ package ninja.eivind.hotsreplayuploader.files;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,7 +34,7 @@ import java.util.stream.Stream;
  * Service that manages multiple {@link WatchHandler}s, which in turn manages different
  * {@link java.nio.file.WatchService}s. Runs concurrently.
  */
-@Singleton
+@Component
 public class AccountDirectoryWatcher implements Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountDirectoryWatcher.class);

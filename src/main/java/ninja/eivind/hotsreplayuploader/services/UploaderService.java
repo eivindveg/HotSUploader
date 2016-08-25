@@ -21,7 +21,6 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import ninja.eivind.hotsreplayuploader.concurrent.tasks.UploadTask;
-import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
@@ -30,6 +29,8 @@ import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
 import ninja.eivind.hotsreplayuploader.repositories.ProviderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -45,8 +46,8 @@ import java.util.stream.Collectors;
  * {@link ScheduledService}, that is responsible for uploading {@link ReplayFile}s
  * to {@link Provider}s. Does also take care of updating the UI in the process.
  */
-@Singleton
-public class UploaderService extends ScheduledService<ReplayFile> implements Initializable {
+@Component
+public class UploaderService extends ScheduledService<ReplayFile> implements InitializingBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(UploaderService.class);
     private final StringProperty uploadedCount = new SimpleStringProperty("0");
@@ -68,7 +69,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
     }
 
     @Override
-    public void initialize() {
+    public void afterPropertiesSet() {
         LOG.info("Initializing " + getClass().getSimpleName());
         watcher.addFileListener(file -> {
             fileRepository.updateReplay(file);
@@ -126,7 +127,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
         }
         try {
             final ReplayFile take = uploadQueue.take();
-            if(!take.getFile().exists()) {
+            if (!take.getFile().exists()) {
                 fileRepository.deleteReplay(take);
                 files.remove(take);
                 return createTask();
@@ -166,6 +167,10 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
                 uploadQueue.add(take);
             });
             return uploadTask;
+        } catch (InterruptedException e) {
+            LOG.warn("Service interrupted while waiting for task", e);
+            return null;
+        }
     }
 
     public boolean isIdle() {

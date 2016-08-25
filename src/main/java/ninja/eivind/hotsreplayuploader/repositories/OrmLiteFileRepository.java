@@ -20,10 +20,12 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
-import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,8 +40,8 @@ import java.util.stream.Collectors;
  * Implementation of a {@link FileRepository}, which is based on a database backend.<br>
  * Uses ORMLite to abstract database access.
  */
-@Singleton
-public class OrmLiteFileRepository implements FileRepository, Initializable, Closeable {
+@Repository
+public class OrmLiteFileRepository implements FileRepository, InitializingBean, DisposableBean {
 
     private static final String FILE_NAME = "fileName";
     @Inject
@@ -60,7 +62,7 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
      * Initializes this object after all members have been injected. Called automatically by the IoC context.
      */
     @Override
-    public void initialize() {
+    public void afterPropertiesSet() {
         try {
             dao = DaoFactory.createDao(connectionSource, ReplayFile.class);
             statusDao = DaoFactory.createDao(connectionSource, UploadStatus.class);
@@ -172,7 +174,7 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     }
 
     @Override
-    public void close() throws IOException {
+    public void destroy() throws IOException {
         connectionSource.closeQuietly();
     }
 }

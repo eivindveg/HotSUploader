@@ -54,14 +54,14 @@ public class UploadTask extends Task<ReplayFile> {
         LOG.info("Uploading replay " + replayFile);
         providers.forEach(provider -> {
 
-            final StormParser parser = new StormParser(take.getFile());
+            final StormParser parser = new StormParser(replayFile.getFile());
             Replay replay = null;
             Status preStatus;
             try {
                 replay = parser.parseReplay();
                 preStatus = provider.getPreStatus(replay);
             } catch (MpqException e) {
-                LOG.warn("Could not parse replay, deferring to upload." + take, e);
+                LOG.warn("Could not parse replay, deferring to upload: " + replayFile, e);
 
                 preStatus = Status.EXCEPTION;
             }

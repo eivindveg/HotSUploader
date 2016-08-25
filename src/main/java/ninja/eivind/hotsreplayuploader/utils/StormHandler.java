@@ -17,6 +17,7 @@ package ninja.eivind.hotsreplayuploader.utils;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.models.Player;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
  * and provides several convencience methods like OS detection or
  * data mining game related information .
  */
-@Singleton
+@Component
 public class StormHandler {
 
     private static final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
