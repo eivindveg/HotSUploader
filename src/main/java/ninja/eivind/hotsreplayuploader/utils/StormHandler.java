@@ -17,10 +17,9 @@ package ninja.eivind.hotsreplayuploader.utils;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.models.Player;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +38,7 @@ public class StormHandler {
     private static final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
 
     private File hotsHome;
-    @Inject
+    @Autowired
     private PlatformService platformService;
 
     public StormHandler() {

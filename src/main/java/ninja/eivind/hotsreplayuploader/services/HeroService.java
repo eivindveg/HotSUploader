@@ -22,10 +22,9 @@ import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.List;
 
 /**
@@ -35,7 +34,7 @@ import java.util.List;
 public class HeroService extends ScheduledService<List<HotSLogsHero>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(HeroService.class);
-    @Inject
+    @Autowired
     private SimpleHttpClient httpClient;
 
     public HeroService() {

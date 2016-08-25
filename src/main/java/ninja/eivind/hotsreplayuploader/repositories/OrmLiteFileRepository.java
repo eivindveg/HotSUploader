@@ -25,11 +25,9 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.Closeable;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -44,10 +42,10 @@ import java.util.stream.Collectors;
 public class OrmLiteFileRepository implements FileRepository, InitializingBean, DisposableBean {
 
     private static final String FILE_NAME = "fileName";
-    @Inject
+    @Autowired
     private ConnectionSource connectionSource;
     private Dao<ReplayFile, Long> dao;
-    @Inject
+    @Autowired
     private AccountDirectoryWatcher accountDirectoryWatcher;
     private Dao<UploadStatus, Long> statusDao;
 

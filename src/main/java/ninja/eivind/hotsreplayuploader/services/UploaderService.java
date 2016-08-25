@@ -30,10 +30,9 @@ import ninja.eivind.hotsreplayuploader.repositories.ProviderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -53,11 +52,11 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
     private final StringProperty uploadedCount = new SimpleStringProperty("0");
     private final BlockingQueue<ReplayFile> uploadQueue;
     private final ObservableList<ReplayFile> files;
-    @Inject
+    @Autowired
     private AccountDirectoryWatcher watcher;
-    @Inject
+    @Autowired
     private FileRepository fileRepository;
-    @Inject
+    @Autowired
     private ProviderRepository providerRepository;
 
     public UploaderService() throws IOException {

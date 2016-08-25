@@ -21,29 +21,29 @@ import org.h2.jdbcx.JdbcDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.sql.DataSource;
+import javax.xml.ws.Provider;
 import java.io.File;
 
 @Component
-public class DataSourceFactoryBean implements Provider<DataSource>, FactoryBean<DataSource> {
+public class DataSourceFactoryBean implements FactoryBean<DataSource> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataSourceFactoryBean.class);
-    @Inject
+    @Autowired
     private PlatformService platformService;
-    @Inject
+    @Autowired
     private ReleaseManager releaseManager;
-    @Inject
+    @Autowired
     private Environment environment;
 
     @Override
-    public DataSource get() {
+    public DataSource getObject() throws Exception {
         final File database = new File(platformService.getApplicationHome(), "database");
         final DataSource dataSource;
 
@@ -83,11 +83,6 @@ public class DataSourceFactoryBean implements Provider<DataSource>, FactoryBean<
         flyway.setValidateOnMigrate(false);
 
         flyway.migrate();
-    }
-
-    @Override
-    public DataSource getObject() throws Exception {
-        return get();
     }
 
     @Override

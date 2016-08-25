@@ -17,10 +17,9 @@ package ninja.eivind.hotsreplayuploader.files;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +41,7 @@ public class AccountDirectoryWatcher implements Closeable {
     private Set<WatchHandler> watchHandlers = new HashSet<>();
     private Collection<Thread> threads;
 
-    @Inject
+    @Autowired
     public AccountDirectoryWatcher(StormHandler stormHandler) {
         watchDirectories = new HashSet<>(stormHandler.getReplayDirectories());
         threads = new HashSet<>();

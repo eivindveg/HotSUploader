@@ -16,15 +16,14 @@ package ninja.eivind.hotsreplayuploader.models.stringconverters;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
-import javax.inject.Singleton;
+import org.springframework.stereotype.Component;
 
 /**
  * Binds a {@link StringProperty} representing the current application status to various elements, including the
  * {@link java.awt.SystemTray} icon and the {@link ninja.eivind.hotsreplayuploader.window.HomeController}'s status
  * display.
  */
-@Singleton
+@Component
 public class StatusBinder {
 
     private final StringProperty message = new SimpleStringProperty();

@@ -19,16 +19,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Provider;
-
 @Component
-public class PlatformServiceFactoryBean implements Provider<PlatformService>, FactoryBean<PlatformService> {
+public class PlatformServiceFactoryBean implements FactoryBean<PlatformService> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PlatformServiceFactoryBean.class);
     private static final String OS_NAME = System.getProperty("os.name");
 
     @Override
-    public PlatformService get() {
+    public PlatformService getObject() throws Exception {
         LOG.info("Constructing PlatformService for " + OS_NAME);
         if (OS_NAME.contains("Windows")) {
             return new WindowsService();
@@ -39,11 +37,6 @@ public class PlatformServiceFactoryBean implements Provider<PlatformService>, Fa
         } else {
             throw new PlatformNotSupportedException("Operating system not supported");
         }
-    }
-
-    @Override
-    public PlatformService getObject() throws Exception {
-        return get();
     }
 
     @Override

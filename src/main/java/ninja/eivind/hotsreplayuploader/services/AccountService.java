@@ -21,9 +21,9 @@ import javafx.util.Duration;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,11 +34,11 @@ import java.util.List;
 @Component
 public class AccountService extends ScheduledService<List<Account>> {
 
-    @Inject
+    @Autowired
     private StormHandler stormHandler;
-    @Inject
+    @Autowired
     private SimpleHttpClient httpClient;
-    @Inject
+    @Autowired
     private ObjectMapper mapper;
 
     public AccountService() {

@@ -31,13 +31,13 @@ import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.inject.Inject;
 import java.awt.*;
 import java.net.URL;
 
@@ -51,19 +51,19 @@ public class Client extends Application implements ApplicationContextAware {
 
     private static String[] launchArgs;
 
-    @Inject
+    @Autowired
     private FXMLLoader fxmlLoader;
-    @Inject
+    @Autowired
     private ReleaseManager releaseManager;
-    @Inject
+    @Autowired
     private PlatformService platformService;
-    @Inject
+    @Autowired
     private StatusBinder statusBinder;
     private ConfigurableApplicationContext context;
 
-    public static void main(String... args) {
+    public static void main(String... args) throws Exception {
         launchArgs = args;
-        PlatformService platformService = new PlatformServiceFactoryBean().get();
+        PlatformService platformService = new PlatformServiceFactoryBean().getObject();
         if (platformService.isPreloaderSupported()) {
             LOG.info("Launching with preloader.");
             LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);

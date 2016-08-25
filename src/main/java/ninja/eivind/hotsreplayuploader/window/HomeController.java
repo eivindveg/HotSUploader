@@ -44,8 +44,8 @@ import ninja.eivind.hotsreplayuploader.versions.GitHubRelease;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -93,17 +93,17 @@ public class HomeController implements JavaFXController {
     @FXML
     private Label uploadedReplays;
 
-    @Inject
+    @Autowired
     private UploaderService uploaderService;
-    @Inject
+    @Autowired
     private PlatformService platformService;
-    @Inject
+    @Autowired
     private ReleaseManager releaseManager;
-    @Inject
+    @Autowired
     private AccountService accountService;
-    @Inject
+    @Autowired
     private StatusBinder statusBinder;
-    @Inject
+    @Autowired
     private HeroService heroService;
 
 
