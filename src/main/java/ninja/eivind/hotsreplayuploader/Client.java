@@ -84,7 +84,7 @@ public class Client extends Application implements ApplicationContextAware {
 
     @Override
     public void init() {
-        ConfigurableApplicationContext context = SpringApplication.run(Client.class, launchArgs);
+        context = SpringApplication.run(Client.class, launchArgs);
         context.getAutowireCapableBeanFactory().autowireBean(this);
 
         //add a shutdown hook to be really sure, resources are closed properly
