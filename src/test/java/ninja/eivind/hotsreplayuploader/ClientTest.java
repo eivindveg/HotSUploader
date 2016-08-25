@@ -23,13 +23,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import rules.JavaFXThreadingRule;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ import static org.junit.Assert.*;
 
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(Client.class)
+@SpringBootTest
 public class ClientTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientTest.class);
@@ -51,7 +51,7 @@ public class ClientTest {
     @Rule
     public JavaFXThreadingRule javaFXThreadingRule = new JavaFXThreadingRule();
 
-    @Inject
+    @Autowired
     private DataSource dataSource;
 
     @BeforeClass
