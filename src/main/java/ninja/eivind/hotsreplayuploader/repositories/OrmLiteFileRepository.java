@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of a {@link FileRepository}, which is based on a database backend.<br>
@@ -93,9 +94,10 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     @Override
     public List<ReplayFile> getAll() {
         //update the DB with any file changes first
-        accountDirectoryWatcher.getAllFiles()
+        checkForDatabaseIntegrity(accountDirectoryWatcher.getAllFiles()
                 .map(ReplayFile::fromDirectory)
-                .forEach(this::checkForDatabaseIntegrity);
+                .flatMap(List::stream)
+                .collect(Collectors.toList()));
 
        //get a fully refreshed copy containing all changes from the db
         try {
@@ -110,17 +112,13 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
             final List<ReplayFile> fromDb = dao.queryForAll();
 
             //start a batch task to speed up initial startups
-            dao.callBatchTasks(new Callable<Void>() {
-                public Void call() throws Exception {
-                    for(ReplayFile replayFile : replayFiles) {
-                        if(!fromDb.contains(replayFile))
-                            createReplay(replayFile);
-                        else if(!replayFile.getFile().exists())
-                            deleteReplay(replayFile);
-                    }
+            dao.callBatchTasks((Callable<Void>) () -> {
+                //create a db entry for every new physical file
+                replayFiles.stream().filter(r -> !fromDb.contains(r)).forEach(this::createReplay);
+                //remove non-existing files from the db
+                fromDb.stream().filter(r -> !replayFiles.contains(r)).forEach(this::deleteReplay);
 
-                    return null;
-                }
+                return null;
             });
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -69,6 +69,9 @@ public class HotsLogsProvider extends Provider {
         }
 
         final File file = replayFile.getFile();
+        if(!(file.exists() && file.canRead())) {
+            return Status.EXCEPTION;
+        }
 
         final String fileName = UUID.randomUUID() + ".StormReplay";
         LOG.info("Assigning remote file name " + fileName + " to " + replayFile);
