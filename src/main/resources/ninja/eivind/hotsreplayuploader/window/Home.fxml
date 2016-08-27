@@ -1,41 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="header" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ninja.eivind.hotsreplayuploader.window.HomeController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="header" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ninja.eivind.hotsreplayuploader.window.HomeController">
     <padding>
         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
     </padding>
    <bottom>
-      <HBox BorderPane.alignment="CENTER">
-         <children>
-            <HBox styleClass="counter">
-               <children>
-                  <Label styleClass="primary" text="Uploaded Replays: " HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="uploadedReplays" styleClass="secondary" text="N/A">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
-         </children>
-      </HBox>
+      <HBox BorderPane.alignment="CENTER" />
    </bottom>
    <right>
           <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
@@ -143,43 +130,61 @@
    </right>
    <left>
       <BorderPane prefHeight="362.0" prefWidth="612.0" BorderPane.alignment="CENTER">
-         <left>
-            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+         <top>
+            <HBox BorderPane.alignment="CENTER">
                <children>
-                  <HBox>
+                  <HBox styleClass="counter" HBox.hgrow="SOMETIMES">
                      <children>
-                        <HBox styleClass="counter" HBox.hgrow="SOMETIMES">
-                           <children>
-                              <Label styleClass="primary" text="New Replays: ">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="newReplaysCount" styleClass="secondary" text="N/A">
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <HBox styleClass="counter">
-                           <children>
-                                    <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#00b000">
-                                        <font>
-                                            <Font name="System Bold" size="18.0" />
-                                        </font>
-                                    </Label>
-                           </children>
-                        </HBox>
+                        <Label styleClass="primary" text="New Replays: ">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="newReplaysCount" styleClass="secondary" text="N/A">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
                      </children>
                   </HBox>
-                          <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="335.0" prefWidth="590.0">
-                     <VBox.margin>
-                        <Insets left="15.0" />
-                     </VBox.margin></ListView>
+                  <HBox styleClass="counter">
+                     <children>
+                              <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#00b000">
+                                  <font>
+                                      <Font name="System Bold" size="18.0" />
+                                  </font>
+                              </Label>
+                     </children>
+                  </HBox>
                </children>
-            </VBox>
-         </left>
+            </HBox>
+         </top>
+         <center>
+                    <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="335.0" prefWidth="590.0" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </ListView>
+         </center>
+         <padding>
+            <Insets left="16.0" right="16.0" />
+         </padding>
+         <bottom>
+            <HBox BorderPane.alignment="CENTER">
+               <children>
+                  <Label styleClass="primary" text="Uploaded Replays: " HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="uploadedReplays" styleClass="secondary" text="N/A">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </bottom>
       </BorderPane>
    </left>
    <top>
