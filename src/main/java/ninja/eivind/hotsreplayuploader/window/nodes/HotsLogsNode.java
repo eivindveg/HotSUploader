@@ -20,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import ninja.eivind.hotsreplayuploader.di.FXMLLoaderFactory;
@@ -52,6 +53,8 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
     @FXML
     private Button viewProfile;
 
+    @FXML
+    private ImageView logo;
     @FXML
     private Label qmMmr;
     @FXML
@@ -156,6 +159,11 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
         setupAccounts();
         fetchHeroNames();
         setPlayerSearchActions();
+        logo.setOnMouseClicked(event -> doOpenHotsLogs());
+    }
+
+    private void doOpenHotsLogs() {
+        platformService.browse("https://www.hotslogs.com/Default");
     }
 
     private void setPlayerSearchActions() {

@@ -47,9 +47,6 @@ public class HomeController implements JavaFXController {
     @FXML
     private Hyperlink updateLink;
 
-    @FXML
-    private ImageView logo;
-
     @Autowired
     private PlatformService platformService;
     @Autowired
@@ -58,8 +55,6 @@ public class HomeController implements JavaFXController {
 
     @Override
     public void afterPropertiesSet() {
-        logo.setOnMouseClicked(event -> doOpenHotsLogs());
-
         checkNewVersion();
     }
 
@@ -79,10 +74,6 @@ public class HomeController implements JavaFXController {
         newVersionLabel.setText(newerVersionIfAny.getTagName());
         updateLink.setOnMouseClicked(value -> platformService.browse(newerVersionIfAny.getHtmlUrl()));
         updatePane.setVisible(true);
-    }
-
-    private void doOpenHotsLogs() {
-        platformService.browse("https://www.hotslogs.com/Default");
     }
 
 }
