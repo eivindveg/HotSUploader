@@ -97,24 +97,29 @@ public class Client extends Application implements ApplicationContextAware {
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        final URL logo = platformService.getLogoUrl();
-        final Image image = new Image(logo.toString());
-        primaryStage.getIcons().add(image);
-        primaryStage.setResizable(false);
-        addToTray(primaryStage);
-        platformService.setupWindowBehaviour(primaryStage);
+        try {
+            final URL logo = platformService.getLogoUrl();
+            final Image image = new Image(logo.toString());
+            primaryStage.getIcons().add(image);
+            primaryStage.setResizable(false);
+            addToTray(primaryStage);
+            platformService.setupWindowBehaviour(primaryStage);
 
-        // Set window title
-        final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
-        primaryStage.setTitle(windowTitle);
+            // Set window title
+            final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
+            primaryStage.setTitle(windowTitle);
 
-        Scene scene = sceneBuilderFactory.builder()
-                .setLocation("/ninja/eivind/hotsreplayuploader/window/Home.fxml")
-                .build();
+            Scene scene = sceneBuilderFactory.builder()
+                    .setLocation("/ninja/eivind/hotsreplayuploader/window/Home.fxml")
+                    .build();
 
 
-        primaryStage.setScene(scene);
-        primaryStage.show();
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (Exception e) {
+            LOG.error("Failed to start", e);
+            throw e;
+        }
     }
 
     private void addToTray(final Stage primaryStage) {

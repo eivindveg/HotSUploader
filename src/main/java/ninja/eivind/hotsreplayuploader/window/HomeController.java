@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2015-2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,10 +64,7 @@ public class HomeController implements JavaFXController {
     private Label newVersionLabel;
     @FXML
     private Hyperlink updateLink;
-    @FXML
-    private ListView<ReplayFile> newReplaysView;
-    @FXML
-    private Label status;
+
     @FXML
     private Label qmMmr;
     @FXML
@@ -88,10 +85,6 @@ public class HomeController implements JavaFXController {
     private Button lookupHero;
     @FXML
     private ComboBox<HotSLogsHero> heroName;
-    @FXML
-    private Label newReplaysCount;
-    @FXML
-    private Label uploadedReplays;
 
     @Autowired
     private UploaderService uploaderService;
@@ -101,8 +94,7 @@ public class HomeController implements JavaFXController {
     private ReleaseManager releaseManager;
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private StatusBinder statusBinder;
+
     @Autowired
     private HeroService heroService;
 
@@ -112,13 +104,7 @@ public class HomeController implements JavaFXController {
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
         setPlayerSearchActions();
-        bindList();
-        setupFileHandler();
-        if (uploaderService.isIdle()) {
-            setIdle();
-        }
 
-        status.textProperty().bind(statusBinder.message());
         setupAccounts();
 
         checkNewVersion();
@@ -258,49 +244,5 @@ public class HomeController implements JavaFXController {
         }
     }
 
-    private void setupFileHandler() {
-        uploaderService.setRestartOnFailure(true);
-        uploaderService.setOnSucceeded(event -> {
-            if (HotsLogsProvider.isMaintenance()) {
-                setMaintenance();
-            } else if (uploaderService.isIdle()) {
-                setIdle();
-            } else {
-                setUploading();
-            }
-        });
-        uploaderService.setOnFailed(event -> setError());
-        uploaderService.start();
-    }
 
-    private void bindList() {
-        final ObservableList<ReplayFile> files = uploaderService.getFiles();
-        newReplaysCount.setText(String.valueOf(files.size()));
-        files.addListener((ListChangeListener<ReplayFile>) c -> newReplaysCount.setText(String.valueOf(files.size())));
-        newReplaysView.setItems(files.sorted(new ReplayFileComparator()));
-        newReplaysView.setCellFactory(new CustomListCellFactory(uploaderService));
-
-        uploadedReplays.textProperty().bind(uploaderService.getUploadedCount());
-    }
-
-    private void setStatus(final String description, final Paint color) {
-        statusBinder.message().setValue(description);
-        status.textFillProperty().setValue(Paint.valueOf("#38d3ff"));
-    }
-
-    private void setIdle() {
-        setStatus("Idle", Paint.valueOf("#38d3ff"));
-    }
-
-    private void setMaintenance() {
-        setStatus("Maintenance", Paint.valueOf("#FF0000"));
-    }
-
-    private void setUploading() {
-        setStatus("Uploading", Paint.valueOf("#00B000"));
-    }
-
-    private void setError() {
-        setStatus("Connection error", Paint.valueOf("#FF0000"));
-    }
 }
