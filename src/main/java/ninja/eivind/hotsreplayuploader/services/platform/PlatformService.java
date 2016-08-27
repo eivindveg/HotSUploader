@@ -102,4 +102,6 @@ public interface PlatformService {
     URL getLogoUrl();
 
     boolean isPreloaderSupported();
+
+    File getTempDirectory();
 }

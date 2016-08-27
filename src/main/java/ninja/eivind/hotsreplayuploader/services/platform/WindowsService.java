@@ -89,6 +89,11 @@ public class WindowsService implements PlatformService {
         return true;
     }
 
+    @Override
+    public File getTempDirectory() {
+        return new File(System.getProperty("java.io.tmpdir"));
+    }
+
     private File findMyDocuments() throws FileNotFoundException {
         Process p = null;
         String myDocuments = null;

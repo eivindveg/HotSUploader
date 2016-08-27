@@ -91,6 +91,11 @@ public class OSXService implements PlatformService {
     }
 
     @Override
+    public File getTempDirectory() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
     public TrayIcon getTrayIcon(final Stage primaryStage) throws PlatformNotSupportedException {
         final URL imageURL = getLogoUrl();
         return buildTrayIcon(imageURL, primaryStage);

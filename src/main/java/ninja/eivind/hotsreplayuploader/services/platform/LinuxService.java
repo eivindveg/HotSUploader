@@ -121,4 +121,9 @@ public class LinuxService implements PlatformService {
     public boolean isPreloaderSupported() {
         return false;
     }
+
+    @Override
+    public File getTempDirectory() {
+        return new File(System.getProperty("java.io.tmpdir"));
+    }
 }
