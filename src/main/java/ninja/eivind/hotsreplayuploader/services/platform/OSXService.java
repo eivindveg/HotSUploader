@@ -18,6 +18,7 @@ import javafx.event.EventType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +47,12 @@ public class OSXService implements PlatformService {
     }
 
     @Override
-    public void browse(final URI uri) throws IOException {
-        Desktop.getDesktop().browse(uri);
+    public void browse(final String uri) {
+        try {
+            Desktop.getDesktop().browse(SimpleHttpClient.encode(uri));
+        } catch (IOException e) {
+            LOG.error("Could not open " + uri + " in browser.", e);
+        }
     }
 
     @Override

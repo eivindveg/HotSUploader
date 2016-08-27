@@ -17,8 +17,6 @@ package ninja.eivind.hotsreplayuploader;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -28,12 +26,13 @@ import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceFactoryBean;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
+import ninja.eivind.hotsreplayuploader.window.builder.SceneBuilderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -52,13 +51,15 @@ public class Client extends Application implements ApplicationContextAware {
     private static String[] launchArgs;
 
     @Autowired
-    private FXMLLoader fxmlLoader;
-    @Autowired
     private ReleaseManager releaseManager;
     @Autowired
     private PlatformService platformService;
     @Autowired
     private StatusBinder statusBinder;
+
+    @Autowired
+    private SceneBuilderFactory sceneBuilderFactory;
+
     private ConfigurableApplicationContext context;
 
     public static void main(String... args) throws Exception {
@@ -84,7 +85,8 @@ public class Client extends Application implements ApplicationContextAware {
 
     @Override
     public void init() {
-        context = SpringApplication.run(Client.class, launchArgs);
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(Client.class);
+        context = builder.headless(false).run(launchArgs);
         context.getAutowireCapableBeanFactory().autowireBean(this);
 
         //add a shutdown hook to be really sure, resources are closed properly
@@ -93,22 +95,29 @@ public class Client extends Application implements ApplicationContextAware {
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        final URL logo = platformService.getLogoUrl();
-        final Image image = new Image(logo.toString());
-        primaryStage.getIcons().add(image);
-        primaryStage.setResizable(false);
-        addToTray(primaryStage);
-        platformService.setupWindowBehaviour(primaryStage);
+        try {
+            final URL logo = platformService.getLogoUrl();
+            final Image image = new Image(logo.toString());
+            primaryStage.getIcons().add(image);
+            primaryStage.setResizable(false);
+            addToTray(primaryStage);
+            platformService.setupWindowBehaviour(primaryStage);
 
-        // Set window title
-        final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
-        primaryStage.setTitle(windowTitle);
+            // Set window title
+            final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
+            primaryStage.setTitle(windowTitle);
 
-        fxmlLoader.setLocation(getClass().getResource("/ninja/eivind/hotsreplayuploader/window/Home.fxml"));
-        final Parent root = fxmlLoader.load();
+            Scene scene = sceneBuilderFactory.builder()
+                    .setLocation("/ninja/eivind/hotsreplayuploader/window/Home.fxml")
+                    .build();
 
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (Exception e) {
+            LOG.error("Failed to start", e);
+            throw e;
+        }
     }
 
     private void addToTray(final Stage primaryStage) {

@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package ninja.eivind.hotsreplayuploader.di;
+package ninja.eivind.hotsreplayuploader.di.nodes;
 
 import javafx.fxml.FXMLLoader;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
- * Functional interface used by JavaFX controllers that need to be initialized by the {@link FXMLLoader}
+ * Functional interface used by JavaFX {@link javafx.scene.Node}s that need to be initialized by the {@link FXMLLoader}
  */
 @FunctionalInterface
-public interface JavaFXController extends InitializingBean {
+public interface JavaFXNode extends InitializingBean {
 
 }

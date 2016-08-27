@@ -1,187 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="header" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ninja.eivind.hotsreplayuploader.window.HomeController">
+<?import ninja.eivind.hotsreplayuploader.window.nodes.UploaderNode?>
+<?import ninja.eivind.hotsreplayuploader.window.nodes.HotsLogsNode?>
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="header" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ninja.eivind.hotsreplayuploader.window.HomeController">
     <padding>
         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
     </padding>
    <bottom>
-      <HBox BorderPane.alignment="CENTER">
-         <children>
-            <HBox styleClass="counter">
-               <children>
-                  <Label styleClass="primary" text="Uploaded Replays: " HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="uploadedReplays" styleClass="secondary" text="N/A">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
-         </children>
-      </HBox>
+      <HBox BorderPane.alignment="CENTER" />
    </bottom>
    <right>
-          <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
-              <children>
-            <ImageView fx:id="logo" fitWidth="225.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../images/hotslogs-large.png" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <effect>
-                  <Bloom threshold="0.95" />
-               </effect>
-            </ImageView>
-                  <BorderPane>
-               <top>
-                        <Label alignment="CENTER" styleClass="primary" text="Players" BorderPane.alignment="CENTER">
-                            <font>
-                                <Font name="System Bold" size="18.0" />
-                            </font>
-                        </Label>
-               </top>
-               <right>
-                        <Button fx:id="viewProfile" disable="true" mnemonicParsing="false" onAction="#doViewProfile" prefWidth="75.0" snapToPixel="false" text="Profile" BorderPane.alignment="CENTER">
-                            <BorderPane.margin>
-                                <Insets />
-                            </BorderPane.margin>
-                        </Button>
-               </right>
-               <center>
-                          <ComboBox fx:id="accountSelect" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
-                              <BorderPane.margin>
-                                  <Insets />
-                              </BorderPane.margin>
-                          </ComboBox>
-               </center>
-                  </BorderPane>
-                  <BorderPane>
-                      <left>
-                          <Label styleClass="primary" text="Team League MMR: " BorderPane.alignment="CENTER" />
-                      </left>
-                      <right>
-                          <Label fx:id="tlMmr" styleClass="secondary" text="N/A" BorderPane.alignment="CENTER" />
-                      </right>
-                  </BorderPane>
-                  <BorderPane>
-                      <left>
-                          <Label styleClass="primary" text="Hero League MMR: " BorderPane.alignment="CENTER" />
-                      </left>
-                      <right>
-                          <Label fx:id="hlMmr" styleClass="secondary" text="N/A" BorderPane.alignment="CENTER" />
-                      </right>
-                  </BorderPane>
-                  <BorderPane>
-                      <left>
-                          <Label styleClass="primary" text="Quick Match MMR: " BorderPane.alignment="CENTER" />
-                      </left>
-                      <right>
-                          <Label fx:id="qmMmr" styleClass="secondary" text="N/A" BorderPane.alignment="CENTER" />
-                      </right>
-                  </BorderPane>
-            <VBox alignment="BOTTOM_CENTER" spacing="20.0" VBox.vgrow="SOMETIMES">
-               <children>
-                        <BorderPane>
-                            <top>
-                                <Label styleClass="primary" text="Lookup Player" BorderPane.alignment="CENTER">
-                                    <font>
-                                        <Font name="System Bold" size="14.0" />
-                                    </font>
-                                </Label>
-                            </top>
-                            <right>
-                                <Button fx:id="playerSearch" mnemonicParsing="false" onAction="#doPlayerSearch" prefWidth="75.0" text="Search" BorderPane.alignment="CENTER" />
-                            </right>
-                            <center>
-                                <TextField fx:id="playerSearchInput" maxWidth="1.7976931348623157E308" promptText="Enter Player Name" BorderPane.alignment="CENTER">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets></TextField>
-                            </center>
-                        </BorderPane>
-                        <BorderPane>
-                            <top>
-                                <Label styleClass="primary" text="Lookup Hero Details" BorderPane.alignment="CENTER">
-                                    <font>
-                                        <Font name="System Bold" size="14.0" />
-                                    </font>
-                                </Label>
-                            </top>
-                            <center>
-                                <ComboBox fx:id="heroName" editable="true" maxWidth="1.7976931348623157E308" promptText="Enter Hero Name" BorderPane.alignment="CENTER" />
-                            </center>
-                            <right>
-                                <Button fx:id="lookupHero" mnemonicParsing="false" onAction="#doLookupHero" prefWidth="75.0" text="View" BorderPane.alignment="CENTER" />
-                            </right>
-                        </BorderPane>
-               </children>
-            </VBox>
-              </children>
-              <padding>
-                  <Insets left="5.0" right="5.0" />
-              </padding>
-          </VBox>
+       <HotsLogsNode />
    </right>
-   <left>
-      <BorderPane prefHeight="362.0" prefWidth="612.0" BorderPane.alignment="CENTER">
-         <left>
-            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
-               <children>
-                  <HBox>
-                     <children>
-                        <HBox styleClass="counter" HBox.hgrow="SOMETIMES">
-                           <children>
-                              <Label styleClass="primary" text="New Replays: ">
-                                 <font>
-                                    <Font name="System Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="newReplaysCount" styleClass="secondary" text="N/A">
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <HBox styleClass="counter">
-                           <children>
-                                    <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#00b000">
-                                        <font>
-                                            <Font name="System Bold" size="18.0" />
-                                        </font>
-                                    </Label>
-                           </children>
-                        </HBox>
-                     </children>
-                  </HBox>
-                          <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="335.0" prefWidth="590.0">
-                     <VBox.margin>
-                        <Insets left="15.0" />
-                     </VBox.margin></ListView>
-               </children>
-            </VBox>
-         </left>
-      </BorderPane>
-   </left>
    <top>
       <HBox BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -229,4 +76,11 @@
          </children>
       </HBox>
    </top>
+   <center>
+      <Pane BorderPane.alignment="CENTER">
+         <children>
+             <UploaderNode />
+         </children>
+      </Pane>
+   </center>
 </BorderPane>

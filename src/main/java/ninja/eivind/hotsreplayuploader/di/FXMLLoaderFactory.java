@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
 package ninja.eivind.hotsreplayuploader.di;
 
 import javafx.fxml.FXMLLoader;
-import org.springframework.beans.factory.InitializingBean;
+
+import java.util.function.Supplier;
 
 /**
- * Functional interface used by JavaFX controllers that need to be initialized by the {@link FXMLLoader}
+ * Marker interface for an object {@link FXMLLoader} provider. Needs to be its own interface in order to be visible as
+ * valid Spring bean.
  */
-@FunctionalInterface
-public interface JavaFXController extends InitializingBean {
-
+public interface FXMLLoaderFactory extends Supplier<FXMLLoader> {
 }
