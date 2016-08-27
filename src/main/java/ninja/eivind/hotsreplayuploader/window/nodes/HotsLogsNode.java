@@ -34,7 +34,6 @@ import ninja.eivind.hotsreplayuploader.services.AccountService;
 import ninja.eivind.hotsreplayuploader.services.HeroService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.utils.FXUtils;
-import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
