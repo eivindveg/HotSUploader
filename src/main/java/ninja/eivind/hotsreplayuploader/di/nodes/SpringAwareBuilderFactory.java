@@ -18,24 +18,31 @@ package ninja.eivind.hotsreplayuploader.di.nodes;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.util.Builder;
 import javafx.util.BuilderFactory;
-import ninja.eivind.hotsreplayuploader.di.JavaFXController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * {@link BuilderFactory} implementation that can run special {@link JavaFXNode}s through a
+ * {@link AutowireCapableBeanFactory} before activing it as a JavaFX {@link javafx.scene.Node}
+ */
 @Component
 public class SpringAwareBuilderFactory implements BuilderFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(SpringAwareBuilderFactory.class);
+    private final AutowireCapableBeanFactory beanFactory;
+    private final JavaFXBuilderFactory javaFXBuilderFactory = new JavaFXBuilderFactory();
+
     @Autowired
-    private AutowireCapableBeanFactory beanFactory;
-    private JavaFXBuilderFactory javaFXBuilderFactory = new JavaFXBuilderFactory();
+    public SpringAwareBuilderFactory(AutowireCapableBeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+    }
 
     @Override
     public Builder<?> getBuilder(Class<?> type) {
-        if(JavaFXNode.class.isAssignableFrom(type)) {
+        if (JavaFXNode.class.isAssignableFrom(type)) {
             logger.info("Creating custom component " + type.getName());
             return (Builder<JavaFXNode>) () -> {
                 JavaFXNode bean = (JavaFXNode) beanFactory.createBean(type);

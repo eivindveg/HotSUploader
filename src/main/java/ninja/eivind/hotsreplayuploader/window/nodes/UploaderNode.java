@@ -37,6 +37,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * The primary {@link javafx.scene.Node} responsible for managing UI components related to the upload of
+ * {@link ReplayFile}
+ */
 public class UploaderNode extends VBox implements JavaFXNode {
 
     private static final Logger logger = LoggerFactory.getLogger(UploaderNode.class);

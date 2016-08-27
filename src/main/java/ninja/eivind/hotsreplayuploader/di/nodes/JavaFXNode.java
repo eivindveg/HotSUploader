@@ -14,8 +14,12 @@
 
 package ninja.eivind.hotsreplayuploader.di.nodes;
 
+import javafx.fxml.FXMLLoader;
 import org.springframework.beans.factory.InitializingBean;
 
+/**
+ * Functional interface used by JavaFX {@link javafx.scene.Node}s that need to be initialized by the {@link FXMLLoader}
+ */
 @FunctionalInterface
 public interface JavaFXNode extends InitializingBean {
 

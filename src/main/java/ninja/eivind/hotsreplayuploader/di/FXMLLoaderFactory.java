@@ -18,5 +18,9 @@ import javafx.fxml.FXMLLoader;
 
 import java.util.function.Supplier;
 
+/**
+ * Marker interface for an object {@link FXMLLoader} provider. Needs to be its own interface in order to be visible as
+ * valid Spring bean.
+ */
 public interface FXMLLoaderFactory extends Supplier<FXMLLoader> {
 }
