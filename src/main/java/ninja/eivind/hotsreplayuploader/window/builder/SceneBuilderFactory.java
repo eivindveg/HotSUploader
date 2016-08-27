@@ -18,6 +18,10 @@ import ninja.eivind.hotsreplayuploader.di.FXMLLoaderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Provider for {@link SceneBuilder}, ensuring each Scene Builder gets a fresh {@link javafx.fxml.FXMLLoader} that is
+ * not contaminated by loading other controllers or nodes.
+ */
 @Component
 public class SceneBuilderFactory {
 

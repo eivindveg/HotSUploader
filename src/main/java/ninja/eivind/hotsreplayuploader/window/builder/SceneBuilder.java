@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,12 +19,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import java.io.IOException;
 
+/**
+ * Builder object for quickly instantiating {@link Scene}s for use in new windows.
+ */
 public class SceneBuilder {
     private FXMLLoader loader;
     private String location;
 
 
-    public SceneBuilder(FXMLLoader loader) {
+    SceneBuilder(FXMLLoader loader) {
         this.loader = loader;
     }
 
