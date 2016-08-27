@@ -23,16 +23,21 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import ninja.eivind.hotsreplayuploader.di.JavaFXController;
+import ninja.eivind.hotsreplayuploader.di.nodes.FXComponent;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotsLogsProvider;
 import ninja.eivind.hotsreplayuploader.scene.control.CustomListCellFactory;
 import ninja.eivind.hotsreplayuploader.services.UploaderService;
 import ninja.eivind.hotsreplayuploader.utils.ReplayFileComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@FXComponent
 public class UploaderNode extends VBox implements JavaFXController {
 
+    private static final Logger logger = LoggerFactory.getLogger(UploaderNode.class);
     @FXML
     private FXMLLoader loader;
 
@@ -70,6 +75,39 @@ public class UploaderNode extends VBox implements JavaFXController {
 
     @Override
     public void initialize() {
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
+        logger.info("Initialize called");
         setupFileHandler();
         if (uploaderService.isIdle()) {
             setIdle();
