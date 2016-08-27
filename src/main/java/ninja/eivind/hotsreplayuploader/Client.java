@@ -28,6 +28,8 @@ import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceFactoryBean;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
+import ninja.eivind.hotsreplayuploader.window.builder.SceneBuilder;
+import ninja.eivind.hotsreplayuploader.window.builder.SceneBuilderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -52,13 +54,15 @@ public class Client extends Application implements ApplicationContextAware {
     private static String[] launchArgs;
 
     @Autowired
-    private FXMLLoader fxmlLoader;
-    @Autowired
     private ReleaseManager releaseManager;
     @Autowired
     private PlatformService platformService;
     @Autowired
     private StatusBinder statusBinder;
+
+    @Autowired
+    private SceneBuilderFactory sceneBuilderFactory;
+
     private ConfigurableApplicationContext context;
 
     public static void main(String... args) throws Exception {
@@ -104,10 +108,12 @@ public class Client extends Application implements ApplicationContextAware {
         final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
         primaryStage.setTitle(windowTitle);
 
-        fxmlLoader.setLocation(getClass().getResource("/ninja/eivind/hotsreplayuploader/window/Home.fxml"));
-        final Parent root = fxmlLoader.load();
+        Scene scene = sceneBuilderFactory.builder()
+                .setLocation("/ninja/eivind/hotsreplayuploader/window/Home.fxml")
+                .build();
 
-        primaryStage.setScene(new Scene(root));
+
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
