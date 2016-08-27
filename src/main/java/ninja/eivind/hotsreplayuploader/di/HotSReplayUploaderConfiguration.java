@@ -48,11 +48,13 @@ public class HotSReplayUploaderConfiguration {
     }
 
     @Bean
-    public FXMLLoader fxmlLoader(ControllerFactory controllerFactory, BuilderFactory builderFactory) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setControllerFactory(controllerFactory);
-        loader.setBuilderFactory(builderFactory);
-        return loader;
+    public FXMLLoaderFactory fxmlLoader(ControllerFactory controllerFactory, BuilderFactory builderFactory) {
+        return () -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setControllerFactory(controllerFactory);
+            loader.setBuilderFactory(builderFactory);
+            return loader;
+        };
     }
 
     @Bean

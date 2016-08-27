@@ -18,6 +18,7 @@ package ninja.eivind.hotsreplayuploader.di.nodes;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.util.Builder;
 import javafx.util.BuilderFactory;
+import ninja.eivind.hotsreplayuploader.di.JavaFXController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,13 @@ public class SpringAwareBuilderFactory implements BuilderFactory {
 
     @Override
     public Builder<?> getBuilder(Class<?> type) {
-        if(type.isAnnotationPresent(FXComponent.class)) {
+        if(JavaFXNode.class.isAssignableFrom(type)) {
             logger.info("Creating custom component " + type.getName());
-            return (Builder<Object>) () -> beanFactory.createBean(type);
+            return (Builder<JavaFXNode>) () -> {
+                JavaFXNode bean = (JavaFXNode) beanFactory.createBean(type);
+                beanFactory.autowireBean(bean);
+                return bean;
+            };
         }
         return javaFXBuilderFactory.getBuilder(type);
     }

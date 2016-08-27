@@ -14,7 +14,7 @@
 
 package ninja.eivind.hotsreplayuploader.window.builder;
 
-import javafx.fxml.FXMLLoader;
+import ninja.eivind.hotsreplayuploader.di.FXMLLoaderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +22,10 @@ import org.springframework.stereotype.Component;
 public class SceneBuilderFactory {
 
     @Autowired
-    private FXMLLoader loader;
+    private FXMLLoaderFactory loaderFactory;
 
     public SceneBuilder builder() {
-        return new SceneBuilder(loader);
+        return new SceneBuilder(loaderFactory.get());
     }
 
 }

@@ -100,7 +100,7 @@ public class HomeController implements JavaFXController {
 
 
     @Override
-    public void initialize() {
+    public void afterPropertiesSet() {
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
         fetchHeroNames();
         setPlayerSearchActions();

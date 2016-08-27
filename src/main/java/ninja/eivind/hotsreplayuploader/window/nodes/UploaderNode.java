@@ -22,8 +22,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
-import ninja.eivind.hotsreplayuploader.di.JavaFXController;
-import ninja.eivind.hotsreplayuploader.di.nodes.FXComponent;
+import ninja.eivind.hotsreplayuploader.di.FXMLLoaderFactory;
+import ninja.eivind.hotsreplayuploader.di.nodes.JavaFXNode;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotsLogsProvider;
@@ -34,13 +34,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@FXComponent
-public class UploaderNode extends VBox implements JavaFXController {
+import java.io.IOException;
+import java.net.URL;
+
+public class UploaderNode extends VBox implements JavaFXNode {
 
     private static final Logger logger = LoggerFactory.getLogger(UploaderNode.class);
-    @FXML
-    private FXMLLoader loader;
-
     @FXML
     private Label newReplaysCount;
 
@@ -59,8 +58,14 @@ public class UploaderNode extends VBox implements JavaFXController {
     @Autowired
     private UploaderService uploaderService;
 
-    public UploaderNode() {
-
+    @Autowired
+    public UploaderNode(FXMLLoaderFactory factory) throws IOException {
+        URL resource = getClass().getResource("UploaderNode.fxml");
+        FXMLLoader loader = factory.get();
+        loader.setLocation(resource);
+        loader.setRoot(this);
+        loader.setController(this);
+        loader.load();
     }
 
     private void bindList() {
@@ -71,49 +76,6 @@ public class UploaderNode extends VBox implements JavaFXController {
         newReplaysView.setCellFactory(new CustomListCellFactory(uploaderService));
 
         uploadedReplays.textProperty().bind(uploaderService.getUploadedCount());
-    }
-
-    @Override
-    public void initialize() {
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        logger.info("Initialize called");
-        setupFileHandler();
-        if (uploaderService.isIdle()) {
-            setIdle();
-        }
-        bindList();
-        status.textProperty().bind(statusBinder.message());
     }
 
     private void setStatus(final String description, final Paint color) {
@@ -150,5 +112,15 @@ public class UploaderNode extends VBox implements JavaFXController {
         });
         uploaderService.setOnFailed(event -> setError());
         uploaderService.start();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        setupFileHandler();
+        if (uploaderService.isIdle()) {
+            setIdle();
+        }
+        bindList();
+        status.textProperty().bind(statusBinder.message());
     }
 }
