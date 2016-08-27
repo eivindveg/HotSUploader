@@ -86,7 +86,7 @@ public class HotsLogsProvider extends Provider {
 
         // Temporary fix for computer players found until the parser supports this
         if (replayHasComputerPlayers(replay)) {
-            LOG.info("Computer players for found for replay, tagging as uploaded.");
+            LOG.info("Computer players found for replay, tagging as uploaded.");
             return Status.UNSUPPORTED_GAME_MODE;
         }
         try {
@@ -108,7 +108,7 @@ public class HotsLogsProvider extends Provider {
     private Status uploadFileToHotSLogs(File file, String fileName, String uri) {
         try {
             s3Client.putObject("heroesreplays", fileName, file);
-            LOG.info("File " + fileName + "uploaded to remote storage.");
+            LOG.info("File " + fileName + " uploaded to remote storage.");
             final String result = getHttpClient().simpleRequest(uri).toLowerCase();
             switch (result) {
                 case "duplicate":
