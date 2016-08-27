@@ -80,7 +80,7 @@ public class UploaderNode extends VBox implements JavaFXController {
 
     private void setStatus(final String description, final Paint color) {
         statusBinder.message().setValue(description);
-        status.textFillProperty().setValue(Paint.valueOf("#38d3ff"));
+        status.textFillProperty().setValue(color);
     }
 
     private void setIdle() {
