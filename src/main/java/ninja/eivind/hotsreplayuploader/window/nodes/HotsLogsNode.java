@@ -45,7 +45,8 @@ import java.util.Optional;
 
 public class HotsLogsNode extends VBox implements JavaFXNode {
 
-    public static final String HERO_DETAILS_URL = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero={{heroName}}";
+    private static final String HERO_DETAILS_URL = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero={{heroName}}";
+    private static final String PLAYER_SEARCH_URL = "https://www.hotslogs.com/PlayerSearch?Name={{playerName}}";
     private static final Logger logger = LoggerFactory.getLogger(HotsLogsNode.class);
     @FXML
     private ComboBox<Account> accountSelect;
@@ -131,21 +132,20 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
         } else {
             this.heroName.setValue(null);
         }
-        
+
         platformService.browse(HERO_DETAILS_URL.replace("{{heroName}}", heroName));
     }
 
     @FXML
     private void doPlayerSearch() {
         final String playerName = playerSearchInput.getText().replaceAll(" ", "");
-        final String url = "https://www.hotslogs.com/PlayerSearch?Name=" + playerName;
         if (playerName.equals("")) {
             return;
         } else {
             playerSearchInput.setText("");
         }
 
-        platformService.browse(url);
+        platformService.browse(PLAYER_SEARCH_URL.replace("{{playerName}}", playerName));
     }
 
     @Override
