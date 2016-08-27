@@ -48,6 +48,8 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
     private static final String HERO_DETAILS_URL = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero={{heroName}}";
     private static final String PLAYER_SEARCH_URL = "https://www.hotslogs.com/PlayerSearch?Name={{playerName}}";
     private static final Logger logger = LoggerFactory.getLogger(HotsLogsNode.class);
+    private static final String HOTS_LOGS_URL = "https://www.hotslogs.com/Default";
+    private static final String PLAYER_PROFILE_URL = "https://www.hotslogs.com/Player/Profile?PlayerID={{playerId}}";
     @FXML
     private ComboBox<Account> accountSelect;
     @FXML
@@ -157,7 +159,7 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
     }
 
     private void doOpenHotsLogs() {
-        platformService.browse("https://www.hotslogs.com/Default");
+        platformService.browse(HOTS_LOGS_URL);
     }
 
     private void setPlayerSearchActions() {
@@ -185,7 +187,7 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
             return;
         }
 
-        String url = "https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId();
+        String url = PLAYER_PROFILE_URL.replace("{{playerId}}", account.getPlayerId().toString());
         platformService.browse(url);
     }
 
