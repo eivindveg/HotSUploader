@@ -17,8 +17,6 @@ package ninja.eivind.hotsreplayuploader;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -28,14 +26,13 @@ import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceFactoryBean;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
-import ninja.eivind.hotsreplayuploader.window.builder.SceneBuilder;
 import ninja.eivind.hotsreplayuploader.window.builder.SceneBuilderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -88,7 +85,8 @@ public class Client extends Application implements ApplicationContextAware {
 
     @Override
     public void init() {
-        context = SpringApplication.run(Client.class, launchArgs);
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(Client.class);
+        context= builder.headless(false).run(launchArgs);
         context.getAutowireCapableBeanFactory().autowireBean(this);
 
         //add a shutdown hook to be really sure, resources are closed properly
