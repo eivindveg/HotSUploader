@@ -129,7 +129,54 @@
               </padding>
           </VBox>
    </right>
-   <left>
+   <top>
+      <HBox BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+         <children>
+            <StackPane HBox.hgrow="SOMETIMES">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <children>
+                      <ImageView pickOnBounds="true" preserveRatio="true">
+                          <image>
+                              <Image url="@../../../../images/hotsreplayuploader-large.png" />
+                          </image>
+                          <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                          </cursor>
+                      </ImageView>
+               </children>
+            </StackPane>
+            <VBox fx:id="updatePane" alignment="CENTER" styleClass="status" visible="false">
+               <children>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="primary" text="An update is available: ">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="newVersionLabel" styleClass="secondary" text="N/A">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <Hyperlink fx:id="updateLink" text="Click to open release notes or download" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Hyperlink>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </top>
+   <center>
       <VBox prefHeight="460.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <HBox BorderPane.alignment="CENTER">
                <children>
@@ -181,52 +228,5 @@
             <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
          </padding>
       </VBox>
-   </left>
-   <top>
-      <HBox BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets bottom="20.0" left="5.0" right="5.0" top="5.0" />
-         </BorderPane.margin>
-         <children>
-            <StackPane HBox.hgrow="SOMETIMES">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-               <children>
-                      <ImageView pickOnBounds="true" preserveRatio="true">
-                          <image>
-                              <Image url="@../../../../images/hotsreplayuploader-large.png" />
-                          </image>
-                          <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                          </cursor>
-                      </ImageView>
-               </children>
-            </StackPane>
-            <VBox fx:id="updatePane" alignment="CENTER" styleClass="status" visible="false">
-               <children>
-                  <HBox alignment="CENTER">
-                     <children>
-                        <Label styleClass="primary" text="An update is available: ">
-                           <font>
-                              <Font name="System Bold" size="15.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="newVersionLabel" styleClass="secondary" text="N/A">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <Hyperlink fx:id="updateLink" text="Click to open release notes or download" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Hyperlink>
-               </children>
-            </VBox>
-         </children>
-      </HBox>
-   </top>
+   </center>
 </BorderPane>
