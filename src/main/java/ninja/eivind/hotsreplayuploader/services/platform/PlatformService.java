@@ -97,7 +97,7 @@ public interface PlatformService {
         Platform.exit();
     }
 
-    void browse(URI uri) throws IOException;
+    void browse(String uri);
 
     URL getLogoUrl();
 

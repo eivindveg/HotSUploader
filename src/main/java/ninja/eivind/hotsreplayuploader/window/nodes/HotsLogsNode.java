@@ -135,7 +135,7 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
             this.heroName.setValue(null);
         }
 
-        safeBrowse(url);
+        platformService.browse(url);
     }
 
     @FXML
@@ -148,7 +148,7 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
             playerSearchInput.setText("");
         }
 
-        safeBrowse(url);
+        platformService.browse(url);
     }
 
     @Override
@@ -184,7 +184,7 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
         }
 
         String url = "https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId();
-        safeBrowse(url);
+        platformService.browse(url);
     }
 
     private String readMmr(final List<LeaderboardRanking> leaderboardRankings, final String mode) {
@@ -194,14 +194,5 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
                 .map(LeaderboardRanking::getCurrentMmr)
                 .map(i -> Integer.toString(i))
                 .findAny().orElse(ifNotPresent);
-    }
-
-    private void safeBrowse(final String url) {
-        try {
-            platformService.browse(SimpleHttpClient.encode(url));
-        } catch (IOException e) {
-
-            logger.error("Could not open " + url + " in browser.", e);
-        }
     }
 }

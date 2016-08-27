@@ -77,20 +77,12 @@ public class HomeController implements JavaFXController {
 
     private void displayUpdateMessage(final GitHubRelease newerVersionIfAny) {
         newVersionLabel.setText(newerVersionIfAny.getTagName());
-        updateLink.setOnMouseClicked(value -> safeBrowse(newerVersionIfAny.getHtmlUrl()));
+        updateLink.setOnMouseClicked(value -> platformService.browse(newerVersionIfAny.getHtmlUrl()));
         updatePane.setVisible(true);
     }
 
-    private void safeBrowse(final String url) {
-        try {
-            platformService.browse(SimpleHttpClient.encode(url));
-        } catch (IOException e) {
-            LOG.error("Could not open " + url + " in browser.", e);
-        }
-    }
-
     private void doOpenHotsLogs() {
-        safeBrowse("https://www.hotslogs.com/Default");
+        platformService.browse("https://www.hotslogs.com/Default");
     }
 
 }

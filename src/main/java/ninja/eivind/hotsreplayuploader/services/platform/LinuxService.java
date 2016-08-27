@@ -14,16 +14,16 @@
 
 package ninja.eivind.hotsreplayuploader.services.platform;
 
+import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -52,8 +52,9 @@ public class LinuxService implements PlatformService {
      * Returns user-configured path for "Documents" folder, which can be localized string.
      * Tries to open ~/.config/user-dirs.dirs and parse its content. If opening or parsing fails,
      * return a default value ("Documents").
-     * @see <a href="http://freedesktop.org/wiki/Software/xdg-user-dirs/">freedesktop specs</a>.
+     *
      * @return String path to user "Documents" folder.
+     * @see <a href="http://freedesktop.org/wiki/Software/xdg-user-dirs/">freedesktop specs</a>.
      */
     private String getXDGDocumentsPath() {
         if (xdgDocsPath != null)
@@ -63,7 +64,7 @@ public class LinuxService implements PlatformService {
         // try-with-resources
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            while((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 // we want to find a line like:
                 // XDG_DOCUMENTS_DIR="$HOME/Documents"
                 line = line.trim();  // remove whitespace
@@ -99,11 +100,15 @@ public class LinuxService implements PlatformService {
     }
 
     @Override
-    public void browse(final URI uri) throws IOException {
-        if (Desktop.isDesktopSupported()) {
-            desktop.browse(uri);
-        } else {
-            Runtime.getRuntime().exec("xdg-open " + uri.toURL());
+    public void browse(final String uri) {
+        try {
+            if (Desktop.isDesktopSupported()) {
+                desktop.browse(SimpleHttpClient.encode(uri));
+            } else {
+                Runtime.getRuntime().exec("xdg-open " + uri);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
