@@ -110,7 +110,6 @@ public class ReplayFile implements Serializable {
     public Status getStatus() {
         // TODO MAKE MULTIPROVIDER-FRIENDLY
         if (uploadStatuses.isEmpty()) {
-            LOG.warn(this + " has no statuses.");
             return Status.NEW;
         }
         return uploadStatuses.iterator().next().getStatus();
