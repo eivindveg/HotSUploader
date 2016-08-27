@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -92,7 +91,7 @@ public class OSXService implements PlatformService {
 
     @Override
     public File getTempDirectory() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    	return new File(USER_HOME + "/Library/Caches/TemporaryItems/Blizzard/");
     }
 
     @Override
