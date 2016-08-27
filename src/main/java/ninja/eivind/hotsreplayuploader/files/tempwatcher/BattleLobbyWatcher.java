@@ -29,6 +29,7 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 public class BattleLobbyWatcher {
     private static final Logger logger = LoggerFactory.getLogger(BattleLobbyWatcher.class);
     public static final String REPLAY_SERVER_BATTLELOBBY = "replay.server.battlelobby";
+    public static final long DELAY = 3000L;
     private Thread watcherThread;
     private File heroesDirectory;
     private FilenameFilter fileNameFilter;
@@ -44,7 +45,7 @@ public class BattleLobbyWatcher {
 
         new Thread(() -> {
             try {
-                Thread.sleep(1000L);
+                Thread.sleep(DELAY);
                 File[] files = heroesDirectory.listFiles(fileNameFilter);
                 for (File file : files != null ? files : new File[0]) {
                     File target = new File(file, REPLAY_SERVER_BATTLELOBBY);
