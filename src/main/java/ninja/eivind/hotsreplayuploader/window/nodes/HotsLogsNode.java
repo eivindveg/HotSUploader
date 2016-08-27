@@ -45,13 +45,12 @@ import java.util.Optional;
 
 public class HotsLogsNode extends VBox implements JavaFXNode {
 
+    public static final String HERO_DETAILS_URL = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero={{heroName}}";
     private static final Logger logger = LoggerFactory.getLogger(HotsLogsNode.class);
     @FXML
     private ComboBox<Account> accountSelect;
-
     @FXML
     private Button viewProfile;
-
     @FXML
     private ImageView logo;
     @FXML
@@ -60,17 +59,14 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
     private Label hlMmr;
     @FXML
     private Label tlMmr;
-
     @FXML
     private Button playerSearch;
     @FXML
     private TextField playerSearchInput;
-
     @FXML
     private Button lookupHero;
     @FXML
     private ComboBox<HotSLogsHero> heroName;
-
     @Autowired
     private PlatformService platformService;
     @Autowired
@@ -130,14 +126,13 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
             return;
         }
         final String heroName = hero.getPrimaryName();
-        final String url = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName;
         if (heroName.equals("")) {
             return;
         } else {
             this.heroName.setValue(null);
         }
-
-        platformService.browse(url);
+        
+        platformService.browse(HERO_DETAILS_URL.replace("{{heroName}}", heroName));
     }
 
     @FXML
