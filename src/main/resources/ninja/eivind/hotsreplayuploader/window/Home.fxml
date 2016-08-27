@@ -11,6 +11,7 @@
 <?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -129,8 +130,7 @@
           </VBox>
    </right>
    <left>
-      <BorderPane prefHeight="360.0" prefWidth="640.0" BorderPane.alignment="CENTER">
-         <top>
+      <VBox prefHeight="460.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <HBox BorderPane.alignment="CENTER">
                <children>
                   <HBox styleClass="counter" HBox.hgrow="SOMETIMES">
@@ -158,18 +158,11 @@
                   </HBox>
                </children>
             </HBox>
-         </top>
-         <center>
-                    <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="335.0" prefWidth="590.0" BorderPane.alignment="CENTER">
-               <BorderPane.margin>
-                  <Insets />
-               </BorderPane.margin>
-            </ListView>
-         </center>
-         <padding>
-            <Insets left="16.0" right="16.0" />
-         </padding>
-         <bottom>
+         <AnchorPane>
+            <children>
+                          <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            </children>
+         </AnchorPane>
             <HBox BorderPane.alignment="CENTER">
                <children>
                   <Label styleClass="primary" text="Uploaded Replays: " HBox.hgrow="ALWAYS">
@@ -184,8 +177,10 @@
                   </Label>
                </children>
             </HBox>
-         </bottom>
-      </BorderPane>
+         <padding>
+            <Insets left="16.0" right="16.0" />
+         </padding>
+      </VBox>
    </left>
    <top>
       <HBox BorderPane.alignment="CENTER">
