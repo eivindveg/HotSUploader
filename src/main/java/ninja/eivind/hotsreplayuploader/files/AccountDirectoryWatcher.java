@@ -46,7 +46,7 @@ public class AccountDirectoryWatcher implements InitializingBean, DisposableBean
     @Autowired
     public AccountDirectoryWatcher(StormHandler stormHandler) {
         watchDirectories = new HashSet<>(stormHandler.getReplayDirectories());
-        executor = Executors.newFixedThreadPool(watchDirectories.size());
+        executor = Executors.newFixedThreadPool(watchDirectories.isEmpty() ? 1 : watchDirectories.size());
     }
 
     public void beginWatch() {
