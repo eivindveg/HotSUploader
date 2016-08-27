@@ -183,7 +183,7 @@
             <VBox prefHeight="460.0" prefWidth="600.0">
                   <HBox BorderPane.alignment="CENTER">
                      <children>
-                        <HBox styleClass="counter" HBox.hgrow="SOMETIMES">
+                        <HBox HBox.hgrow="SOMETIMES">
                            <children>
                               <Label styleClass="primary" text="New Replays: ">
                                  <font>
