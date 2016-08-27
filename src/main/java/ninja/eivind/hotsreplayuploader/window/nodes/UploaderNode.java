@@ -116,11 +116,13 @@ public class UploaderNode extends VBox implements JavaFXNode {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        logger.info("Initializing UploaderNode");
         setupFileHandler();
         if (uploaderService.isIdle()) {
             setIdle();
         }
         bindList();
         status.textProperty().bind(statusBinder.message());
+        logger.info("UploaderNode initialized");
     }
 }
