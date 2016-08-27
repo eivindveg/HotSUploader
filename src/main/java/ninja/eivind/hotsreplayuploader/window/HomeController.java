@@ -66,46 +66,17 @@ public class HomeController implements JavaFXController {
     private Hyperlink updateLink;
 
     @FXML
-    private Label qmMmr;
-    @FXML
-    private Label hlMmr;
-    @FXML
-    private Label tlMmr;
-    @FXML
     private ImageView logo;
-    @FXML
-    private Button playerSearch;
-    @FXML
-    private TextField playerSearchInput;
-    @FXML
-    private Button viewProfile;
-    @FXML
-    private ComboBox<Account> accountSelect;
-    @FXML
-    private Button lookupHero;
-    @FXML
-    private ComboBox<HotSLogsHero> heroName;
 
-    @Autowired
-    private UploaderService uploaderService;
     @Autowired
     private PlatformService platformService;
     @Autowired
     private ReleaseManager releaseManager;
-    @Autowired
-    private AccountService accountService;
-
-    @Autowired
-    private HeroService heroService;
 
 
     @Override
     public void afterPropertiesSet() {
         logo.setOnMouseClicked(event -> doOpenHotsLogs());
-        fetchHeroNames();
-        setPlayerSearchActions();
-
-        setupAccounts();
 
         checkNewVersion();
     }
@@ -118,7 +89,7 @@ public class HomeController implements JavaFXController {
             }
         };
         task.setOnSucceeded(event -> task.getValue().
-                ifPresent(version -> displayUpdateMessage(version)));
+                ifPresent(this::displayUpdateMessage));
         new Thread(task).start();
     }
 
@@ -126,18 +97,6 @@ public class HomeController implements JavaFXController {
         newVersionLabel.setText(newerVersionIfAny.getTagName());
         updateLink.setOnMouseClicked(value -> safeBrowse(newerVersionIfAny.getHtmlUrl()));
         updatePane.setVisible(true);
-    }
-
-    private void fetchHeroNames() {
-        heroName.converterProperty().setValue(new HeroConverter());
-        FXUtils.autoCompleteComboBox(heroName, FXUtils.AutoCompleteMode.STARTS_WITH);
-        heroService.setOnSucceeded(event -> {
-            if (null != heroService.getValue()) {
-                heroName.getItems().setAll(heroService.getValue());
-                LOG.info("Replaced list of heroes.");
-            }
-        });
-        heroService.start();
     }
 
     private void safeBrowse(final String url) {
@@ -151,98 +110,5 @@ public class HomeController implements JavaFXController {
     private void doOpenHotsLogs() {
         safeBrowse("https://www.hotslogs.com/Default");
     }
-
-    private void setPlayerSearchActions() {
-        playerSearchInput.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                doPlayerSearch();
-            }
-        });
-    }
-
-    @FXML
-    private void doLookupHero() {
-        final HotSLogsHero hero = this.heroName.getValue();
-        if (hero == null) {
-            return;
-        }
-        final String heroName = hero.getPrimaryName();
-        final String url = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + heroName;
-        if (heroName.equals("")) {
-            return;
-        } else {
-            this.heroName.setValue(null);
-        }
-
-        safeBrowse(url);
-    }
-
-    @FXML
-    private void doPlayerSearch() {
-        final String playerName = playerSearchInput.getText().replaceAll(" ", "");
-        final String url = "https://www.hotslogs.com/PlayerSearch?Name=" + playerName;
-        if (playerName.equals("")) {
-            return;
-        } else {
-            playerSearchInput.setText("");
-        }
-
-        safeBrowse(url);
-    }
-
-    @FXML
-    private void doViewProfile() {
-        final Account account = accountSelect.getValue();
-        if (account == null) {
-            return;
-        }
-
-        String url = "https://www.hotslogs.com/Player/Profile?PlayerID=" + account.getPlayerId();
-        safeBrowse(url);
-    }
-
-    private void setupAccounts() {
-        accountSelect.converterProperty().setValue(new AccountConverter());
-        accountSelect.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() != -1) {
-                updateAccountView(accountSelect.getItems().get(newValue.intValue()));
-                viewProfile.setDisable(false);
-            }
-        });
-
-        accountService.setOnSucceeded(event -> updatePlayers(accountService.getValue()));
-        accountService.start();
-    }
-
-    private void updateAccountView(final Account account) {
-        if (account == null) {
-            return;
-        }
-
-        qmMmr.setText(readMmr(account.getLeaderboardRankings(), "QuickMatch"));
-        hlMmr.setText(readMmr(account.getLeaderboardRankings(), "HeroLeague"));
-        tlMmr.setText(readMmr(account.getLeaderboardRankings(), "TeamLeague"));
-    }
-
-    private String readMmr(final List<LeaderboardRanking> leaderboardRankings, final String mode) {
-        final String ifNotPresent = "N/A";
-        return leaderboardRankings.stream()
-                .filter(ranking -> ranking.getGameMode().equals(mode))
-                .map(LeaderboardRanking::getCurrentMmr)
-                .map(i -> Integer.toString(i))
-                .findAny().orElse(ifNotPresent);
-    }
-
-    private void updatePlayers(final List<Account> newAccounts) {
-        accountSelect.getItems().setAll(newAccounts);
-
-        if (!accountSelect.getItems().isEmpty()) {
-            Account reference = Optional.ofNullable(accountSelect.getValue()).orElse(newAccounts.get(0));
-            accountSelect.getItems().stream()
-                    .filter(account -> account.getPlayerId().equals(reference.getPlayerId()))
-                    .findFirst().ifPresent(acc -> accountSelect.setValue(acc));
-        }
-    }
-
 
 }
