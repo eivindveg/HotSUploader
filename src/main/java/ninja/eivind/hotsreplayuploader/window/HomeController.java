@@ -14,31 +14,14 @@
 
 package ninja.eivind.hotsreplayuploader.window;
 
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import ninja.eivind.hotsreplayuploader.di.JavaFXController;
-import ninja.eivind.hotsreplayuploader.models.Account;
-import ninja.eivind.hotsreplayuploader.models.LeaderboardRanking;
-import ninja.eivind.hotsreplayuploader.models.ReplayFile;
-import ninja.eivind.hotsreplayuploader.models.stringconverters.AccountConverter;
-import ninja.eivind.hotsreplayuploader.models.stringconverters.HeroConverter;
-import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
-import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
-import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotsLogsProvider;
-import ninja.eivind.hotsreplayuploader.scene.control.CustomListCellFactory;
-import ninja.eivind.hotsreplayuploader.services.AccountService;
-import ninja.eivind.hotsreplayuploader.services.HeroService;
-import ninja.eivind.hotsreplayuploader.services.UploaderService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
-import ninja.eivind.hotsreplayuploader.utils.FXUtils;
-import ninja.eivind.hotsreplayuploader.utils.ReplayFileComparator;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.versions.GitHubRelease;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
@@ -47,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 /**
