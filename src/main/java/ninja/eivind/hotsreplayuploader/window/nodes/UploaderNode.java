@@ -43,7 +43,7 @@ import java.net.URL;
  */
 public class UploaderNode extends VBox implements JavaFXNode {
 
-    private static final Logger logger = LoggerFactory.getLogger(UploaderNode.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UploaderNode.class);
     @FXML
     private Label newReplaysCount;
 
@@ -120,13 +120,13 @@ public class UploaderNode extends VBox implements JavaFXNode {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        logger.info("Initializing UploaderNode");
+        LOG.info("Initializing UploaderNode");
         setupFileHandler();
         if (uploaderService.isIdle()) {
             setIdle();
         }
         bindList();
         status.textProperty().bind(statusBinder.message());
-        logger.info("UploaderNode initialized");
+        LOG.info("UploaderNode initialized");
     }
 }
