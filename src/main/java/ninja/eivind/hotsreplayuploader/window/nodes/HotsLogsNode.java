@@ -47,7 +47,7 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
 
     private static final String HERO_DETAILS_URL = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero={{heroName}}";
     private static final String PLAYER_SEARCH_URL = "https://www.hotslogs.com/PlayerSearch?Name={{playerName}}";
-    private static final Logger logger = LoggerFactory.getLogger(HotsLogsNode.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HotsLogsNode.class);
     private static final String HOTS_LOGS_URL = "https://www.hotslogs.com/Default";
     private static final String PLAYER_PROFILE_URL = "https://www.hotslogs.com/Player/Profile?PlayerID={{playerId}}";
     @FXML
@@ -121,7 +121,7 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
         heroService.setOnSucceeded(event -> {
             if (null != heroService.getValue()) {
                 heroName.getItems().setAll(heroService.getValue());
-                logger.info("Replaced list of heroes.");
+                LOG.info("Replaced list of heroes.");
             }
         });
         heroService.start();
