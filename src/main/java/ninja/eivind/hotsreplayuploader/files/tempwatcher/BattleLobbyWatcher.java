@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.function.Consumer;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
@@ -33,6 +34,7 @@ public class BattleLobbyWatcher {
     private Thread watcherThread;
     private File heroesDirectory;
     private FilenameFilter fileNameFilter;
+    private Consumer<File> callback;
 
     public BattleLobbyWatcher(File heroesDirectory) {
         this.heroesDirectory = heroesDirectory;
@@ -98,11 +100,16 @@ public class BattleLobbyWatcher {
 
     private void handleFile(File target) {
         logger.info("Eureka! {} is discovered!", target);
+        new Thread(() -> callback.accept(target)).start();
     }
 
     public void stop() {
         logger.info("Game exited. Stopping BattleLobbyWatcher");
         watcherThread.interrupt();
         watcherThread = null;
+    }
+
+    public void setCallback(Consumer<File> callback) {
+        this.callback = callback;
     }
 }

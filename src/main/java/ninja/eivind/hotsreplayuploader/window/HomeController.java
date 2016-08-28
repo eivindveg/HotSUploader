@@ -14,21 +14,29 @@
 
 package ninja.eivind.hotsreplayuploader.window;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import ninja.eivind.hotsreplayuploader.di.FXMLLoaderFactory;
 import ninja.eivind.hotsreplayuploader.di.JavaFXController;
+import ninja.eivind.hotsreplayuploader.di.nodes.JavaFXNode;
+import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
+import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyWatcher;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
-import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.versions.GitHubRelease;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
+import ninja.eivind.hotsreplayuploader.window.nodes.BattleLobbyNode;
+import ninja.eivind.hotsreplayuploader.window.nodes.UploaderNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -47,15 +55,41 @@ public class HomeController implements JavaFXController {
     @FXML
     private Hyperlink updateLink;
 
+    @FXML
+    private Pane nodeHolder;
+
     @Autowired
     private PlatformService platformService;
     @Autowired
     private ReleaseManager releaseManager;
+    @Autowired
+    private FXMLLoaderFactory loaderFactory;
+    @Autowired
+    private BattleLobbyWatcher lobbyWatcher;
+    @Autowired
+    private AccountDirectoryWatcher accountWatcher;
+    private JavaFXNode currentContext;
+
+    private UploaderNode uploaderNode;
+    private BattleLobbyNode battleLobbyNode;
 
 
     @Override
-    public void afterPropertiesSet() {
+    public void initialize() {
+        LOG.info("Initializing HomeController");
+
         checkNewVersion();
+
+        currentContext = loadInitialContext();
+        uploaderNode = (UploaderNode) currentContext;
+        lobbyWatcher.setCallback(this::switchToBattleLobbyView);
+        accountWatcher.addFileListener(file -> switchToUploaderView());
+        LOG.info("Initialized HomeController");
+    }
+
+    private JavaFXNode loadInitialContext() {
+        Node node = nodeHolder.getChildren().get(0);
+        return (JavaFXNode) node;
     }
 
     private void checkNewVersion() {
@@ -68,6 +102,47 @@ public class HomeController implements JavaFXController {
         task.setOnSucceeded(event -> task.getValue().
                 ifPresent(this::displayUpdateMessage));
         new Thread(task).start();
+    }
+
+    public void switchToUploaderView() {
+        Platform.runLater(() -> {
+            try {
+                if (uploaderNode == null) {
+                    uploaderNode = new UploaderNode(loaderFactory);
+                }
+                if (currentContext == uploaderNode) {
+                    return;
+                }
+                uploaderNode.activate();
+
+                nodeHolder.getChildren().clear();
+                nodeHolder.getChildren().add(uploaderNode);
+
+            } catch (IOException e) {
+                LOG.error("Failed to set uploader view", e);
+            }
+        });
+    }
+
+    public void switchToBattleLobbyView(File file) {
+        Platform.runLater(() -> {
+            try {
+                if (battleLobbyNode == null) {
+                    battleLobbyNode = new BattleLobbyNode(loaderFactory);
+                }
+                uploaderNode.passivate();
+                battleLobbyNode.setFile(file);
+
+                LOG.info("Setting battle lobby node!");
+                nodeHolder.getChildren().clear();
+                nodeHolder.getChildren().add(battleLobbyNode);
+
+                currentContext = battleLobbyNode;
+            } catch (IOException e) {
+                LOG.error("Failed to set battle lobby view", e);
+            }
+        });
+
     }
 
     private void displayUpdateMessage(final GitHubRelease newerVersionIfAny) {

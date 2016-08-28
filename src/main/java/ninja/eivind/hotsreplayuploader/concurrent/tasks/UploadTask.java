@@ -36,11 +36,13 @@ public class UploadTask extends Task<ReplayFile> {
     private static final Logger LOG = LoggerFactory.getLogger(UploadTask.class);
     private final Collection<Provider> providers;
     private final BlockingQueue<ReplayFile> replayQueue;
+    private final StormParser parser;
 
 
-    public UploadTask(final Collection<Provider> providers, final BlockingQueue<ReplayFile> queue) {
+    public UploadTask(final Collection<Provider> providers, final BlockingQueue<ReplayFile> queue, StormParser parser) {
         this.providers = providers;
         this.replayQueue = queue;
+        this.parser = parser;
 
         setOnFailed(event -> {
             LOG.error("UploadTask failed.", event.getSource().getException());
@@ -54,11 +56,10 @@ public class UploadTask extends Task<ReplayFile> {
         LOG.info("Uploading replay " + replayFile);
         providers.forEach(provider -> {
 
-            final StormParser parser = new StormParser(replayFile.getFile());
             Replay replay = null;
             Status preStatus;
             try {
-                replay = parser.parseReplay();
+                replay = parser.apply(replayFile.getFile());
                 preStatus = provider.getPreStatus(replay);
             } catch (MpqException e) {
                 LOG.warn("Could not parse replay, deferring to upload: " + replayFile, e);

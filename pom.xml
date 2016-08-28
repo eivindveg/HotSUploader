@@ -110,7 +110,7 @@
         <dependency>
             <groupId>ninja.eivind.hots</groupId>
             <artifactId>storm-parser</artifactId>
-            <version>0.1.1</version>
+            <version>0.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.j256.ormlite</groupId>

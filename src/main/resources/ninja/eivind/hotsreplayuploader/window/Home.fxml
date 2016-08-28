@@ -77,7 +77,7 @@
       </HBox>
    </top>
    <center>
-      <Pane BorderPane.alignment="CENTER">
+      <Pane BorderPane.alignment="CENTER" fx:id="nodeHolder">
          <children>
              <UploaderNode />
          </children>

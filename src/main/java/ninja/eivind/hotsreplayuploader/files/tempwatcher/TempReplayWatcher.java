@@ -14,13 +14,10 @@
 
 package ninja.eivind.hotsreplayuploader.files.tempwatcher;
 
-import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,29 +25,24 @@ import java.nio.file.*;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
-@Component
 public class TempReplayWatcher implements InitializingBean, DisposableBean {
 
-    public static final String DIRECTORY_NAME = "Heroes of the Storm";
+    static final String DIRECTORY_NAME = "Heroes of the Storm";
     private static final Logger logger = LoggerFactory.getLogger(TempReplayWatcher.class);
-    private final PlatformService platformService;
     private final File heroesDirectory;
     private final File tempDirectory;
+    private final BattleLobbyWatcher lobbyWatcher;
     private Thread watchThread;
-    private BattleLobbyWatcher battleLobbyWatcher;
 
-    @Autowired
-    public TempReplayWatcher(PlatformService platformService) {
-        this.platformService = platformService;
-        tempDirectory = platformService.getTempDirectory();
-        heroesDirectory = new File(tempDirectory, "Heroes of the Storm");
+    public TempReplayWatcher(File tempDirectory, BattleLobbyWatcher lobbyWatcher) {
+        this.tempDirectory = tempDirectory;
+        this.lobbyWatcher = lobbyWatcher;
+        heroesDirectory = new File(tempDirectory, DIRECTORY_NAME);
     }
 
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
-
         start();
     }
 
@@ -59,9 +51,8 @@ public class TempReplayWatcher implements InitializingBean, DisposableBean {
         Runnable runnable = getRunnable(tempDirectory);
         watchThread = new Thread(runnable);
         watchThread.start();
-        battleLobbyWatcher = new BattleLobbyWatcher(heroesDirectory);
         if (heroesDirectory.exists()) {
-            battleLobbyWatcher.start();
+            lobbyWatcher.start();
         }
     }
 
@@ -85,9 +76,9 @@ public class TempReplayWatcher implements InitializingBean, DisposableBean {
                         if (fileName.contains(DIRECTORY_NAME)) {
                             if (kind == ENTRY_CREATE) {
                                 logger.info("Discovered Heroes of the Storm folder");
-                                battleLobbyWatcher.start();
+                                lobbyWatcher.start();
                             } else if (kind == ENTRY_DELETE) {
-                                battleLobbyWatcher.stop();
+                                lobbyWatcher.stop();
                             }
                         }
                     });

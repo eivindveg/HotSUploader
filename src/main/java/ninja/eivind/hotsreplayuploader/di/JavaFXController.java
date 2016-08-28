@@ -21,6 +21,7 @@ import org.springframework.beans.factory.InitializingBean;
  * Functional interface used by JavaFX controllers that need to be initialized by the {@link FXMLLoader}
  */
 @FunctionalInterface
-public interface JavaFXController extends InitializingBean {
+public interface JavaFXController {
 
+    void initialize();
 }

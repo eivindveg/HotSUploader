@@ -129,4 +129,16 @@ public class UploaderNode extends VBox implements JavaFXNode {
         status.textProperty().bind(statusBinder.message());
         logger.info("UploaderNode initialized");
     }
+
+    public void passivate() {
+        if (uploaderService.isRunning()) {
+            uploaderService.cancel();
+        }
+    }
+
+    public void activate() {
+        if (!uploaderService.isRunning()) {
+            uploaderService.restart();
+        }
+    }
 }

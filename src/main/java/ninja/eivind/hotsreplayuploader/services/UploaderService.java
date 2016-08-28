@@ -27,6 +27,7 @@ import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
 import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
 import ninja.eivind.hotsreplayuploader.repositories.ProviderRepository;
+import ninja.eivind.stormparser.StormParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -58,6 +59,8 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
     private FileRepository fileRepository;
     @Autowired
     private ProviderRepository providerRepository;
+    @Autowired
+    private StormParser parser;
 
     public UploaderService() throws IOException {
         LOG.info("Instantiating " + getClass().getSimpleName());
@@ -131,7 +134,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
                 files.remove(take);
                 return createTask();
             }
-            final UploadTask uploadTask = new UploadTask(providerRepository.getAll(), uploadQueue);
+            final UploadTask uploadTask = new UploadTask(providerRepository.getAll(), uploadQueue, parser);
             final Status oldStatus = take.getStatus();
 
             uploadTask.setOnSucceeded(event -> {
