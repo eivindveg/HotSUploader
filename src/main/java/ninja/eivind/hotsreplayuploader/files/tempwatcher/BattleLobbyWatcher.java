@@ -38,7 +38,7 @@ public class BattleLobbyWatcher implements TempWatcher {
     private Thread watcherThread;
     private Consumer<File> callback;
 
-    public BattleLobbyWatcher(File heroesDirectory) {
+    public BattleLobbyWatcher(File heroesDirectory, Consumer<File> callback) {
         this.heroesDirectory = heroesDirectory;
         fileNameFilter = (dir, name) -> name.contains("TempWriteReplayP");
     }

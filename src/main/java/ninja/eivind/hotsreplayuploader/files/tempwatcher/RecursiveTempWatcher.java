@@ -29,13 +29,18 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 public class RecursiveTempWatcher implements TempWatcher, InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(RecursiveTempWatcher.class);
-    private BattleLobbyTempDirectories tempDirectories;
+    private final BattleLobbyTempDirectories tempDirectories;
     private TempWatcher child;
     private Thread watcherThread;
     private Consumer<File> callback;
 
     public RecursiveTempWatcher(BattleLobbyTempDirectories tempDirectories) {
         this.tempDirectories = tempDirectories;
+    }
+
+    public RecursiveTempWatcher(BattleLobbyTempDirectories battleLobbyTempDirectories, Consumer<File> callback) {
+        this(battleLobbyTempDirectories);
+        this.callback = callback;
     }
 
     @Override
@@ -48,8 +53,7 @@ public class RecursiveTempWatcher implements TempWatcher, InitializingBean {
         final String firstChild = splitRemainder[0];
         final File newRoot = new File(root, firstChild);
         if(child == null) {
-            child = getChild(relativeRemainder, firstChild, newRoot);
-            child.setCallback(callback);
+            child = getChild(relativeRemainder, firstChild, newRoot, file -> callback.accept(file));
         }
 
         if (newRoot.exists()) {
@@ -60,14 +64,14 @@ public class RecursiveTempWatcher implements TempWatcher, InitializingBean {
         watcherThread.start();
     }
 
-    private TempWatcher getChild(String relativeRemainder, String firstChild, File newRoot) {
+    private TempWatcher getChild(String relativeRemainder, String firstChild, File newRoot, Consumer<File> callback) {
         if (!relativeRemainder.contains(File.pathSeparator)) {
-            return new BattleLobbyWatcher(newRoot);
+            return new BattleLobbyWatcher(newRoot, callback);
         } else {
             final String remainingChildren = relativeRemainder.replace(firstChild + File.pathSeparator, "");
             final File newRemainder = new File(newRoot, remainingChildren);
 
-            return new RecursiveTempWatcher(new BattleLobbyTempDirectories(newRoot, newRemainder));
+            return new RecursiveTempWatcher(new BattleLobbyTempDirectories(newRoot, newRemainder), callback);
         }
     }
 
@@ -120,9 +124,6 @@ public class RecursiveTempWatcher implements TempWatcher, InitializingBean {
     @Override
     public void setCallback(Consumer<File> callback) {
         this.callback = callback;
-        if(child != null) {
-            child.setCallback(callback);
-        }
     }
 
     private String getRelativeRemainder(File root, File remainder) {

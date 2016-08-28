@@ -29,6 +29,7 @@ import ninja.eivind.stormparser.StandaloneBattleLobbyParser;
 import ninja.eivind.stormparser.models.Player;
 import ninja.eivind.stormparser.models.Replay;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,7 +79,7 @@ public class BattleLobbyNode extends VBox implements JavaFXNode {
         List<Player> players = replay.getReplayDetails().getPlayers();
         for (int i = 0; i < players.size(); i++) {
             final Player player = players.get(i);
-            final String playerName = player.getShortName();
+            final String playerName = getPlayerName(player);
             final ObservableList<String> items;
             if (i >= 5) {
                 items = teamOneList.getItems();
@@ -93,6 +94,14 @@ public class BattleLobbyNode extends VBox implements JavaFXNode {
             final String url = MATCH_PREVIEW_URL.replace("{{data}}", base64EncodeBattleLobby(replay));
             platformService.browse(url);
         });
+    }
+
+    private String getPlayerName(Player player) {
+        String shortName = player.getShortName();
+        if(!StringUtils.hasLength(shortName)) {
+            return "AI Player";
+        }
+        return shortName;
     }
 
     public String base64EncodeBattleLobby(Replay replay) {
