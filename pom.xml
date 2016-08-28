@@ -94,13 +94,28 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>jfx</id>
+                        <id>jfx-jar</id>
                         <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jfx-native</id>
+                        <phase>install</phase>
                         <goals>
                             <goal>native</goal>
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>
