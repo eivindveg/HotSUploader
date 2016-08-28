@@ -71,6 +71,8 @@ public class BattleLobbyNode extends VBox implements JavaFXNode {
     }
 
     public void setFile(File file) {
+        teamOneList.getItems().clear();
+        teamTwoList.getItems().clear();
         Replay replay = parser.apply(file);
 
         List<Player> players = replay.getReplayDetails().getPlayers();
