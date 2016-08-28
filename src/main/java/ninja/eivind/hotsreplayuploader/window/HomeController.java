@@ -36,6 +36,7 @@ import ninja.eivind.hotsreplayuploader.window.nodes.BattleLobbyNode;
 import ninja.eivind.hotsreplayuploader.window.nodes.UploaderNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -46,7 +47,7 @@ import java.util.Optional;
  * Window controller for the application. Contains references to all the components exposed to the user. Sets up events
  * and services to handle almost everything that happens in this application.
  */
-public class HomeController implements JavaFXController {
+public class HomeController implements JavaFXController, InitializingBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
 
@@ -84,8 +85,6 @@ public class HomeController implements JavaFXController {
 
         currentContext = loadInitialContext();
         uploaderNode = (UploaderNode) currentContext;
-        lobbyWatcher.setCallback(this::switchToBattleLobbyView);
-        accountWatcher.addFileListener(file -> switchToUploaderView());
         LOG.info("Initialized HomeController");
     }
 
@@ -145,4 +144,10 @@ public class HomeController implements JavaFXController {
         updatePane.setVisible(true);
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        lobbyWatcher.setCallback(this::switchToBattleLobbyView);
+        accountWatcher.addFileListener(file -> switchToUploaderView());
+        lobbyWatcher.start();
+    }
 }

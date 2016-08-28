@@ -16,18 +16,15 @@ package ninja.eivind.hotsreplayuploader.files.tempwatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.function.Consumer;
 
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
-import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
+import static java.nio.file.StandardWatchEventKinds.*;
 
-public class RecursiveTempWatcher implements TempWatcher, InitializingBean {
+public class RecursiveTempWatcher implements TempWatcher {
     private static final Logger logger = LoggerFactory.getLogger(RecursiveTempWatcher.class);
     private final BattleLobbyTempDirectories tempDirectories;
     private TempWatcher child;
@@ -52,7 +49,7 @@ public class RecursiveTempWatcher implements TempWatcher, InitializingBean {
         String[] splitRemainder = relativeRemainder.split(File.pathSeparator);
         final String firstChild = splitRemainder[0];
         final File newRoot = new File(root, firstChild);
-        if(child == null) {
+        if (child == null) {
             child = getChild(relativeRemainder, firstChild, newRoot, file -> callback.accept(file));
         }
 
@@ -81,28 +78,28 @@ public class RecursiveTempWatcher implements TempWatcher, InitializingBean {
         return new Thread(() -> {
             logger.info("Starting watch for {} in {}", firstChild, root);
 
-            try(WatchService watchService = FileSystems.getDefault().newWatchService()) {
+            try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
                 path.register(watchService, ENTRY_CREATE, ENTRY_DELETE);
 
-                while(true) {
+                while (true) {
                     WatchKey key = watchService.take();
                     key.pollEvents().forEach(event -> {
                         WatchEvent.Kind<?> kind = event.kind();
-                        if(kind == OVERFLOW) {
+                        if (kind == OVERFLOW) {
                             return;
                         }
                         @SuppressWarnings("unchecked")
                         final WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
                         final Path pathName = pathEvent.context();
-                        if(pathName.toString().equals(firstChild.replaceAll(File.pathSeparator, ""))) {
-                            if(kind == ENTRY_CREATE) {
+                        if (pathName.toString().equals(firstChild.replaceAll(File.pathSeparator, ""))) {
+                            if (kind == ENTRY_CREATE) {
                                 child.start();
-                            } else if(kind == ENTRY_DELETE) {
+                            } else if (kind == ENTRY_DELETE) {
                                 child.stop();
                             }
                         }
                     });
-                    if(!key.reset()) {
+                    if (!key.reset()) {
                         break;
                     }
                 }
@@ -132,10 +129,5 @@ public class RecursiveTempWatcher implements TempWatcher, InitializingBean {
             return remainderString.replace(File.pathSeparator, "");
         }
         return remainderString;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        start();
     }
 }
