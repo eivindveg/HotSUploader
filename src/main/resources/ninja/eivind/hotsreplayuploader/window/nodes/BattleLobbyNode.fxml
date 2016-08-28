@@ -40,7 +40,7 @@
                      <Pane HBox.hgrow="ALWAYS" />
                   </children>
                </HBox>
-                  <ListView fx:id="team1List" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                  <ListView fx:id="teamOneList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
             </children>
          </VBox>
           <VBox>
