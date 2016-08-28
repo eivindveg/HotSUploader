@@ -120,6 +120,9 @@ public class RecursiveTempWatcher implements TempWatcher, InitializingBean {
     @Override
     public void setCallback(Consumer<File> callback) {
         this.callback = callback;
+        if(child != null) {
+            child.setCallback(callback);
+        }
     }
 
     private String getRelativeRemainder(File root, File remainder) {
