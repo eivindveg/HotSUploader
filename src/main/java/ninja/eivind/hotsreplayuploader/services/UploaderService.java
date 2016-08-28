@@ -129,37 +129,37 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
         }
         try {
             logger.info("Attempting to take file from queue");
-            final ReplayFile take = uploadQueue.take();
-            if (!take.getFile().exists()) {
-                fileRepository.deleteReplay(take);
-                files.remove(take);
+            final ReplayFile replayFile = uploadQueue.take();
+            if (!replayFile.getFile().exists()) {
+                fileRepository.deleteReplay(replayFile);
+                files.remove(replayFile);
                 return createTask();
             }
-            final UploadTask uploadTask = new UploadTask(providerRepository.getAll(), uploadQueue, parser);
+            final UploadTask uploadTask = new UploadTask(providerRepository.getAll(), replayFile, parser);
 
             uploadTask.setOnSucceeded(event -> {
                 try {
-                    final ReplayFile replayFile = uploadTask.get();
-                    final Status status = replayFile.getStatus();
-                    logger.info("Resolved status {} for {}", status, replayFile);
+                    final ReplayFile result = uploadTask.get();
+                    final Status status = result.getStatus();
+                    logger.info("Resolved status {} for {}", status, result);
                     switch (status) {
                         case UPLOADED:
                             final int newCount = Integer.valueOf(uploadedCount.getValue()) + 1;
                             uploadedCount.setValue(String.valueOf(newCount));
                             logger.info("Upload count updated to " + newCount);
                         case UNSUPPORTED_GAME_MODE:
-                            replayFile.getFailedProperty().setValue(false);
-                            logger.info("Removing {} from display list", replayFile);
-                            files.remove(replayFile);
+                            result.getFailedProperty().setValue(false);
+                            logger.info("Removing {} from display list", result);
+                            files.remove(result);
                             break;
                         case EXCEPTION:
                         case NEW:
-                            logger.warn("Upload failed for replay " + replayFile + ". Tagging replay.");
-                            replayFile.getFailedProperty().set(true);
+                            logger.warn("Upload failed for replay " + result + ". Tagging replay.");
+                            result.getFailedProperty().set(true);
                             break;
                     }
-                    logger.info("Updating {} in database.", replayFile);
-                    fileRepository.updateReplay(replayFile);
+                    logger.info("Updating {} in database.", result);
+                    fileRepository.updateReplay(result);
                     logger.info("Finished handling file.");
                 } catch (InterruptedException | ExecutionException e) {
                     logger.error("Could not execute task successfully.", e);
@@ -167,7 +167,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
             });
             uploadTask.setOnFailed(event -> {
                 logger.error("UploadTask failed.", event.getSource().getException());
-                uploadQueue.add(take);
+                uploadQueue.add(replayFile);
             });
             logger.info("Prepared task");
             return uploadTask;
