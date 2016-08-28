@@ -48,7 +48,15 @@ public class BattleLobbyWatcher implements TempWatcher {
         logger.info("BattleLobbyWatcher starting...");
         Path path = heroesDirectory.toPath();
 
-        new Thread(() -> {
+        new Thread(getInstantFileChecker()).start();
+
+        Runnable runnable = getRunnable(path);
+        watcherThread = new Thread(runnable);
+        watcherThread.start();
+    }
+
+    private Runnable getInstantFileChecker() {
+        return () -> {
             try {
                 LocalDateTime end = LocalDateTime.now().plus(10, ChronoUnit.SECONDS);
                 while(LocalDateTime.now().isBefore(end)) {
@@ -57,17 +65,14 @@ public class BattleLobbyWatcher implements TempWatcher {
                         File target = new File(file, REPLAY_SERVER_BATTLELOBBY);
                         if (target.exists()) {
                             handleFile(target);
+                            return;
                         }
                     }
                     Thread.sleep(DELAY);
                 }
             } catch (InterruptedException ignored) {
             }
-        }).start();
-
-        Runnable runnable = getRunnable(path);
-        watcherThread = new Thread(runnable);
-        watcherThread.start();
+        };
     }
 
     private Runnable getRunnable(Path path) {
