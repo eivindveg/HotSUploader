@@ -4,7 +4,7 @@
     -fx-hots-background: #444;
 }
 
-.header {
+.root {
     -fx-background-color: -fx-hots-background;
 }
 

@@ -22,6 +22,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.util.BuilderFactory;
 import ninja.eivind.hotsreplayuploader.di.FXMLLoaderFactory;
 import ninja.eivind.hotsreplayuploader.di.JavaFXController;
 import ninja.eivind.hotsreplayuploader.di.nodes.JavaFXNode;
@@ -63,7 +64,7 @@ public class HomeController implements JavaFXController {
     @Autowired
     private ReleaseManager releaseManager;
     @Autowired
-    private FXMLLoaderFactory loaderFactory;
+    private BuilderFactory builderFactory;
     @Autowired
     private BattleLobbyWatcher lobbyWatcher;
     @Autowired
@@ -106,41 +107,33 @@ public class HomeController implements JavaFXController {
 
     public void switchToUploaderView() {
         Platform.runLater(() -> {
-            try {
-                if (uploaderNode == null) {
-                    uploaderNode = new UploaderNode(loaderFactory);
-                }
-                if (currentContext == uploaderNode) {
-                    return;
-                }
-                uploaderNode.activate();
-
-                nodeHolder.getChildren().clear();
-                nodeHolder.getChildren().add(uploaderNode);
-
-            } catch (IOException e) {
-                LOG.error("Failed to set uploader view", e);
+            if (uploaderNode == null) {
+                uploaderNode = (UploaderNode) builderFactory.getBuilder(UploaderNode.class).build();
             }
+            if (currentContext == uploaderNode) {
+                return;
+            }
+            uploaderNode.activate();
+
+            nodeHolder.getChildren().clear();
+            nodeHolder.getChildren().add(uploaderNode);
+
         });
     }
 
     public void switchToBattleLobbyView(File file) {
         Platform.runLater(() -> {
-            try {
-                if (battleLobbyNode == null) {
-                    battleLobbyNode = new BattleLobbyNode(loaderFactory);
-                }
-                uploaderNode.passivate();
-                battleLobbyNode.setFile(file);
-
-                LOG.info("Setting battle lobby node!");
-                nodeHolder.getChildren().clear();
-                nodeHolder.getChildren().add(battleLobbyNode);
-
-                currentContext = battleLobbyNode;
-            } catch (IOException e) {
-                LOG.error("Failed to set battle lobby view", e);
+            if (battleLobbyNode == null) {
+                battleLobbyNode = (BattleLobbyNode) builderFactory.getBuilder(BattleLobbyNode.class).build();
             }
+            uploaderNode.passivate();
+            battleLobbyNode.setFile(file);
+
+            LOG.info("Setting battle lobby node!");
+            nodeHolder.getChildren().clear();
+            nodeHolder.getChildren().add(battleLobbyNode);
+
+            currentContext = battleLobbyNode;
         });
 
     }

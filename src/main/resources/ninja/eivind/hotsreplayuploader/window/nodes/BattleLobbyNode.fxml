@@ -6,15 +6,17 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root prefHeight="460.0" prefWidth="600.0" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="460.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../../styles/window.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
     <HBox BorderPane.alignment="CENTER">
         <children>
             <HBox HBox.hgrow="SOMETIMES">
                 <children>
-                    <Label styleClass="primary" text="In match" textFill="#00b000">
+               <Pane HBox.hgrow="ALWAYS" />
+                    <Label text="In match" textFill="#00b000">
                         <font>
                             <Font name="System Bold" size="18.0" />
                         </font>
@@ -27,19 +29,49 @@
       <children>
          <VBox HBox.hgrow="ALWAYS">
             <children>
-               <Label text="Team 1" />
+               <HBox>
+                  <children>
+                     <Pane HBox.hgrow="ALWAYS" />
+                     <Label styleClass="primary" text="Team 1">
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                     <Pane HBox.hgrow="ALWAYS" />
+                  </children>
+               </HBox>
                   <ListView fx:id="team1List" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
             </children>
          </VBox>
+          <VBox>
+            <padding>
+               <Insets left="16.0" right="16.0" />
+            </padding></VBox>
          <VBox HBox.hgrow="ALWAYS">
             <children>
-               <Label text="Team 2" />
+               <HBox>
+                  <children>
+                     <Pane HBox.hgrow="ALWAYS" />
+                     <Label styleClass="primary" text="Team 2">
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                     <Pane layoutX="10.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
+                  </children>
+               </HBox>
                <ListView fx:id="teamTwoList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
             </children>
          </VBox>
       </children>
    </HBox>
-   <Hyperlink text="View details on HotsLogs" />
+   <Hyperlink fx:id="link" text="View details on HotsLogs">
+      <padding>
+         <Insets left="16.0" right="16.0" top="16.0" />
+      </padding>
+      <font>
+         <Font name="System Bold" size="14.0" />
+      </font></Hyperlink>
     <padding>
         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
     </padding>

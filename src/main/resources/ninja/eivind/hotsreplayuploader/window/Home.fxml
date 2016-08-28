@@ -2,12 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -16,10 +12,10 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
-<?import ninja.eivind.hotsreplayuploader.window.nodes.UploaderNode?>
 <?import ninja.eivind.hotsreplayuploader.window.nodes.HotsLogsNode?>
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="header" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ninja.eivind.hotsreplayuploader.window.HomeController">
+<?import ninja.eivind.hotsreplayuploader.window.nodes.UploaderNode?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="root" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ninja.eivind.hotsreplayuploader.window.HomeController">
     <padding>
         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
     </padding>
@@ -77,7 +73,7 @@
       </HBox>
    </top>
    <center>
-      <Pane BorderPane.alignment="CENTER" fx:id="nodeHolder">
+      <Pane fx:id="nodeHolder" BorderPane.alignment="CENTER">
          <children>
              <UploaderNode />
          </children>

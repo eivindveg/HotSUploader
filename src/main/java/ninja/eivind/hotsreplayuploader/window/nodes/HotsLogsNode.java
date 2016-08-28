@@ -77,7 +77,12 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
     @Autowired
     private HeroService heroService;
 
+    public HotsLogsNode() throws IOException {
+        this(FXMLLoader::new);
+    }
+
     public HotsLogsNode(FXMLLoaderFactory factory) throws IOException {
+        super();
         URL resource = getClass().getResource("HotsLogsNode.fxml");
         FXMLLoader loader = factory.get();
         loader.setLocation(resource);

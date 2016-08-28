@@ -62,8 +62,13 @@ public class UploaderNode extends VBox implements JavaFXNode {
     @Autowired
     private UploaderService uploaderService;
 
+    public UploaderNode() throws IOException {
+        this(FXMLLoader::new);
+    }
+
     @Autowired
     public UploaderNode(FXMLLoaderFactory factory) throws IOException {
+        super();
         URL resource = getClass().getResource("UploaderNode.fxml");
         FXMLLoader loader = factory.get();
         loader.setLocation(resource);
