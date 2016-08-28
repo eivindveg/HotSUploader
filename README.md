@@ -26,9 +26,15 @@ Before contributing new features, please make sure the feature is discussed in a
 If you've had a pull request accepted, or otherwise helped solve an issue, feel free to submit a pull request adding your own entry to pom.xml. I will not add anyone to this list without their consent.
 
 ## Building
-This is a Maven project. You must have the Java 8 SDK installed in order to build from source. To build native artifacts for your platform in addition to jar files, run the following:
+This is a Maven project. You must have the Java 8 SDK installed in order to build from source. 
 
-``mvn clean package``
+To build a JavaFX-bundled jar file, run the following:
+
+``$ mvn clean package``
+
+To build native artifacts for your platform in addition to jar files, run the following:
+
+``$ mvn clean install``
 
 ## Maintainers
 [eivindveg](/../../../../eivindveg) - Windows, Linux and general development

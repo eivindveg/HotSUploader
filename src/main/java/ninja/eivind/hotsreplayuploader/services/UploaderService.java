@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2015-2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
 import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
-import ninja.eivind.hotsreplayuploader.repositories.ProviderRepository;
 import ninja.eivind.stormparser.StormParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +57,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
     @Autowired
     private FileRepository fileRepository;
     @Autowired
-    private ProviderRepository providerRepository;
+    private List<Provider> providers;
     @Autowired
     private StormParser parser;
 
@@ -135,7 +134,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
                 files.remove(replayFile);
                 return createTask();
             }
-            final UploadTask uploadTask = new UploadTask(providerRepository.getAll(), replayFile, parser);
+            final UploadTask uploadTask = new UploadTask(providers, replayFile, parser);
 
             uploadTask.setOnSucceeded(event -> {
                 try {

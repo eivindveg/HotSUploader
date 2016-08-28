@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2015-2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
 package ninja.eivind.hotsreplayuploader;
 
 import javafx.concurrent.Task;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import ninja.eivind.hotsreplayuploader.services.platform.TestEnvironmentPlatformService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.BeforeClass;
@@ -25,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -40,9 +43,8 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
-@ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
+@HotsReplayUploaderTest
 public class ClientTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientTest.class);
@@ -53,6 +55,8 @@ public class ClientTest {
 
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private PlatformService platformService;
 
     @BeforeClass
     public static void setUpClass() throws IOException {
@@ -62,6 +66,12 @@ public class ClientTest {
     @Test
     public void testDataSourceIsEmbedded() {
         assertTrue("DataSource is an instance of EmbeddedDatabase", dataSource instanceof EmbeddedDatabase);
+    }
+
+    @Test
+    public void testPlatformServiceIsTestEnvironment() {
+        assertTrue("PlatformService is an instance of TestEnvironmentPlatformService",
+                platformService instanceof TestEnvironmentPlatformService);
     }
 
     @Test

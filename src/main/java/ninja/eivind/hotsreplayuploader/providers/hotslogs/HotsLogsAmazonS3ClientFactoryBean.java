@@ -12,38 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package ninja.eivind.hotsreplayuploader.services.platform;
+package ninja.eivind.hotsreplayuploader.providers.hotslogs;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("hotslogs-s3client")
 @Profile("!test")
-public class PlatformServiceFactoryBean implements FactoryBean<PlatformService> {
+public class HotsLogsAmazonS3ClientFactoryBean implements FactoryBean<AmazonS3> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PlatformServiceFactoryBean.class);
-    private static final String OS_NAME = System.getProperty("os.name");
+    private final AWSCredentials credentials;
+
+    @Autowired
+    public HotsLogsAmazonS3ClientFactoryBean(@Qualifier("hotslogs-s3credentials") AWSCredentials credentials) {
+        this.credentials = credentials;
+    }
+
 
     @Override
-    public PlatformService getObject() throws Exception {
-        LOG.info("Constructing PlatformService for " + OS_NAME);
-        if (OS_NAME.contains("Windows")) {
-            return new WindowsService();
-        } else if (OS_NAME.contains("Mac")) {
-            return new OSXService();
-        } else if (OS_NAME.contains("Linux")) {
-            return new LinuxService();
-        } else {
-            throw new PlatformNotSupportedException("Operating system not supported");
-        }
+    public AmazonS3 getObject() throws Exception {
+        return new AmazonS3Client(credentials);
     }
 
     @Override
     public Class<?> getObjectType() {
-        return PlatformService.class;
+        return AmazonS3.class;
     }
 
     @Override
