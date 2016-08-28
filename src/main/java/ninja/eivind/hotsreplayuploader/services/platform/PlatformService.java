@@ -16,6 +16,7 @@ package ninja.eivind.hotsreplayuploader.services.platform;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyTempDirectories;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 
 import java.awt.*;
@@ -103,5 +104,5 @@ public interface PlatformService {
 
     boolean isPreloaderSupported();
 
-    File getTempDirectory();
+    BattleLobbyTempDirectories getBattleLobbyTempDirectories();
 }

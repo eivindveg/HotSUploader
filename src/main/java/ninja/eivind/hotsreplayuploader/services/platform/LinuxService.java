@@ -14,6 +14,7 @@
 
 package ninja.eivind.hotsreplayuploader.services.platform;
 
+import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyTempDirectories;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +124,7 @@ public class LinuxService implements PlatformService {
     }
 
     @Override
-    public File getTempDirectory() {
-        return new File(System.getProperty("java.io.tmpdir"));
+    public BattleLobbyTempDirectories getBattleLobbyTempDirectories() {
+        return null;
     }
 }

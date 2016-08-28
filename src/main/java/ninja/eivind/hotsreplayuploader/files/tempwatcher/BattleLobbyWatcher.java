@@ -27,13 +27,13 @@ import java.util.function.Consumer;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
-public class BattleLobbyWatcher {
-    private static final Logger logger = LoggerFactory.getLogger(BattleLobbyWatcher.class);
+public class BattleLobbyWatcher implements TempWatcher {
     public static final String REPLAY_SERVER_BATTLELOBBY = "replay.server.battlelobby";
     public static final long DELAY = 3000L;
+    private static final Logger logger = LoggerFactory.getLogger(BattleLobbyWatcher.class);
+    private final File heroesDirectory;
+    private final FilenameFilter fileNameFilter;
     private Thread watcherThread;
-    private File heroesDirectory;
-    private FilenameFilter fileNameFilter;
     private Consumer<File> callback;
 
     public BattleLobbyWatcher(File heroesDirectory) {
@@ -41,6 +41,7 @@ public class BattleLobbyWatcher {
         fileNameFilter = (dir, name) -> name.contains("TempWriteReplayP");
     }
 
+    @Override
     public void start() {
         logger.info("BattleLobbyWatcher starting...");
         Path path = heroesDirectory.toPath();
@@ -51,7 +52,7 @@ public class BattleLobbyWatcher {
                 File[] files = heroesDirectory.listFiles(fileNameFilter);
                 for (File file : files != null ? files : new File[0]) {
                     File target = new File(file, REPLAY_SERVER_BATTLELOBBY);
-                    if(target.exists()) {
+                    if (target.exists()) {
                         handleFile(target);
                     }
                 }
@@ -99,16 +100,18 @@ public class BattleLobbyWatcher {
     }
 
     private void handleFile(File target) {
-        logger.info("Eureka! {} is discovered!", target);
+        logger.info("Discovered BattleLobby: {}", target);
         new Thread(() -> callback.accept(target)).start();
     }
 
+    @Override
     public void stop() {
         logger.info("Game exited. Stopping BattleLobbyWatcher");
         watcherThread.interrupt();
         watcherThread = null;
     }
 
+    @Override
     public void setCallback(Consumer<File> callback) {
         this.callback = callback;
     }

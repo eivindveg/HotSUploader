@@ -28,6 +28,7 @@ import ninja.eivind.hotsreplayuploader.di.JavaFXController;
 import ninja.eivind.hotsreplayuploader.di.nodes.JavaFXNode;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyWatcher;
+import ninja.eivind.hotsreplayuploader.files.tempwatcher.TempWatcher;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.versions.GitHubRelease;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
@@ -66,7 +67,7 @@ public class HomeController implements JavaFXController {
     @Autowired
     private BuilderFactory builderFactory;
     @Autowired
-    private BattleLobbyWatcher lobbyWatcher;
+    private TempWatcher lobbyWatcher;
     @Autowired
     private AccountDirectoryWatcher accountWatcher;
     private JavaFXNode currentContext;

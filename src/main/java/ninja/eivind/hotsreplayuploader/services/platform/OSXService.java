@@ -18,6 +18,7 @@ import javafx.event.EventType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyTempDirectories;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,8 +91,13 @@ public class OSXService implements PlatformService {
     }
 
     @Override
-    public File getTempDirectory() {
-    	return new File(USER_HOME + "/Library/Caches/TemporaryItems/Blizzard/");
+    public BattleLobbyTempDirectories getBattleLobbyTempDirectories() {
+        final File root = new File(USER_HOME, "Library");
+        final File remainder = new File(USER_HOME + "/Library/Caches/TemporaryItems/Blizzard/");
+        return new BattleLobbyTempDirectories(
+                root,
+                remainder
+        );
     }
 
     @Override
