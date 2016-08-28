@@ -17,6 +17,7 @@ package ninja.eivind.hotsreplayuploader.repositories;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
@@ -39,7 +40,7 @@ public class OrmLiteFileRepositoryTest {
         TableUtils.createTable(connectionSource, ReplayFile.class);
         TableUtils.createTable(connectionSource, UploadStatus.class);
 
-        repository = new OrmLiteFileRepository(connectionSource);
+        repository = new OrmLiteFileRepository(connectionSource, mock(AccountDirectoryWatcher.class));
         repository.afterPropertiesSet();
     }
 
