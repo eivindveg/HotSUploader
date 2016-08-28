@@ -26,7 +26,7 @@
                     </Label>
                 </children>
             </HBox>
-            <HBox styleClass="counter">
+            <HBox>
                 <children>
                     <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#00b000">
                         <font>
