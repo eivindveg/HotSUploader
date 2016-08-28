@@ -93,7 +93,7 @@ public class OSXService implements PlatformService {
     @Override
     public BattleLobbyTempDirectories getBattleLobbyTempDirectories() {
         final File root = new File(USER_HOME, "Library");
-        final File remainder = new File(USER_HOME + "/Library/Caches/TemporaryItems/Blizzard/");
+        final File remainder = new File(USER_HOME + "/Library/Caches/TemporaryItems/Blizzard/Heroes of the Storm");
         return new BattleLobbyTempDirectories(
                 root,
                 remainder
