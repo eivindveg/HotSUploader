@@ -111,7 +111,14 @@ public class BattleLobbyWatcher implements TempWatcher {
 
     private void handleFile(File target) {
         logger.info("Discovered BattleLobby: {}", target);
-        new Thread(() -> callback.accept(target)).start();
+        new Thread(() -> {
+            try {
+                Thread.sleep(250L);
+                callback.accept(target);
+            } catch (InterruptedException e) {
+                logger.error("", e);
+            }
+        }).start();
     }
 
     @Override
