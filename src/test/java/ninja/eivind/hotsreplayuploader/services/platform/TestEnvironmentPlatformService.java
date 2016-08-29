@@ -14,7 +14,6 @@
 
 package ninja.eivind.hotsreplayuploader.services.platform;
 
-import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyTempDirectories;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -50,6 +49,7 @@ public class TestEnvironmentPlatformService implements PlatformService {
         return false;
     }
 
+    /* Ooops! Does not exist yet!
     @Override
     public BattleLobbyTempDirectories getBattleLobbyTempDirectories() {
         final File root = new File(TEST_ROOT, "tmp");
@@ -59,4 +59,5 @@ public class TestEnvironmentPlatformService implements PlatformService {
                 remainder
         );
     }
+    */
 }

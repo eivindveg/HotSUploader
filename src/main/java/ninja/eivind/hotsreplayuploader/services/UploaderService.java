@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2015-2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
 import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
-import ninja.eivind.hotsreplayuploader.repositories.ProviderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -57,7 +56,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
     @Autowired
     private FileRepository fileRepository;
     @Autowired
-    private ProviderRepository providerRepository;
+    private List<Provider> providers;
 
     public UploaderService() throws IOException {
         LOG.info("Instantiating " + getClass().getSimpleName());
@@ -131,7 +130,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
                 files.remove(take);
                 return createTask();
             }
-            final UploadTask uploadTask = new UploadTask(providerRepository.getAll(), uploadQueue);
+            final UploadTask uploadTask = new UploadTask(providers, uploadQueue);
             final Status oldStatus = take.getStatus();
 
             uploadTask.setOnSucceeded(event -> {

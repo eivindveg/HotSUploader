@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package ninja.eivind.hotsreplayuploader.repositories;
+package ninja.eivind.hotsreplayuploader.providers.hotslogs;
 
-import ninja.eivind.hotsreplayuploader.providers.Provider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+@Component("hotslogs-s3credentials")
+public class HotsLogsAWSCredentials extends BasicAWSCredentials {
 
-/**
- * Repository interface for {@link Provider} services. Single entry point for locating a Provider to handle replay files
- * with external services.
- */
-public interface ProviderRepository {
+    private static final String ACCESS_KEY = "AKIAIESBHEUH4KAAG4UA";
+    private static final String SECRET_KEY = "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";
 
-    Collection<Provider> getAll();
-
+    public HotsLogsAWSCredentials() {
+        super(ACCESS_KEY, SECRET_KEY);
+    }
 }
