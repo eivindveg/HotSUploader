@@ -8,6 +8,14 @@
     -fx-background-color: -fx-hots-background;
 }
 
+.teamTwo {
+    -fx-text-fill: crimson;
+}
+
+.teamOne {
+    -fx-text-fill: -fx-hots-secondary;
+}
+
 .button {
     -fx-background-color: -fx-hots-secondary;
     -fx-padding: 0.7em;

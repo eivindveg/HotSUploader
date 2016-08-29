@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root prefHeight="460.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../../styles/window.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="460.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../../styles/window.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1">
     <HBox BorderPane.alignment="CENTER">
         <children>
             <HBox HBox.hgrow="SOMETIMES">
@@ -32,7 +32,7 @@
                <HBox>
                   <children>
                      <Pane HBox.hgrow="ALWAYS" />
-                     <Label styleClass="primary" text="Team 1">
+                     <Label styleClass="teamOne" text="Team 1">
                         <font>
                            <Font size="18.0" />
                         </font>
@@ -52,7 +52,7 @@
                <HBox>
                   <children>
                      <Pane HBox.hgrow="ALWAYS" />
-                     <Label styleClass="primary" text="Team 2">
+                     <Label styleClass="teamTwo" text="Team 2">
                         <font>
                            <Font size="18.0" />
                         </font>
@@ -65,13 +65,20 @@
          </VBox>
       </children>
    </HBox>
-   <Hyperlink fx:id="link" text="View details on HotsLogs">
+   <HBox>
+      <children>
+         <Pane HBox.hgrow="ALWAYS" />
+         <Hyperlink fx:id="link" text="Click to view details about this matchup on Hotslogs.com">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Hyperlink>
+         <Pane layoutX="10.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
+      </children>
       <padding>
          <Insets left="16.0" right="16.0" top="16.0" />
       </padding>
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font></Hyperlink>
+   </HBox>
     <padding>
         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
     </padding>
