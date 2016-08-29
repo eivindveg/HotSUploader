@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@ package ninja.eivind.hotsreplayuploader.services.platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("!test")
 public class PlatformServiceFactoryBean implements FactoryBean<PlatformService> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PlatformServiceFactoryBean.class);

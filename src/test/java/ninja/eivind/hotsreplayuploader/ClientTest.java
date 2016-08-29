@@ -15,6 +15,8 @@
 package ninja.eivind.hotsreplayuploader;
 
 import javafx.concurrent.Task;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import ninja.eivind.hotsreplayuploader.services.platform.TestEnvironmentPlatformService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.BeforeClass;
@@ -53,6 +55,8 @@ public class ClientTest {
 
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private PlatformService platformService;
 
     @BeforeClass
     public static void setUpClass() throws IOException {
@@ -62,6 +66,12 @@ public class ClientTest {
     @Test
     public void testDataSourceIsEmbedded() {
         assertTrue("DataSource is an instance of EmbeddedDatabase", dataSource instanceof EmbeddedDatabase);
+    }
+
+    @Test
+    public void testPlatformServiceIsTestEnvironment() {
+        assertTrue("PlatformService is an instance of TestEnvironmentPlatformService",
+                platformService instanceof TestEnvironmentPlatformService);
     }
 
     @Test
