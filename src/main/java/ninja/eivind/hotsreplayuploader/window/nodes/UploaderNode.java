@@ -62,6 +62,10 @@ public class UploaderNode extends VBox implements JavaFXNode {
     @Autowired
     private UploaderService uploaderService;
 
+    /**
+     * @deprecated
+     * @throws IOException
+     */
     public UploaderNode() throws IOException {
         this(FXMLLoader::new);
     }

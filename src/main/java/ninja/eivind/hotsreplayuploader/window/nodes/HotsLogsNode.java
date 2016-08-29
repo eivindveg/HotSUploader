@@ -77,6 +77,10 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
     @Autowired
     private HeroService heroService;
 
+    /**
+     * @deprecated
+     * @throws IOException
+     */
     public HotsLogsNode() throws IOException {
         this(FXMLLoader::new);
     }

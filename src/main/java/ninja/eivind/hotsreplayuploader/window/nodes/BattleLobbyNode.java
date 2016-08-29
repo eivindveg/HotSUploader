@@ -58,6 +58,14 @@ public class BattleLobbyNode extends VBox implements JavaFXNode {
 
     private static final String MATCH_PREVIEW_URL = "http://www.hotslogs.com/Player/MatchPreview?Data={{data}}";
 
+    /**
+     * @deprecated
+     * @throws IOException
+     */
+    public BattleLobbyNode() throws IOException {
+        this(FXMLLoader::new);
+    }
+
     public BattleLobbyNode(FXMLLoaderFactory factory) throws IOException {
         URL resource = getClass().getResource("BattleLobbyNode.fxml");
         FXMLLoader loader = factory.get();
