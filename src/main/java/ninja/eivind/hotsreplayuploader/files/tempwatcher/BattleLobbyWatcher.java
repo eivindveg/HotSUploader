@@ -133,4 +133,9 @@ public class BattleLobbyWatcher implements TempWatcher {
     public void setCallback(Consumer<File> callback) {
         this.callback = callback;
     }
+
+    @Override
+    public int getChildCount() {
+        return 0;
+    }
 }

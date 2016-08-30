@@ -123,6 +123,19 @@ public class RecursiveTempWatcher implements TempWatcher {
         this.callback = callback;
     }
 
+    @Override
+    public int getChildCount() {
+        if(child != null) {
+            return child.getChildCount() + 1;
+        } else {
+            return 0;
+        }
+    }
+
+    protected TempWatcher getChild() {
+        return child;
+    }
+
     private String getRelativeRemainder(File root, File remainder) {
         String remainderString = remainder.toString().replace(root.toString(), "");
         if (remainderString.startsWith(File.pathSeparator)) {
