@@ -125,8 +125,10 @@ public class BattleLobbyWatcher implements TempWatcher {
     @Override
     public void stop() {
         logger.info("Game exited. Stopping BattleLobbyWatcher");
-        watcherThread.interrupt();
-        watcherThread = null;
+        if(watcherThread != null) {
+            watcherThread.interrupt();
+            watcherThread = null;
+        }
     }
 
     @Override

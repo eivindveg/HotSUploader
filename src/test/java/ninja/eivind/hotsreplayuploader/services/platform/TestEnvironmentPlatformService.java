@@ -22,7 +22,7 @@ import java.net.URL;
 
 @Component
 public class TestEnvironmentPlatformService implements PlatformService {
-    public static final File TEST_ROOT = new File("target" + File.pathSeparator + "test");
+    public static final File TEST_ROOT = new File("target" + File.separator + "test");
 
     @Override
     public File getApplicationHome() {
@@ -53,7 +53,8 @@ public class TestEnvironmentPlatformService implements PlatformService {
     @Override
     public BattleLobbyTempDirectories getBattleLobbyTempDirectories() {
         final File root = new File(TEST_ROOT, "tmp");
-        final File remainder = new File(root + File.pathSeparator + "tmp" + File.pathSeparator + "Heroes of the Storm");
+        final File remainder = new File(root, "Heroes of the Storm");
+
         return new BattleLobbyTempDirectories(
                 root,
                 remainder

@@ -114,8 +114,10 @@ public class RecursiveTempWatcher implements TempWatcher {
     @Override
     public void stop() {
         child.stop();
-        watcherThread.interrupt();
-        watcherThread = null;
+        if (watcherThread != null) {
+            watcherThread.interrupt();
+            watcherThread = null;
+        }
     }
 
     @Override
@@ -125,7 +127,7 @@ public class RecursiveTempWatcher implements TempWatcher {
 
     @Override
     public int getChildCount() {
-        if(child != null) {
+        if (child != null) {
             return child.getChildCount() + 1;
         } else {
             return 0;
