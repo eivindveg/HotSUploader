@@ -94,7 +94,7 @@ public class WindowsService implements PlatformService {
     public BattleLobbyTempDirectories getBattleLobbyTempDirectories() {
         final String tempDirProperty = System.getProperty("java.io.tmpdir");
         final File root = new File(tempDirProperty);
-        final File remainder = new File(tempDirProperty + File.pathSeparator + "Heroes of the Storm");
+        final File remainder = new File(tempDirProperty + File.separator + "Heroes of the Storm");
 
         return new BattleLobbyTempDirectories(root, remainder);
     }

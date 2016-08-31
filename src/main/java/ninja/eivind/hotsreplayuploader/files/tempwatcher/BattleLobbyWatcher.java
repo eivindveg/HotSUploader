@@ -15,6 +15,7 @@
 
 package ninja.eivind.hotsreplayuploader.files.tempwatcher;
 
+import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +30,12 @@ import java.util.function.Consumer;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
-public class BattleLobbyWatcher implements TempWatcher {
+public class BattleLobbyWatcher extends TempWatcher {
     public static final String REPLAY_SERVER_BATTLELOBBY = "replay.server.battlelobby";
     public static final long DELAY = 250L;
     private static final Logger logger = LoggerFactory.getLogger(BattleLobbyWatcher.class);
     private final File heroesDirectory;
     private final FilenameFilter fileNameFilter;
-    private Thread watcherThread;
     private Consumer<File> callback;
 
     public BattleLobbyWatcher(File heroesDirectory, Consumer<File> callback) {
@@ -45,22 +45,56 @@ public class BattleLobbyWatcher implements TempWatcher {
     }
 
     @Override
-    public void start() {
+    protected Task<Void> createTask() {
         logger.info("BattleLobbyWatcher starting...");
         Path path = heroesDirectory.toPath();
 
         new Thread(getInstantFileChecker()).start();
 
-        Runnable runnable = getRunnable(path);
-        watcherThread = new Thread(runnable);
-        watcherThread.start();
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                logger.info("BattleLobbyWatcher started");
+                try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+                    path.register(watchService, ENTRY_CREATE);
+                    while (true) {
+                        WatchKey key = watchService.take();
+                        key.pollEvents().forEach(event -> {
+                            WatchEvent.Kind<?> kind = event.kind();
+                            @SuppressWarnings("unchecked")
+                            final WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
+                            final Path pathName = pathEvent.context();
+                            logger.info("Received " + kind + " for path " + pathName);
+                            if (kind == OVERFLOW) {
+                                return;
+                            }
+                            File file = new File(path.toFile(), pathName.toString());
+                            String fileName = file.getName();
+                            if (fileNameFilter.accept(path.toFile(), fileName)) {
+                                File target = new File(file, REPLAY_SERVER_BATTLELOBBY);
+                                handleFile(target);
+                            }
+                        });
+                        if (!key.reset()) {
+                            break;
+                        }
+                    }
+                } catch (IOException e) {
+                    logger.error("Watcher threw exception", e);
+                } catch (InterruptedException e) {
+                    logger.info("TempReplayWatcher was interrupted. Winding down.");
+                }
+                logger.info("Game exited. Stopping BattleLobbyWatcher");
+                return null;
+            }
+        };
     }
 
     private Runnable getInstantFileChecker() {
         return () -> {
             try {
                 LocalDateTime end = LocalDateTime.now().plus(10, ChronoUnit.SECONDS);
-                while(LocalDateTime.now().isBefore(end)) {
+                while (LocalDateTime.now().isBefore(end)) {
                     File[] files = heroesDirectory.listFiles(fileNameFilter);
                     for (File file : files != null ? files : new File[0]) {
                         File target = new File(file, REPLAY_SERVER_BATTLELOBBY);
@@ -72,41 +106,6 @@ public class BattleLobbyWatcher implements TempWatcher {
                     Thread.sleep(DELAY);
                 }
             } catch (InterruptedException ignored) {
-            }
-        };
-    }
-
-    private Runnable getRunnable(Path path) {
-        return () -> {
-            logger.info("BattleLobbyWatcher started");
-            try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
-                path.register(watchService, ENTRY_CREATE);
-                while (true) {
-                    WatchKey key = watchService.take();
-                    key.pollEvents().forEach(event -> {
-                        WatchEvent.Kind<?> kind = event.kind();
-                        @SuppressWarnings("unchecked")
-                        final WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
-                        final Path pathName = pathEvent.context();
-                        logger.info("Received " + kind + " for path " + pathName);
-                        if (kind == OVERFLOW) {
-                            return;
-                        }
-                        File file = new File(path.toFile(), pathName.toString());
-                        String fileName = file.getName();
-                        if (fileNameFilter.accept(path.toFile(), fileName)) {
-                            File target = new File(file, REPLAY_SERVER_BATTLELOBBY);
-                            handleFile(target);
-                        }
-                    });
-                    if (!key.reset()) {
-                        break;
-                    }
-                }
-            } catch (IOException e) {
-                logger.error("Watcher threw exception", e);
-            } catch (InterruptedException e) {
-                logger.info("TempReplayWatcher was interrupted. Winding down.");
             }
         };
     }
@@ -124,20 +123,6 @@ public class BattleLobbyWatcher implements TempWatcher {
     }
 
     @Override
-    public void stop() {
-        logger.info("Game exited. Stopping BattleLobbyWatcher");
-        if(watcherThread != null) {
-            watcherThread.interrupt();
-            watcherThread = null;
-        }
-    }
-
-    @Override
-    public void setCallback(Consumer<File> callback) {
-        this.callback = callback;
-    }
-
-    @Override
     public int getChildCount() {
         return 0;
     }
@@ -145,5 +130,10 @@ public class BattleLobbyWatcher implements TempWatcher {
     @Override
     public Consumer<File> getCallback() {
         return callback;
+    }
+
+    @Override
+    public void setCallback(Consumer<File> callback) {
+        this.callback = callback;
     }
 }

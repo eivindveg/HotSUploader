@@ -14,6 +14,7 @@
 
 package ninja.eivind.hotsreplayuploader.files.tempwatcher;
 
+import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,24 +25,23 @@ import java.util.function.Consumer;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
-public class RecursiveTempWatcher implements TempWatcher {
+public class RecursiveTempWatcher extends TempWatcher {
     private static final Logger logger = LoggerFactory.getLogger(RecursiveTempWatcher.class);
     private final BattleLobbyTempDirectories tempDirectories;
     private TempWatcher child;
-    private Thread watcherThread;
     private Consumer<File> callback;
 
     public RecursiveTempWatcher(BattleLobbyTempDirectories tempDirectories) {
-        this.tempDirectories = tempDirectories;
+        this(tempDirectories, null);
     }
 
-    public RecursiveTempWatcher(BattleLobbyTempDirectories battleLobbyTempDirectories, Consumer<File> callback) {
-        this(battleLobbyTempDirectories);
+    public RecursiveTempWatcher(BattleLobbyTempDirectories tempDirectories, Consumer<File> callback) {
+        this.tempDirectories = tempDirectories;
         this.callback = callback;
     }
 
     @Override
-    public void start() {
+    protected Task<Void> createTask() {
         final File root = tempDirectories.getRoot();
         final File remainder = tempDirectories.getRemainder();
 
@@ -51,7 +51,7 @@ public class RecursiveTempWatcher implements TempWatcher {
         }
 
         final String remainderRegex;
-        if(File.separator.equals("\\")) {
+        if (File.separator.equals("\\")) {
             // '\' matches nothing, and split uses regex.
             remainderRegex = "\\\\";
         } else {
@@ -61,16 +61,60 @@ public class RecursiveTempWatcher implements TempWatcher {
         String[] splitRemainder = relativeRemainder.split(remainderRegex);
         final String firstChild = splitRemainder[0];
         final File newRoot = new File(root, firstChild);
-        if (child == null) {
-            child = getChild(relativeRemainder, firstChild, newRoot, file -> callback.accept(file));
+        if (child != null) {
+            child.cancel();
         }
+        child = getChild(relativeRemainder, firstChild, newRoot, file -> {
+            if(callback != null) {
+                callback.accept(file);
+            }
+        });
 
         if (newRoot.exists()) {
             child.start();
         }
 
-        watcherThread = prepareWatch(root, firstChild);
-        watcherThread.start();
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                logger.info("Starting watch for {} in {}", firstChild, root);
+                final Path path = root.toPath();
+                try {
+                    Thread.sleep(50L);
+                    try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+                        path.register(watchService, ENTRY_CREATE, ENTRY_DELETE);
+
+                        while (true) {
+                            WatchKey key = watchService.take();
+                            key.pollEvents().forEach(event -> {
+                                WatchEvent.Kind<?> kind = event.kind();
+                                if (kind == OVERFLOW) {
+                                    return;
+                                }
+                                @SuppressWarnings("unchecked")
+                                final WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
+                                final Path pathName = pathEvent.context();
+                                if (pathName.toString().equals(firstChild.replaceAll(File.pathSeparator, ""))) {
+                                    if (kind == ENTRY_CREATE) {
+                                        child.start();
+                                    } else if (kind == ENTRY_DELETE) {
+                                        child.cancel();
+                                    }
+                                }
+                            });
+                            if (!key.reset()) {
+                                break;
+                            }
+                        }
+                    } catch (IOException e) {
+                        logger.error("Watcher threw exception", e);
+                    }
+                } catch (InterruptedException e) {
+                    logger.info("Watcher for {} in {} interrupted", firstChild, root);
+                }
+                return null;
+            }
+        };
     }
 
     private TempWatcher getChild(String relativeRemainder, String firstChild, File newRoot, Consumer<File> callback) {
@@ -84,54 +128,12 @@ public class RecursiveTempWatcher implements TempWatcher {
         }
     }
 
-    private Thread prepareWatch(File root, String firstChild) {
-        final Path path = root.toPath();
-
-        return new Thread(() -> {
-            logger.info("Starting watch for {} in {}", firstChild, root);
-            try {
-                Thread.sleep(50L);
-                try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
-                    path.register(watchService, ENTRY_CREATE, ENTRY_DELETE);
-
-                    while (true) {
-                        WatchKey key = watchService.take();
-                        key.pollEvents().forEach(event -> {
-                            WatchEvent.Kind<?> kind = event.kind();
-                            if (kind == OVERFLOW) {
-                                return;
-                            }
-                            @SuppressWarnings("unchecked")
-                            final WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
-                            final Path pathName = pathEvent.context();
-                            if (pathName.toString().equals(firstChild.replaceAll(File.pathSeparator, ""))) {
-                                if (kind == ENTRY_CREATE) {
-                                    child.start();
-                                } else if (kind == ENTRY_DELETE) {
-                                    child.stop();
-                                }
-                            }
-                        });
-                        if (!key.reset()) {
-                            break;
-                        }
-                    }
-                } catch (IOException e) {
-                    logger.error("Watcher threw exception", e);
-                }
-            } catch (InterruptedException e) {
-                logger.info("Watcher for {} in {} interrupted", firstChild, root);
-            }
-        });
-    }
-
     @Override
-    public void stop() {
-        child.stop();
-        if (watcherThread != null) {
-            watcherThread.interrupt();
-            watcherThread = null;
+    public boolean cancel() {
+        if(child == null) {
+            return super.cancel();
         }
+        return child.cancel() && super.cancel();
     }
 
     @Override

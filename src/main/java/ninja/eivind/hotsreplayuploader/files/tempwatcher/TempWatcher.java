@@ -14,18 +14,16 @@
 
 package ninja.eivind.hotsreplayuploader.files.tempwatcher;
 
+import javafx.concurrent.Service;
+
 import java.io.File;
 import java.util.function.Consumer;
 
-public interface TempWatcher {
+public abstract class TempWatcher extends Service<Void> {
 
-    void start();
+    public abstract void setCallback(Consumer<File> callback);
 
-    void stop();
+    abstract int getChildCount();
 
-    void setCallback(Consumer<File> callback);
-
-    int getChildCount();
-
-    Consumer<File> getCallback();
+    abstract Consumer<File> getCallback();
 }

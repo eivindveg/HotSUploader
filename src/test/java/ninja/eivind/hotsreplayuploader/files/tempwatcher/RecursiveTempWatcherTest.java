@@ -14,14 +14,17 @@
 
 package ninja.eivind.hotsreplayuploader.files.tempwatcher;
 
+import javafx.application.Platform;
 import ninja.eivind.hotsreplayuploader.HotsReplayUploaderTest;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import rules.JavaFXThreadingRule;
 
 import java.io.File;
 import java.time.temporal.ChronoUnit;
@@ -38,9 +41,11 @@ public class RecursiveTempWatcherTest {
 
     @Autowired
     private PlatformService platformService;
-    @Autowired
     private RecursiveTempWatcher tempWatcher;
     private BattleLobbyTempDirectories directories;
+
+    @Rule
+    public JavaFXThreadingRule rule = new JavaFXThreadingRule();
 
     @Before
     public void setUp() throws Exception {
@@ -52,8 +57,19 @@ public class RecursiveTempWatcherTest {
         // give file creation some time to complete
         Thread.sleep(250);
 
-        tempWatcher.start();
+        tempWatcher = new RecursiveTempWatcher(directories);
 
+        CountDownLatch latch = new CountDownLatch(1);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                tempWatcher.start();
+                latch.countDown();
+            }
+        });
+        if(!latch.await(1, TimeUnit.SECONDS)) {
+            fail("Service did not start.");
+        }
         // give watchers some time to wind up
         Thread.sleep(250);
     }
@@ -124,7 +140,7 @@ public class RecursiveTempWatcherTest {
         } else {
             remainderRegex = File.separator;
         }
-        final int expected = difference.split(remainderRegex).length;
+        final int expected = difference.split(remainderRegex).length - 1;
         final int actual = tempWatcher.getChildCount();
 
         assertSame(expected, actual);
@@ -132,7 +148,15 @@ public class RecursiveTempWatcherTest {
 
     @After
     public void tearDown() throws Exception {
-        tempWatcher.stop();
+        CountDownLatch latch = new CountDownLatch(1);
+        Platform.runLater(() -> {
+            if(tempWatcher.cancel()) {
+                latch.countDown();
+            }
+        });
+        if(!latch.await(1, TimeUnit.SECONDS)) {
+            fail("Service failed to stop");
+        }
         // give watchers some time to wind down recursively
         Thread.sleep(1000L);
         cleanupRecursive(directories.getRoot());

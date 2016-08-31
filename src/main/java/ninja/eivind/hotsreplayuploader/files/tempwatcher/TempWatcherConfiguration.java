@@ -14,6 +14,7 @@
 
 package ninja.eivind.hotsreplayuploader.files.tempwatcher;
 
+import javafx.concurrent.Task;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +40,8 @@ public class TempWatcherConfiguration {
                 }
 
                 @Override
-                public void stop() {
-
+                protected Task<Void> createTask() {
+                    return null;
                 }
 
                 @Override
