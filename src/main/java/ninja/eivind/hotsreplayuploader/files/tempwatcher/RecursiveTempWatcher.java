@@ -49,7 +49,16 @@ public class RecursiveTempWatcher implements TempWatcher {
         if (relativeRemainder.startsWith(File.separator)) {
             relativeRemainder = relativeRemainder.substring(1);
         }
-        String[] splitRemainder = relativeRemainder.split(File.pathSeparator);
+
+        final String remainderRegex;
+        if(File.separator.equals("\\")) {
+            // '\' matches nothing, and split uses regex.
+            remainderRegex = "\\\\";
+        } else {
+            remainderRegex = File.separator;
+        }
+
+        String[] splitRemainder = relativeRemainder.split(remainderRegex);
         final String firstChild = splitRemainder[0];
         final File newRoot = new File(root, firstChild);
         if (child == null) {
@@ -65,8 +74,8 @@ public class RecursiveTempWatcher implements TempWatcher {
     }
 
     private TempWatcher getChild(String relativeRemainder, String firstChild, File newRoot, Consumer<File> callback) {
-        if (relativeRemainder.contains(File.pathSeparator)) {
-            final String remainingChildren = relativeRemainder.replace(firstChild + File.pathSeparator, "");
+        if (relativeRemainder.contains(File.separator)) {
+            final String remainingChildren = relativeRemainder.replace(firstChild + File.separator, "");
             final File newRemainder = new File(newRoot, remainingChildren);
 
             return new RecursiveTempWatcher(new BattleLobbyTempDirectories(newRoot, newRemainder), callback);

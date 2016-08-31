@@ -105,7 +105,7 @@ public class BattleLobbyWatcher implements TempWatcher {
             } catch (IOException e) {
                 logger.error("Watcher threw exception", e);
             } catch (InterruptedException e) {
-                logger.info("TempReplayWatcher was interrupted. Winding down.", e);
+                logger.info("TempReplayWatcher was interrupted. Winding down.");
             }
         };
     }
