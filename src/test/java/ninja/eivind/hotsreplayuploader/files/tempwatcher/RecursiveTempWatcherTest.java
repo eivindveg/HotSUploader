@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
+import static ninja.eivind.hotsreplayuploader.files.tempwatcher.RecursiveTempWatcher.REMAINDER_REGEX;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -136,14 +137,15 @@ public class RecursiveTempWatcherTest {
         final String remainderString = remainder.toString();
         final String difference = remainderString.replace(rootString, "").substring(1);
 
-        final String remainderRegex = String.format("\\%s", File.separator);
+
         logger.info("Remainder string: {}", remainderString);
         logger.info("Root string: {}", rootString);
         logger.info("Difference string: {}", difference);
-        final int expected = difference.split(remainderRegex).length - 1;
+        logger.info("Splitting using regex string: {}", REMAINDER_REGEX);
+        final int expected = difference.split(REMAINDER_REGEX).length - 1;
         final int actual = tempWatcher.getChildCount();
 
-        assertSame(expected, actual);
+        assertSame(String.format("Expecting %d children for tempwatcher", expected), expected, actual);
     }
 
     @After

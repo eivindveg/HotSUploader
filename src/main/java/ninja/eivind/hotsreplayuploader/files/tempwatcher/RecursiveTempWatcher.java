@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public class RecursiveTempWatcher extends TempWatcher {
+    protected static final String REMAINDER_REGEX = String.format("\\%s", File.separator);
     private static final Logger logger = LoggerFactory.getLogger(RecursiveTempWatcher.class);
     private final BattleLobbyTempDirectories tempDirectories;
     private TempWatcher child;
