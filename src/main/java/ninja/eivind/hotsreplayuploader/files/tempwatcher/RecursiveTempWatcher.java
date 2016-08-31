@@ -50,13 +50,7 @@ public class RecursiveTempWatcher extends TempWatcher {
             relativeRemainder = relativeRemainder.substring(1);
         }
 
-        final String remainderRegex;
-        if (File.separator.equals("\\")) {
-            // '\' matches nothing, and split uses regex.
-            remainderRegex = "\\\\";
-        } else {
-            remainderRegex = File.separator;
-        }
+        final String remainderRegex = String.format("\\%s", File.separator);
 
         String[] splitRemainder = relativeRemainder.split(remainderRegex);
         final String firstChild = splitRemainder[0];

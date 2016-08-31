@@ -136,13 +136,7 @@ public class RecursiveTempWatcherTest {
         final String remainderString = remainder.toString();
         final String difference = remainderString.replace(rootString, "").substring(1);
 
-        final String remainderRegex;
-        if(File.separator.equals("\\")) {
-            // '\' matches nothing, and split uses regex.
-            remainderRegex = "\\\\";
-        } else {
-            remainderRegex = File.separator;
-        }
+        final String remainderRegex = String.format("\\%s", File.separator);
         logger.info("Remainder string: {}", remainderString);
         logger.info("Root string: {}", rootString);
         logger.info("Difference string: {}", difference);
