@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
-import static ninja.eivind.hotsreplayuploader.files.tempwatcher.RecursiveTempWatcher.REMAINDER_REGEX;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
