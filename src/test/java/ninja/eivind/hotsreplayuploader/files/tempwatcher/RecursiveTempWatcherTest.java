@@ -22,6 +22,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import rules.JavaFXThreadingRule;
@@ -39,6 +41,7 @@ import static org.junit.Assert.*;
 @HotsReplayUploaderTest
 public class RecursiveTempWatcherTest {
 
+    private static final Logger logger = LoggerFactory.getLogger(RecursiveTempWatcherTest.class);
     @Autowired
     private PlatformService platformService;
     private RecursiveTempWatcher tempWatcher;
@@ -125,12 +128,12 @@ public class RecursiveTempWatcherTest {
     @Test
     public void testGetChildCount() throws Exception {
         final File remainder = directories.getRemainder();
-        final String remainderString = remainder.toString();
         if(!remainder.mkdirs()) {
             fail("Failed to create files.");
         }
 
         final String rootString = directories.getRoot().toString();
+        final String remainderString = remainder.toString();
         final String difference = remainderString.replace(rootString, "").substring(1);
 
         final String remainderRegex;
@@ -140,6 +143,9 @@ public class RecursiveTempWatcherTest {
         } else {
             remainderRegex = File.separator;
         }
+        logger.debug("Remainder string: {}", remainderString);
+        logger.debug("Root string: {}", rootString);
+        logger.debug("Difference string: {}", difference);
         final int expected = difference.split(remainderRegex).length - 1;
         final int actual = tempWatcher.getChildCount();
 
