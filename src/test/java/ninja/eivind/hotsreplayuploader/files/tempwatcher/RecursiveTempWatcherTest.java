@@ -24,6 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
+import java.time.temporal.ChronoUnit;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import static org.junit.Assert.*;
 
@@ -45,8 +49,24 @@ public class RecursiveTempWatcherTest {
     }
 
     @Test
-    public void testSetCallback() throws Exception {
-        fail("Test not implemented");
+    public void testSetCallbackIsAppliedProperly() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+        tempWatcher.setCallback(file -> latch.countDown());
+        TempWatcher lastChild = getChildRecursively(tempWatcher);
+        Consumer<File> callback = lastChild.getCallback();
+
+        callback.accept(null);
+
+        latch.await(100, TimeUnit.MILLISECONDS);
+    }
+
+    private TempWatcher getChildRecursively(RecursiveTempWatcher tempWatcher) {
+        TempWatcher child = tempWatcher.getChild();
+        //noinspection InstanceofConcreteClass
+        if(child != null && child instanceof RecursiveTempWatcher) {
+            return getChildRecursively((RecursiveTempWatcher) child);
+        }
+        return tempWatcher;
     }
 
     @Test
@@ -70,7 +90,7 @@ public class RecursiveTempWatcherTest {
     public void tearDown() throws Exception {
         tempWatcher.stop();
         // give watchers some time to wind down recursively
-        Thread.sleep(250L);
+        Thread.sleep(1000L);
         cleanupRecursive(directories.getRoot());
     }
 
@@ -79,7 +99,7 @@ public class RecursiveTempWatcherTest {
         for (File child : children != null ? children : new File[0]) {
             cleanupRecursive(child);
         }
-        if(!file.delete()) {
+        if(file.exists() && !file.delete()) {
             throw new AssertionError("Failed to clean up file " + file);
         }
     }

@@ -26,4 +26,6 @@ public interface TempWatcher {
     void setCallback(Consumer<File> callback);
 
     int getChildCount();
+
+    Consumer<File> getCallback();
 }

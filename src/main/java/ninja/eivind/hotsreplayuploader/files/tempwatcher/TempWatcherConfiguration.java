@@ -52,6 +52,11 @@ public class TempWatcherConfiguration {
                 public int getChildCount() {
                     return 0;
                 }
+
+                @Override
+                public Consumer<File> getCallback() {
+                    return null;
+                }
             };
         }
         return new RecursiveTempWatcher(tempDirectories);

@@ -140,4 +140,9 @@ public class BattleLobbyWatcher implements TempWatcher {
     public int getChildCount() {
         return 0;
     }
+
+    @Override
+    public Consumer<File> getCallback() {
+        return callback;
+    }
 }
