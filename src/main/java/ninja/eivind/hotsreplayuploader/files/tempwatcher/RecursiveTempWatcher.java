@@ -26,7 +26,6 @@ import java.util.function.Consumer;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public class RecursiveTempWatcher extends TempWatcher {
-    protected static final String REMAINDER_REGEX = String.format("\\%s", File.separator);
     private static final Logger logger = LoggerFactory.getLogger(RecursiveTempWatcher.class);
     private final BattleLobbyTempDirectories tempDirectories;
     private TempWatcher child;
@@ -51,7 +50,7 @@ public class RecursiveTempWatcher extends TempWatcher {
             relativeRemainder = relativeRemainder.substring(1);
         }
 
-        final String remainderRegex = String.format("\\%s", File.separator);
+        final String remainderRegex = getRemainderRegex();
 
         String[] splitRemainder = relativeRemainder.split(remainderRegex);
         final String firstChild = splitRemainder[0];
@@ -110,6 +109,16 @@ public class RecursiveTempWatcher extends TempWatcher {
                 return null;
             }
         };
+    }
+
+    protected String getRemainderRegex() {
+        final String remainderRegex;
+        if(File.separator.equals("\\")) {
+            remainderRegex = File.separator + File.separator;
+        } else {
+            remainderRegex = File.separator;
+        }
+        return remainderRegex;
     }
 
     private TempWatcher getChild(String relativeRemainder, String firstChild, File newRoot, Consumer<File> callback) {

@@ -137,12 +137,13 @@ public class RecursiveTempWatcherTest {
         final String remainderString = remainder.toString();
         final String difference = remainderString.replace(rootString, "").substring(1);
 
+        final String remainderRegex = tempWatcher.getRemainderRegex();
 
         logger.info("Remainder string: {}", remainderString);
         logger.info("Root string: {}", rootString);
         logger.info("Difference string: {}", difference);
-        logger.info("Splitting using regex string: {}", REMAINDER_REGEX);
-        final int expected = difference.split(REMAINDER_REGEX).length - 1;
+        logger.info("Splitting using regex string: {}", remainderRegex);
+        final int expected = difference.split(remainderRegex).length - 1;
         final int actual = tempWatcher.getChildCount();
 
         assertSame(String.format("Expecting %d children for tempwatcher", expected), expected, actual);
