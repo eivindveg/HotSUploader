@@ -53,7 +53,12 @@ public class TestEnvironmentPlatformService implements PlatformService {
     @Override
     public BattleLobbyTempDirectories getBattleLobbyTempDirectories() {
         final File root = new File(TEST_ROOT, "tmp");
-        final File remainder = new File(root, "Heroes of the Storm");
+        final File remainder = new File(root,
+                "some" + File.separator
+                        + "nested" + File.separator
+                        + "to" + File.separator
+                        + "path" + File.separator
+                        + "Heroes of the Storm");
 
         return new BattleLobbyTempDirectories(
                 root,
