@@ -87,7 +87,9 @@ public class ClientTest {
         javaFxTask.setOnSucceeded((result) -> latch.countDown());
         new Thread(javaFxTask).run();
 
-        latch.await(1, TimeUnit.SECONDS);
+        if(!latch.await(1, TimeUnit.SECONDS)) {
+            fail("JavaFX is not available.");
+        }
     }
 
     @Test
