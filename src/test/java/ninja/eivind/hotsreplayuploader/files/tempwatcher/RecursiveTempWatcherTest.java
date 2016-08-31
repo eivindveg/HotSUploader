@@ -143,9 +143,9 @@ public class RecursiveTempWatcherTest {
         } else {
             remainderRegex = File.separator;
         }
-        logger.debug("Remainder string: {}", remainderString);
-        logger.debug("Root string: {}", rootString);
-        logger.debug("Difference string: {}", difference);
+        logger.info("Remainder string: {}", remainderString);
+        logger.info("Root string: {}", rootString);
+        logger.info("Difference string: {}", difference);
         final int expected = difference.split(remainderRegex).length - 1;
         final int actual = tempWatcher.getChildCount();
 
