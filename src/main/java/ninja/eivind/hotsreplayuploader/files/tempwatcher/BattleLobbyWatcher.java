@@ -85,6 +85,7 @@ public class BattleLobbyWatcher implements TempWatcher {
                     WatchKey key = watchService.take();
                     key.pollEvents().forEach(event -> {
                         WatchEvent.Kind<?> kind = event.kind();
+                        @SuppressWarnings("unchecked")
                         final WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
                         final Path pathName = pathEvent.context();
                         logger.info("Received " + kind + " for path " + pathName);
