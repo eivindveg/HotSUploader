@@ -28,6 +28,8 @@ import static java.nio.file.StandardWatchEventKinds.*;
 public class RecursiveTempWatcher extends TempWatcher {
     private static final Logger logger = LoggerFactory.getLogger(RecursiveTempWatcher.class);
     private final BattleLobbyTempDirectories tempDirectories;
+    private final File newRoot;
+    private final String firstChild;
     private TempWatcher child;
     private Consumer<File> callback;
 
@@ -38,10 +40,7 @@ public class RecursiveTempWatcher extends TempWatcher {
     public RecursiveTempWatcher(BattleLobbyTempDirectories tempDirectories, Consumer<File> callback) {
         this.tempDirectories = tempDirectories;
         this.callback = callback;
-    }
 
-    @Override
-    protected Task<Void> createTask() {
         final File root = tempDirectories.getRoot();
         final File remainder = tempDirectories.getRemainder();
 
@@ -53,67 +52,74 @@ public class RecursiveTempWatcher extends TempWatcher {
         final String remainderRegex = getRemainderRegex();
 
         String[] splitRemainder = relativeRemainder.split(remainderRegex);
-        final String firstChild = splitRemainder[0];
-        final File newRoot = new File(root, firstChild);
-        if (child != null) {
-            child.cancel();
-        }
+        firstChild = splitRemainder[0];
+        newRoot = new File(root, firstChild);
         child = getChild(relativeRemainder, firstChild, newRoot, file -> {
-            if(callback != null) {
+            if (callback != null) {
                 callback.accept(file);
             }
         });
+    }
 
+    @Override
+    protected Task<Void> createTask() {
+        if (child != null && child.isRunning()) {
+            child.cancel();
+        }
         if (newRoot.exists()) {
             child.start();
         }
 
-        return new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                logger.info("Starting watch for {} in {}", firstChild, root);
-                final Path path = root.toPath();
-                try {
-                    Thread.sleep(50L);
-                    try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
-                        path.register(watchService, ENTRY_CREATE, ENTRY_DELETE);
+        return new WatcherTask();
+    }
 
-                        while (true) {
-                            WatchKey key = watchService.take();
-                            key.pollEvents().forEach(event -> {
-                                WatchEvent.Kind<?> kind = event.kind();
-                                if (kind == OVERFLOW) {
-                                    return;
-                                }
-                                @SuppressWarnings("unchecked")
-                                final WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
-                                final Path pathName = pathEvent.context();
-                                if (pathName.toString().equals(firstChild.replaceAll(File.pathSeparator, ""))) {
-                                    if (kind == ENTRY_CREATE) {
-                                        child.start();
-                                    } else if (kind == ENTRY_DELETE) {
-                                        child.cancel();
-                                    }
-                                }
-                            });
-                            if (!key.reset()) {
-                                break;
+    private class WatcherTask extends Task<Void> {
+
+        @Override
+        protected Void call() throws Exception {
+            final File root = tempDirectories.getRoot();
+            logger.info("Starting watch for {} in {}", firstChild, root);
+            final Path path = root.toPath();
+            try {
+                Thread.sleep(50L);
+                try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+                    path.register(watchService, ENTRY_CREATE, ENTRY_DELETE);
+
+                    while (true) {
+                        WatchKey key = watchService.take();
+                        key.pollEvents().forEach(event -> {
+                            WatchEvent.Kind<?> kind = event.kind();
+                            if (kind == OVERFLOW) {
+                                return;
                             }
+                            @SuppressWarnings("unchecked")
+                            final WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
+                            final Path pathName = pathEvent.context();
+                            if (pathName.toString().equals(firstChild.replaceAll(File.pathSeparator, ""))) {
+                                if (kind == ENTRY_CREATE) {
+                                    child.start();
+                                } else if (kind == ENTRY_DELETE) {
+                                    child.cancel();
+                                }
+                            }
+                        });
+                        if (!key.reset()) {
+                            break;
                         }
-                    } catch (IOException e) {
-                        logger.error("Watcher threw exception", e);
                     }
-                } catch (InterruptedException e) {
-                    logger.info("Watcher for {} in {} interrupted", firstChild, root);
+                } catch (IOException e) {
+                    logger.error("Watcher threw exception", e);
                 }
-                return null;
+            } catch (InterruptedException e) {
+                logger.info("Watcher for {} in {} interrupted", firstChild, root);
             }
-        };
+            return null;
+        }
     }
 
     protected String getRemainderRegex() {
         final String remainderRegex;
-        if(File.separator.equals("\\")) {
+        if (File.separator.equals("\\")) {
             remainderRegex = File.separator + File.separator;
         } else {
             remainderRegex = File.separator;
@@ -134,7 +140,7 @@ public class RecursiveTempWatcher extends TempWatcher {
 
     @Override
     public boolean cancel() {
-        if(child == null) {
+        if (child == null) {
             return super.cancel();
         }
         return child.cancel() && super.cancel();
