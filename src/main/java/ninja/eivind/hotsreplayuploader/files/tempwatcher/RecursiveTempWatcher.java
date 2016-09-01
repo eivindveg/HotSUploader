@@ -30,16 +30,10 @@ public class RecursiveTempWatcher extends TempWatcher {
     private final BattleLobbyTempDirectories tempDirectories;
     private final File newRoot;
     private final String firstChild;
-    private TempWatcher child;
-    private Consumer<File> callback;
+    private final TempWatcher child;
 
     public RecursiveTempWatcher(BattleLobbyTempDirectories tempDirectories) {
-        this(tempDirectories, null);
-    }
-
-    public RecursiveTempWatcher(BattleLobbyTempDirectories tempDirectories, Consumer<File> callback) {
         this.tempDirectories = tempDirectories;
-        this.callback = callback;
 
         final File root = tempDirectories.getRoot();
         final File remainder = tempDirectories.getRemainder();
@@ -54,23 +48,76 @@ public class RecursiveTempWatcher extends TempWatcher {
         String[] splitRemainder = relativeRemainder.split(remainderRegex);
         firstChild = splitRemainder[0];
         newRoot = new File(root, firstChild);
-        child = getChild(relativeRemainder, firstChild, newRoot, file -> {
-            if (callback != null) {
-                callback.accept(file);
-            }
-        });
+        child = getChild(relativeRemainder, firstChild, newRoot);
+    }
+
+    @Override
+    public void start() {
+        if (child.isRunning()) {
+            child.cancel();
+        }
+        super.start();
+        if (newRoot.exists()) {
+            child.start();
+        }
     }
 
     @Override
     protected Task<Void> createTask() {
-        if (child != null && child.isRunning()) {
-            child.cancel();
-        }
-        if (newRoot.exists()) {
-            child.start();
-        }
-
         return new WatcherTask();
+    }
+
+    protected String getRemainderRegex() {
+        final String remainderRegex;
+        if (File.separator.equals("\\")) {
+            remainderRegex = File.separator + File.separator;
+        } else {
+            remainderRegex = File.separator;
+        }
+        return remainderRegex;
+    }
+
+    private TempWatcher getChild(String relativeRemainder, String firstChild, File newRoot) {
+        if (relativeRemainder.contains(File.separator)) {
+            final String remainingChildren = relativeRemainder.replace(firstChild + File.separator, "");
+            final File newRemainder = new File(newRoot, remainingChildren);
+
+            return new RecursiveTempWatcher(new BattleLobbyTempDirectories(newRoot, newRemainder));
+        } else {
+            return new BattleLobbyWatcher(newRoot);
+        }
+    }
+
+    @Override
+    public boolean cancel() {
+        return child.cancel() && super.cancel();
+    }
+
+    @Override
+    public int getChildCount() {
+        return child.getChildCount() + 1;
+    }
+
+    @Override
+    public Consumer<File> getCallback() {
+        return child.getCallback();
+    }
+
+    @Override
+    public void setCallback(Consumer<File> callback) {
+        child.setCallback(callback);
+    }
+
+    protected TempWatcher getChild() {
+        return child;
+    }
+
+    private String getRelativeRemainder(File root, File remainder) {
+        String remainderString = remainder.toString().replace(root.toString(), "");
+        if (remainderString.startsWith(File.pathSeparator)) {
+            return remainderString.replace(File.pathSeparator, "");
+        }
+        return remainderString;
     }
 
     private class WatcherTask extends Task<Void> {
@@ -115,65 +162,5 @@ public class RecursiveTempWatcher extends TempWatcher {
             }
             return null;
         }
-    }
-
-    protected String getRemainderRegex() {
-        final String remainderRegex;
-        if (File.separator.equals("\\")) {
-            remainderRegex = File.separator + File.separator;
-        } else {
-            remainderRegex = File.separator;
-        }
-        return remainderRegex;
-    }
-
-    private TempWatcher getChild(String relativeRemainder, String firstChild, File newRoot, Consumer<File> callback) {
-        if (relativeRemainder.contains(File.separator)) {
-            final String remainingChildren = relativeRemainder.replace(firstChild + File.separator, "");
-            final File newRemainder = new File(newRoot, remainingChildren);
-
-            return new RecursiveTempWatcher(new BattleLobbyTempDirectories(newRoot, newRemainder), callback);
-        } else {
-            return new BattleLobbyWatcher(newRoot, callback);
-        }
-    }
-
-    @Override
-    public boolean cancel() {
-        if (child == null) {
-            return super.cancel();
-        }
-        return child.cancel() && super.cancel();
-    }
-
-    @Override
-    public int getChildCount() {
-        if (child != null) {
-            return child.getChildCount() + 1;
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public Consumer<File> getCallback() {
-        return callback;
-    }
-
-    @Override
-    public void setCallback(Consumer<File> callback) {
-        this.callback = callback;
-    }
-
-    protected TempWatcher getChild() {
-        return child;
-    }
-
-    private String getRelativeRemainder(File root, File remainder) {
-        String remainderString = remainder.toString().replace(root.toString(), "");
-        if (remainderString.startsWith(File.pathSeparator)) {
-            return remainderString.replace(File.pathSeparator, "");
-        }
-        return remainderString;
     }
 }

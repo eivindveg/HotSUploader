@@ -106,7 +106,7 @@ public class RecursiveTempWatcherTest {
             fail("Could not create file to drop target " + target + " in");
         }
 
-        if(!latch.await(500, TimeUnit.MILLISECONDS)) {
+        if(!latch.await(5000, TimeUnit.MILLISECONDS)) {
             fail("Latch was not tripped.");
         }
 
