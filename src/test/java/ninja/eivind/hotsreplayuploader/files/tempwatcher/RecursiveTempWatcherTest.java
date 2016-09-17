@@ -29,7 +29,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import rules.JavaFXThreadingRule;
 
 import java.io.File;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -106,7 +105,7 @@ public class RecursiveTempWatcherTest {
             fail("Could not create file to drop target " + target + " in");
         }
 
-        if(!latch.await(5000, TimeUnit.MILLISECONDS)) {
+        if(!latch.await(50000, TimeUnit.MILLISECONDS)) {
             fail("Latch was not tripped.");
         }
 
