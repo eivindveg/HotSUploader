@@ -17,51 +17,50 @@ package ninja.eivind.hotsreplayuploader.files;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 /**
  * Service that manages multiple {@link WatchHandler}s, which in turn manages different
  * {@link java.nio.file.WatchService}s. Runs concurrently.
  */
-@Singleton
-public class AccountDirectoryWatcher implements Closeable {
+@Component
+public class AccountDirectoryWatcher implements InitializingBean, DisposableBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountDirectoryWatcher.class);
     private final Set<File> watchDirectories;
-    private Set<WatchHandler> watchHandlers = new HashSet<>();
-    private Collection<Thread> threads;
+    private final Set<WatchHandler> watchHandlers = new HashSet<>();
+    private final ExecutorService executor;
 
-    @Inject
+    @Autowired
     public AccountDirectoryWatcher(StormHandler stormHandler) {
         watchDirectories = new HashSet<>(stormHandler.getReplayDirectories());
-        threads = new HashSet<>();
-        beginWatch();
+        executor = Executors.newFixedThreadPool(watchDirectories.isEmpty() ? 1 : watchDirectories.size());
     }
 
     public void beginWatch() {
         LOG.info("Initiating watch against directories:");
-        watchDirectories.stream().map(file -> Paths.get(file.toString())).forEach(path -> {
-            try {
-                LOG.info("\t" + path);
-                final WatchHandler watchHandler = new WatchHandler(path);
-                watchHandlers.add(watchHandler);
-                final Thread thread = new Thread(watchHandler);
-                thread.start();
-                threads.add(thread);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        watchDirectories.stream()
+                .map(file -> Paths.get(file.toString()))
+                .map(path -> {
+                    try {
+                        return new WatchHandler(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .forEach(watchHandlers::add);
         LOG.info("Watcher initiated.");
     }
 
@@ -77,9 +76,14 @@ public class AccountDirectoryWatcher implements Closeable {
     }
 
     @Override
-    public void close() {
-        threads.stream()
-                .filter(thread -> !thread.isInterrupted())
-                .forEach(Thread::interrupt);
+    public void afterPropertiesSet() throws Exception {
+        beginWatch();
+        watchHandlers.forEach(executor::execute);
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        LOG.info("Shutting down watch handlers");
+        executor.shutdownNow();
     }
 }

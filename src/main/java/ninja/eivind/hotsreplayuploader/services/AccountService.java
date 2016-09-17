@@ -21,10 +21,9 @@ import javafx.util.Duration;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.hotsreplayuploader.utils.StormHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +31,14 @@ import java.util.List;
  * {@link ScheduledService} for checking the current values of
  * a user's {@link Account}s. Will be checked often for MMR changes.
  */
+@Component
 public class AccountService extends ScheduledService<List<Account>> {
 
-    @Inject
+    @Autowired
     private StormHandler stormHandler;
-    @Inject
+    @Autowired
     private SimpleHttpClient httpClient;
-    @Inject
+    @Autowired
     private ObjectMapper mapper;
 
     public AccountService() {

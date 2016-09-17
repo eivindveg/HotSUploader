@@ -15,7 +15,8 @@
 package ninja.eivind.hotsreplayuploader.repositories;
 
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
-import ninja.eivind.hotsreplayuploader.models.Status;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.util.List;

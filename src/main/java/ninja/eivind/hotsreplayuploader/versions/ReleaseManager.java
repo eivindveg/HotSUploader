@@ -18,8 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import java.util.Optional;
  * Service object that intends to finds the last current GitHub.com release for the application, as well provide
  * its own implementation of current version to compare against.
  */
+@Component
 public class ReleaseManager {
 
     /**
@@ -45,12 +47,11 @@ public class ReleaseManager {
             = "http://github.com/{maintainer}/{repository}/releases/tag/{version}";
     private static final Logger LOG = LoggerFactory.getLogger(ReleaseManager.class);
     private final GitHubRelease currentRelease;
-    @Inject
+    @Autowired
     private ObjectMapper objectMapper;
-    @Inject
+    @Autowired
     private SimpleHttpClient httpClient;
 
-    @Inject
     public ReleaseManager() {
         currentRelease = buildCurrentRelease();
     }

@@ -16,7 +16,6 @@ package ninja.eivind.hotsreplayuploader.files;
 
 import javafx.application.Platform;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
-import ninja.eivind.hotsreplayuploader.utils.StormHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,47 +35,29 @@ import static java.nio.file.StandardWatchEventKinds.*;
 public class WatchHandler implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(WatchHandler.class);
-    private final WatchService watchService;
     private final List<FileListener> fileListeners;
     private final Path path;
 
     public WatchHandler(final Path path) throws IOException {
         fileListeners = new ArrayList<>();
         this.path = path;
-        watchService = FileSystems.getDefault().newWatchService();
-        path.register(watchService, ENTRY_CREATE);
-
     }
 
     @Override
     public void run() {
-        WatchKey key = null;
-        while (true) {
-            if (key != null) {
-                if (!key.reset()) {
+        try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+            path.register(watchService, ENTRY_CREATE);
+            while (true) {
+                WatchKey key = watchService.take();
+                key.pollEvents().forEach(this::handleEvent);
+                if(!key.reset()) {
                     break;
                 }
             }
-            try {
-                key = watchService.take();
-            } catch (InterruptedException e) {
-                LOG.info(getClass().getSimpleName() + " was interrupted. Winding down thread.");
-                break;
-            }
-            for (final WatchEvent<?> watchEvent : key.pollEvents()) {
-                if (!handleEvent(watchEvent)) {
-                    continue;
-                }
-                final boolean valid = key.reset();
-                if (!valid) {
-                    break;
-                }
-            }
-        }
-        try {
-            watchService.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOG.error("Failed to read", e);
+        } catch (InterruptedException e) {
+            LOG.info("{}-{} was interrupted. Winding down thread.", getClass().getSimpleName(), path);
         }
     }
 

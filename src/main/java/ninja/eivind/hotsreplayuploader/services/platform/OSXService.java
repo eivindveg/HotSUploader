@@ -18,13 +18,14 @@ import javafx.event.EventType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyTempDirectories;
+import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -33,21 +34,25 @@ import java.util.concurrent.TimeUnit;
  */
 public class OSXService implements PlatformService {
     private static final Logger LOG = LoggerFactory.getLogger(OSXService.class);
-    private final String libraryPath = "/Library/Application Support";
+    private static final String LIBRARY_PATH = "/Library/Application Support";
 
     @Override
     public File getApplicationHome() {
-        return new File(USER_HOME + "/" + libraryPath + "/" + APPLICATION_DIRECTORY_NAME);
+        return new File(USER_HOME + "/" + LIBRARY_PATH + "/" + APPLICATION_DIRECTORY_NAME);
     }
 
     @Override
     public File getHotSHome() {
-        return new File(USER_HOME + "/" + libraryPath + "/" + "Blizzard/Heroes of the Storm/Accounts/");
+        return new File(USER_HOME + "/" + LIBRARY_PATH + "/" + "Blizzard/Heroes of the Storm/Accounts/");
     }
 
     @Override
-    public void browse(final URI uri) throws IOException {
-        Desktop.getDesktop().browse(uri);
+    public void browse(final String uri) {
+        try {
+            Desktop.getDesktop().browse(SimpleHttpClient.encode(uri));
+        } catch (IOException e) {
+            LOG.error("Could not open " + uri + " in browser.", e);
+        }
     }
 
     @Override
@@ -86,6 +91,16 @@ public class OSXService implements PlatformService {
     }
 
     @Override
+    public BattleLobbyTempDirectories getBattleLobbyTempDirectories() {
+        final File root = new File(USER_HOME, "Library");
+        final File remainder = new File(USER_HOME + "/Library/Caches/TemporaryItems/Blizzard/Heroes of the Storm");
+        return new BattleLobbyTempDirectories(
+                root,
+                remainder
+        );
+    }
+
+    @Override
     public TrayIcon getTrayIcon(final Stage primaryStage) throws PlatformNotSupportedException {
         final URL imageURL = getLogoUrl();
         return buildTrayIcon(imageURL, primaryStage);
@@ -98,7 +113,7 @@ public class OSXService implements PlatformService {
      * @return true if <code>defaults read -g AppleInterfaceStyle</code>
      * has an exit status of <code>0</code> (i.e. _not_ returning "key not found").
      */
-    private boolean isMacMenuBarDarkMode() {
+    private static boolean isMacMenuBarDarkMode() {
         try {
             /* check for exit status only.
              * Once there are more modes than "dark" and "default",

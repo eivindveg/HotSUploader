@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,18 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package ninja.eivind.hotsreplayuploader.repositories;
+package ninja.eivind.hotsreplayuploader.di;
 
-import ninja.eivind.hotsreplayuploader.providers.Provider;
+import javafx.fxml.FXMLLoader;
 
-import java.util.Collection;
+import java.util.function.Supplier;
 
 /**
- * Repository interface for {@link Provider} services. Single entry point for locating a Provider to handle replay files
- * with external services.
+ * Marker interface for an object {@link FXMLLoader} provider. Needs to be its own interface in order to be visible as
+ * valid Spring bean.
  */
-public interface ProviderRepository {
-
-    Collection<Provider> getAll();
-
+public interface FXMLLoaderFactory extends Supplier<FXMLLoader> {
 }

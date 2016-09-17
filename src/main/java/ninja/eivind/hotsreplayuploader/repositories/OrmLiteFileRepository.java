@@ -20,14 +20,16 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
-import ninja.eivind.hotsreplayuploader.di.Initializable;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.Closeable;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -38,28 +40,28 @@ import java.util.stream.Collectors;
  * Implementation of a {@link FileRepository}, which is based on a database backend.<br>
  * Uses ORMLite to abstract database access.
  */
-@Singleton
-public class OrmLiteFileRepository implements FileRepository, Initializable, Closeable {
+@Repository
+public class OrmLiteFileRepository implements FileRepository, InitializingBean, DisposableBean {
 
-    @Inject
+    private static final Logger logger = LoggerFactory.getLogger(OrmLiteFileRepository.class);
+    private static final String FILE_NAME = "fileName";
     private ConnectionSource connectionSource;
     private Dao<ReplayFile, Long> dao;
-    @Inject
-    private AccountDirectoryWatcher accountDirectoryWatcher;
+    private final AccountDirectoryWatcher accountDirectoryWatcher;
     private Dao<UploadStatus, Long> statusDao;
 
-    public OrmLiteFileRepository() {
-    }
 
-    public OrmLiteFileRepository(ConnectionSource connectionSource) {
+    @Autowired
+    public OrmLiteFileRepository(ConnectionSource connectionSource, AccountDirectoryWatcher accountDirectoryWatcher) {
         this.connectionSource = connectionSource;
+        this.accountDirectoryWatcher = accountDirectoryWatcher;
     }
 
     /**
      * Initializes this object after all members have been injected. Called automatically by the IoC context.
      */
     @Override
-    public void initialize() {
+    public void afterPropertiesSet() {
         try {
             dao = DaoFactory.createDao(connectionSource, ReplayFile.class);
             statusDao = DaoFactory.createDao(connectionSource, UploadStatus.class);
@@ -86,6 +88,7 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
             }
             dao.refresh(file);
         } catch (SQLException e) {
+            logger.error("File update failed", e);
             throw new RuntimeException(e);
         }
     }
@@ -126,11 +129,11 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
 
     @Override
     public void deleteByFileName(ReplayFile file) {
-        final SelectArg selectArg = new SelectArg("fileName", file.getFileName());
+        final SelectArg selectArg = new SelectArg(FILE_NAME, file.getFileName());
         try {
             final DeleteBuilder<ReplayFile, Long> deleteBuilder = dao.deleteBuilder();
             deleteBuilder.where()
-                    .eq("fileName", selectArg);
+                    .eq(FILE_NAME, selectArg);
             dao.delete(deleteBuilder.prepare());
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -156,9 +159,9 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
 
     private ReplayFile getByFileName(final ReplayFile replayFile) {
         try {
-            final SelectArg selectArg = new SelectArg("fileName", replayFile.getFileName());
+            final SelectArg selectArg = new SelectArg(FILE_NAME, replayFile.getFileName());
             final PreparedQuery<ReplayFile> query = dao.queryBuilder()
-                    .where().eq("fileName", selectArg)
+                    .where().eq(FILE_NAME, selectArg)
                     .prepare();
 
             return dao.query(query).stream()
@@ -171,7 +174,7 @@ public class OrmLiteFileRepository implements FileRepository, Initializable, Clo
     }
 
     @Override
-    public void close() throws IOException {
+    public void destroy() throws IOException {
         connectionSource.closeQuietly();
     }
 }

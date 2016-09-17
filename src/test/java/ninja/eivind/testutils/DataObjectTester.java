@@ -14,8 +14,6 @@
 
 package ninja.eivind.testutils;
 
-import ninja.eivind.hotsreplayuploader.models.Account;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -33,7 +31,7 @@ public class DataObjectTester<T> {
     }
 
     public void testAllFieldsArePrivate() {
-        final Field[] fields = Account.class.getDeclaredFields();
+        final Field[] fields = clazz.getDeclaredFields();
 
         for (final Field field : fields) {
             assertFalse("Field is not accessible", field.isAccessible());

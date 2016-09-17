@@ -14,49 +14,57 @@
 
 package ninja.eivind.hotsreplayuploader;
 
-import com.gluonhq.ignite.DIContext;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import ninja.eivind.hotsreplayuploader.di.CloseableGuiceContext;
-import ninja.eivind.hotsreplayuploader.di.GuiceModule;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
-import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceProvider;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceFactoryBean;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
+import ninja.eivind.hotsreplayuploader.window.builder.SceneBuilderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.inject.Inject;
 import java.awt.*;
 import java.net.URL;
-import java.util.Collections;
 
 /**
  * Application entry point. Sets up the actions that connect to the underlying platform.
  */
-public class Client extends Application {
+@SpringBootApplication
+public class Client extends Application implements ApplicationContextAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(Client.class);
-    private final DIContext context = new CloseableGuiceContext(this, () -> Collections.singletonList(new GuiceModule()));
-    @Inject
-    private FXMLLoader fxmlLoader;
-    @Inject
+
+    private static String[] launchArgs;
+
+    @Autowired
     private ReleaseManager releaseManager;
-    @Inject
+    @Autowired
     private PlatformService platformService;
-    @Inject
+    @Autowired
     private StatusBinder statusBinder;
 
-    public static void main(String... args) {
-        PlatformService platformService = new PlatformServiceProvider().get();
+    @Autowired
+    private SceneBuilderFactory sceneBuilderFactory;
+
+    private ConfigurableApplicationContext context;
+
+    public static void main(String... args) throws Exception {
+        launchArgs = args;
+        PlatformService platformService = new PlatformServiceFactoryBean().getObject();
         if (platformService.isPreloaderSupported()) {
             LOG.info("Launching with preloader.");
             LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
@@ -66,39 +74,50 @@ public class Client extends Application {
         }
     }
 
+
     @Override
     public void stop() throws Exception {
-        context.dispose();
+        context.close();
         super.stop();
         System.exit(0);
     }
 
+
     @Override
     public void init() {
-        context.init();
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(Client.class);
+        context = builder.headless(false).run(launchArgs);
+        context.getAutowireCapableBeanFactory().autowireBean(this);
 
         //add a shutdown hook to be really sure, resources are closed properly
-        Runtime.getRuntime().addShutdownHook(new Thread(context::dispose));
+        Runtime.getRuntime().addShutdownHook(new Thread(context::close));
     }
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        final URL logo = platformService.getLogoUrl();
-        final Image image = new Image(logo.toString());
-        primaryStage.getIcons().add(image);
-        primaryStage.setResizable(false);
-        addToTray(primaryStage);
-        platformService.setupWindowBehaviour(primaryStage);
+        try {
+            final URL logo = platformService.getLogoUrl();
+            final Image image = new Image(logo.toString());
+            primaryStage.getIcons().add(image);
+            primaryStage.setResizable(false);
+            addToTray(primaryStage);
+            platformService.setupWindowBehaviour(primaryStage);
 
-        // Set window title
-        final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
-        primaryStage.setTitle(windowTitle);
+            // Set window title
+            final String windowTitle = Constants.APPLICATION_NAME + " v" + releaseManager.getCurrentVersion();
+            primaryStage.setTitle(windowTitle);
 
-        fxmlLoader.setLocation(getClass().getResource("/ninja/eivind/hotsreplayuploader/window/Home.fxml"));
-        final Parent root = fxmlLoader.load();
+            Scene scene = sceneBuilderFactory.builder()
+                    .setLocation("/ninja/eivind/hotsreplayuploader/window/Home.fxml")
+                    .build();
 
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (Exception e) {
+            LOG.error("Failed to start", e);
+            throw e;
+        }
     }
 
     private void addToTray(final Stage primaryStage) {
@@ -121,4 +140,8 @@ public class Client extends Application {
         }
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.context = (ConfigurableApplicationContext) applicationContext;
+    }
 }

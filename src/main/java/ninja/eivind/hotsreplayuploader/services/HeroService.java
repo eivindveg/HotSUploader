@@ -14,7 +14,6 @@
 
 package ninja.eivind.hotsreplayuploader.services;
 
-import com.google.inject.Inject;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
@@ -23,18 +22,19 @@ import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Singleton;
 import java.util.List;
 
 /**
  * {@link ScheduledService} for checking the current list of available {@link HotSLogsHero}es periodically.
  */
-@Singleton
+@Component
 public class HeroService extends ScheduledService<List<HotSLogsHero>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(HeroService.class);
-    @Inject
+    @Autowired
     private SimpleHttpClient httpClient;
 
     public HeroService() {

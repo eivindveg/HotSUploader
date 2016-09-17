@@ -17,9 +17,10 @@ package ninja.eivind.hotsreplayuploader.repositories;
 import com.j256.ormlite.db.H2DatabaseType;
 import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
@@ -28,17 +29,28 @@ import java.sql.SQLException;
  * to connect to the underlying database.<br>
  * Database connection strings may differ for development or production mode.
  */
-public class ConnectionSourceProvider implements Provider<ConnectionSource> {
+@Component
+public class ConnectionSourceFactoryBean implements FactoryBean<ConnectionSource> {
 
-    @Inject
+    @Autowired
     private DataSource dataSource;
 
     @Override
-    public ConnectionSource get() {
+    public ConnectionSource getObject() throws Exception {
         try {
             return new DataSourceConnectionSource(dataSource, new H2DatabaseType());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return ConnectionSource.class;
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return true;
     }
 }

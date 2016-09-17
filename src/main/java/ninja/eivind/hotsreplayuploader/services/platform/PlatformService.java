@@ -16,6 +16,7 @@ package ninja.eivind.hotsreplayuploader.services.platform;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyTempDirectories;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 
 import java.awt.*;
@@ -27,7 +28,7 @@ import java.net.URL;
 
 /**
  * Interface for implementations. There should be one active at all times, depending on the user's platform/operating
- * system. When no valid implementation can be detected, the {@link PlatformServiceProvider} will throw a
+ * system. When no valid implementation can be detected, the {@link PlatformServiceFactoryBean} will throw a
  * {@link PlatformNotSupportedException}.
  */
 public interface PlatformService {
@@ -97,9 +98,11 @@ public interface PlatformService {
         Platform.exit();
     }
 
-    void browse(URI uri) throws IOException;
+    void browse(String uri);
 
     URL getLogoUrl();
 
     boolean isPreloaderSupported();
+
+    BattleLobbyTempDirectories getBattleLobbyTempDirectories();
 }

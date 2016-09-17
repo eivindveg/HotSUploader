@@ -17,9 +17,9 @@ package ninja.eivind.hotsreplayuploader.utils;
 import ninja.eivind.hotsreplayuploader.models.Account;
 import ninja.eivind.hotsreplayuploader.models.Player;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,14 +31,14 @@ import java.util.stream.Collectors;
  * and provides several convencience methods like OS detection or
  * data mining game related information .
  */
-@Singleton
+@Component
 public class StormHandler {
 
-    private final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
-    private final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
+    private static final String ACCOUNT_FOLDER_FILTER = "(\\d+[^A-Za-z,.\\-()\\s])";
+    private static final String hotsAccountFilter = "(\\d-Hero-\\d-\\d{1,20})";
 
     private File hotsHome;
-    @Inject
+    @Autowired
     private PlatformService platformService;
 
     public StormHandler() {
@@ -57,13 +57,13 @@ public class StormHandler {
      * @return {@link List} of directories or an empty {@link List}
      */
     public List<File> getReplayDirectories() {
-        final List<File> replayDirectories = new ArrayList<>();
+        return getAccountDirectories().stream()
+                .map(StormHandler::getReplayDirectory)
+                .collect(Collectors.toList());
+    }
 
-        getAccountDirectories().stream()
-                    .map(folder -> new File(folder, "Replays"))
-                    .map(folder -> new File(folder, "Multiplayer"))
-                    .forEach(replayDirectories::add);
-        return replayDirectories;
+    private static File getReplayDirectory(File dir) {
+        return new File(dir, "Replays" + File.separator + "Multiplayer");
     }
 
     /**
@@ -91,7 +91,20 @@ public class StormHandler {
     }
 
     private File buildHotSHome() {
-        return platformService.getHotSHome();
+        String hotsHome = System.getProperty("hots.home");
+        if (hotsHome != null) {
+            return new File(hotsHome);
+        } else {
+            return platformService.getHotSHome();
+        }
+    }
+
+    private static long maxLastModified(File dir) {
+        File[] files = getReplayDirectory(dir).listFiles();
+        if (files == null || files.length < 1) return Long.MIN_VALUE;
+        return Arrays.stream(files)
+                .mapToLong(File::lastModified)
+                .max().orElse(Long.MIN_VALUE);
     }
 
     /**
@@ -109,6 +122,8 @@ public class StormHandler {
             Arrays.stream(hotsFolders).forEach(hotsAccounts::add);
         }
 
-        return hotsAccounts;
+         return hotsAccounts.stream()
+                .sorted((f1, f2) -> Long.compare(maxLastModified(f2), maxLastModified(f1)))
+                .collect(Collectors.toList());
     }
 }

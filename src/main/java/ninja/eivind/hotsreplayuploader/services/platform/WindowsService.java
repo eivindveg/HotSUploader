@@ -15,6 +15,8 @@
 package ninja.eivind.hotsreplayuploader.services.platform;
 
 import javafx.stage.Stage;
+import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyTempDirectories;
+import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,8 +72,12 @@ public class WindowsService implements PlatformService {
     }
 
     @Override
-    public void browse(final URI uri) throws IOException {
-        desktop.browse(uri);
+    public void browse(final String uri) {
+        try {
+            desktop.browse(SimpleHttpClient.encode(uri));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -82,6 +88,15 @@ public class WindowsService implements PlatformService {
     @Override
     public boolean isPreloaderSupported() {
         return true;
+    }
+
+    @Override
+    public BattleLobbyTempDirectories getBattleLobbyTempDirectories() {
+        final String tempDirProperty = System.getProperty("java.io.tmpdir");
+        final File root = new File(tempDirProperty);
+        final File remainder = new File(tempDirProperty + File.separator + "Heroes of the Storm");
+
+        return new BattleLobbyTempDirectories(root, remainder);
     }
 
     private File findMyDocuments() throws FileNotFoundException {

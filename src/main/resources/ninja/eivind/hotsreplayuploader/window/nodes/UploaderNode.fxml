@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<fx:root prefHeight="460.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../../styles/window.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <HBox BorderPane.alignment="CENTER">
+        <children>
+            <HBox HBox.hgrow="SOMETIMES">
+                <children>
+                    <Label styleClass="primary" text="New Replays: ">
+                        <font>
+                            <Font name="System Bold" size="18.0" />
+                        </font>
+                    </Label>
+                    <Label fx:id="newReplaysCount" styleClass="secondary" text="N/A">
+                        <font>
+                            <Font size="18.0" />
+                        </font>
+                    </Label>
+                </children>
+            </HBox>
+            <HBox>
+                <children>
+                    <Label fx:id="status" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Uploading" textFill="#00b000">
+                        <font>
+                            <Font name="System Bold" size="18.0" />
+                        </font>
+                    </Label>
+                </children>
+            </HBox>
+        </children>
+    </HBox>
+    <AnchorPane>
+        <children>
+            <ListView fx:id="newReplaysView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        </children>
+    </AnchorPane>
+    <HBox BorderPane.alignment="CENTER">
+        <children>
+            <Label styleClass="primary" text="Uploaded Replays: " HBox.hgrow="ALWAYS">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Label>
+            <Label fx:id="uploadedReplays" styleClass="secondary" text="N/A">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Label>
+        </children>
+    </HBox>
+    <padding>
+        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+    </padding>
+</fx:root>

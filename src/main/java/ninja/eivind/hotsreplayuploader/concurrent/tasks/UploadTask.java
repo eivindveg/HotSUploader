@@ -28,52 +28,61 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 
 /**
- * {@link Task} for uploading a replay to a {@link Collection} of {@link Provider}s
+ * {@link Task} for uploading a replayFile to a {@link Collection} of {@link Provider}s.<br>
+ * Blocks if there are no replays to process.
  */
 public class UploadTask extends Task<ReplayFile> {
     private static final Logger LOG = LoggerFactory.getLogger(UploadTask.class);
     private final Collection<Provider> providers;
-    private final ReplayFile take;
+    private final ReplayFile replayFile;
+    private final StormParser parser;
 
-    public UploadTask(final Collection<Provider> providers, final ReplayFile take) {
+
+    public UploadTask(final Collection<Provider> providers, ReplayFile replayFile, StormParser parser) {
         this.providers = providers;
-        this.take = take;
+        this.replayFile = replayFile;
+        this.parser = parser;
+
+        setOnFailed(event -> {
+            LOG.error("UploadTask failed.", event.getSource().getException());
+        });
     }
 
     @Override
     protected ReplayFile call() throws Exception {
-        LOG.info("Uploading replay " + take);
+        //take suceeded, so we now have a file to handle
+        LOG.info("Uploading replayFile " + replayFile);
         providers.forEach(provider -> {
 
-            final StormParser parser = new StormParser(take.getFile());
             Replay replay = null;
             Status preStatus;
             try {
-                replay = parser.parseReplay();
+                replay = parser.apply(replayFile.getFile());
                 preStatus = provider.getPreStatus(replay);
             } catch (MpqException e) {
-                LOG.warn("Could not parse replay, deferring to upload." + take, e);
+                LOG.warn("Could not parse replayFile, deferring to upload: " + replayFile, e);
 
                 preStatus = Status.EXCEPTION;
             }
             if (preStatus == Status.UPLOADED || preStatus == Status.UNSUPPORTED_GAME_MODE) {
                 LOG.info("Parsed preStatus reported no need to upload "
-                        + take.getFile() + " for provider " + provider.getName());
-                applyStatus(provider, preStatus);
+                        + replayFile + " for provider " + provider.getName());
+                applyStatus(replayFile, provider, preStatus);
             } else {
-                final Status upload = provider.upload(take);
+                final Status upload = provider.upload(replayFile);
                 if (upload == null) {
                     throw new RuntimeException("Failed");
                 }
-                applyStatus(provider, upload);
+                applyStatus(replayFile, provider, upload);
             }
             succeeded();
         });
-        return take;
+
+        return replayFile;
     }
 
-    private void applyStatus(final Provider provider, final Status status) {
-        final Collection<UploadStatus> uploadStatuses = take.getUploadStatuses();
+    private void applyStatus(final ReplayFile file, final Provider provider, final Status status) {
+        final Collection<UploadStatus> uploadStatuses = file.getUploadStatuses();
         final UploadStatus current = uploadStatuses.stream()
                 .filter(uploadStatus -> uploadStatus.getHost().equals(provider.getName()))
                 .findFirst()

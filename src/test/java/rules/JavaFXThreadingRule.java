@@ -40,6 +40,10 @@ public class JavaFXThreadingRule implements TestRule {
      */
     private static boolean jfxIsSetup;
 
+    public JavaFXThreadingRule() {
+        System.setProperty("java.awt.headless", "false");
+    }
+
     @Override
     public Statement apply(Statement statement, Description description) {
 
@@ -49,7 +53,6 @@ public class JavaFXThreadingRule implements TestRule {
     private static class OnJFXThreadStatement extends Statement {
 
         private final Statement statement;
-        private Throwable rethrownException = null;
 
         public OnJFXThreadStatement(Statement aStatement) {
             statement = aStatement;
@@ -64,24 +67,7 @@ public class JavaFXThreadingRule implements TestRule {
                 jfxIsSetup = true;
             }
 
-            final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-            Platform.runLater(() -> {
-                try {
-                    statement.evaluate();
-                } catch (Throwable e) {
-                    rethrownException = e;
-                }
-                countDownLatch.countDown();
-            });
-
-            countDownLatch.await();
-
-            // if an exception was thrown by the statement during evaluation,
-            // then re-throw it to fail the test
-            if (null != rethrownException) {
-                throw rethrownException;
-            }
+            statement.evaluate();
         }
 
         protected void setupJavaFX() throws InterruptedException {

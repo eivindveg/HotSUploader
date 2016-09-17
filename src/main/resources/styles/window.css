@@ -4,8 +4,16 @@
     -fx-hots-background: #444;
 }
 
-.header {
+.root {
     -fx-background-color: -fx-hots-background;
+}
+
+.teamTwo {
+    -fx-text-fill: crimson;
+}
+
+.teamOne {
+    -fx-text-fill: -fx-hots-secondary;
 }
 
 .button {
