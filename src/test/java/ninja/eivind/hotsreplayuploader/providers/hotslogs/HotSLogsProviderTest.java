@@ -57,7 +57,7 @@ public class HotSLogsProviderTest {
         URL resource = ClassLoader.getSystemClassLoader().getResource("test.StormReplay");
         assertNotNull("Could not load test resource", resource);
         String fileName = resource.getFile();
-        parsedReplay = new StormParser(new File(fileName)).parseReplay();
+        parsedReplay = new StormParser().apply(new File(fileName));
         SimpleHttpClient mock = mock(SimpleHttpClient.class);
         when(mock.simpleRequest(anyString())).thenReturn("Duplicate");
         provider.setHttpClient(mock);
@@ -74,10 +74,7 @@ public class HotSLogsProviderTest {
 
     @Test
     public void testProviderDoesNotTryToUploadPresentReplay() {
-        final BlockingQueue<ReplayFile> queue = new LinkedBlockingQueue<>();
-        queue.add(replayFile);
-
-        final UploadTask uploadTask = new UploadTask(Collections.singletonList(provider), queue);
+        final UploadTask uploadTask = new UploadTask(Collections.singletonList(provider), replayFile, new StormParser());
         uploadTask.run();
 
         verifyZeroInteractions(s3Client);

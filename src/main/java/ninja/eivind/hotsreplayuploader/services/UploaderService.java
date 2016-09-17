@@ -26,6 +26,7 @@ import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
 import ninja.eivind.hotsreplayuploader.repositories.FileRepository;
+import ninja.eivind.stormparser.StormParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -47,7 +48,7 @@ import java.util.stream.Collectors;
 @Component
 public class UploaderService extends ScheduledService<ReplayFile> implements InitializingBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UploaderService.class);
+    private static final Logger logger = LoggerFactory.getLogger(UploaderService.class);
     private final StringProperty uploadedCount = new SimpleStringProperty("0");
     private final BlockingQueue<ReplayFile> uploadQueue;
     private final ObservableList<ReplayFile> files;
@@ -57,18 +58,20 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
     private FileRepository fileRepository;
     @Autowired
     private List<Provider> providers;
+    @Autowired
+    private StormParser parser;
 
     public UploaderService() throws IOException {
-        LOG.info("Instantiating " + getClass().getSimpleName());
+        logger.info("Instantiating " + getClass().getSimpleName());
         uploadQueue = new LinkedBlockingQueue<>();
         files = FXCollections.observableArrayList();
         setExecutor(Executors.newCachedThreadPool());
-        LOG.info("Instantiated " + getClass().getSimpleName());
+        logger.info("Instantiated " + getClass().getSimpleName());
     }
 
     @Override
     public void afterPropertiesSet() {
-        LOG.info("Initializing " + getClass().getSimpleName());
+        logger.info("Initializing " + getClass().getSimpleName());
         watcher.addFileListener(file -> {
             fileRepository.updateReplay(file);
             files.add(file);
@@ -76,11 +79,11 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
         });
 
         registerInitial();
-        LOG.info("Initialized " + getClass().getSimpleName());
+        logger.info("Initialized " + getClass().getSimpleName());
     }
 
     private void registerInitial() {
-        LOG.info("Registering initial replays.");
+        logger.info("Registering initial replays.");
         final List<ReplayFile> fileList = fileRepository.getAll();
         uploadQueue.addAll(
                 fileList.stream()
@@ -93,7 +96,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
 
 
     private void getQueuableFiles(final List<ReplayFile> mapped) {
-        LOG.info("Registering not yet uploaded replays.");
+        logger.info("Registering not yet uploaded replays.");
         files.addAll(
                 mapped.stream()
                         .filter(replayFile -> replayFile.getStatus() == Status.NEW
@@ -102,7 +105,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
     }
 
     private void updateUploadedCount(final List<ReplayFile> mapped) {
-        LOG.info("Updating counter for uploaded replays.");
+        logger.info("Updating counter for uploaded replays.");
         uploadedCount.set(
                 String.valueOf(
                         mapped.stream()
@@ -124,49 +127,51 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
             };
         }
         try {
-            final ReplayFile take = uploadQueue.take();
-            if (!take.getFile().exists()) {
-                fileRepository.deleteReplay(take);
-                files.remove(take);
+            logger.info("Attempting to take file from queue");
+            final ReplayFile replayFile = uploadQueue.take();
+            if (!replayFile.getFile().exists()) {
+                fileRepository.deleteReplay(replayFile);
+                files.remove(replayFile);
                 return createTask();
             }
-            final UploadTask uploadTask = new UploadTask(providers, uploadQueue);
-            final Status oldStatus = take.getStatus();
+            final UploadTask uploadTask = new UploadTask(providers, replayFile, parser);
 
             uploadTask.setOnSucceeded(event -> {
                 try {
-                    final ReplayFile replayFile = uploadTask.get();
-                    final Status status = replayFile.getStatus();
-                    if (status == oldStatus) {
-                        return;
-                    }
+                    final ReplayFile result = uploadTask.get();
+                    final Status status = result.getStatus();
+                    logger.info("Resolved status {} for {}", status, result);
                     switch (status) {
                         case UPLOADED:
                             final int newCount = Integer.valueOf(uploadedCount.getValue()) + 1;
-                            LOG.info("Upload count updated to " + newCount);
                             uploadedCount.setValue(String.valueOf(newCount));
+                            logger.info("Upload count updated to " + newCount);
                         case UNSUPPORTED_GAME_MODE:
-                            replayFile.getFailedProperty().setValue(false);
-                            files.remove(replayFile);
+                            result.getFailedProperty().setValue(false);
+                            logger.info("Removing {} from display list", result);
+                            files.remove(result);
                             break;
                         case EXCEPTION:
                         case NEW:
-                            LOG.warn("Upload failed for replay " + replayFile + ". Tagging replay.");
-                            replayFile.getFailedProperty().set(true);
+                            logger.warn("Upload failed for replay " + result + ". Tagging replay.");
+                            result.getFailedProperty().set(true);
                             break;
                     }
-                    fileRepository.updateReplay(replayFile);
+                    logger.info("Updating {} in database.", result);
+                    fileRepository.updateReplay(result);
+                    logger.info("Finished handling file.");
                 } catch (InterruptedException | ExecutionException e) {
-                    LOG.error("Could not execute task successfully.", e);
+                    logger.error("Could not execute task successfully.", e);
                 }
             });
             uploadTask.setOnFailed(event -> {
-                LOG.error("UploadTask failed.", event.getSource().getException());
-                uploadQueue.add(take);
+                logger.error("UploadTask failed.", event.getSource().getException());
+                uploadQueue.add(replayFile);
             });
+            logger.info("Prepared task");
             return uploadTask;
         } catch (InterruptedException e) {
-            LOG.warn("Service interrupted while waiting for task", e);
+            logger.warn("Service interrupted while waiting for task", e);
             return null;
         }
     }
@@ -185,7 +190,7 @@ public class UploaderService extends ScheduledService<ReplayFile> implements Ini
                 .filter(status -> status.getStatus() != Status.UPLOADED)
                 .forEach(status -> status.setStatus(Status.NEW));
         uploadQueue.add(item);
-        LOG.info("Replay " + item + " invalidated and marked as new.");
+        logger.info("Replay " + item + " invalidated and marked as new.");
     }
 
     public void deleteReplay(ReplayFile item) {

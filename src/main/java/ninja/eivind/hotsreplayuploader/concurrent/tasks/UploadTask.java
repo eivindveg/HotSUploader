@@ -26,21 +26,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.concurrent.BlockingQueue;
 
 /**
- * {@link Task} for uploading a replay to a {@link Collection} of {@link Provider}s.<br>
+ * {@link Task} for uploading a replayFile to a {@link Collection} of {@link Provider}s.<br>
  * Blocks if there are no replays to process.
  */
 public class UploadTask extends Task<ReplayFile> {
     private static final Logger LOG = LoggerFactory.getLogger(UploadTask.class);
     private final Collection<Provider> providers;
-    private final BlockingQueue<ReplayFile> replayQueue;
+    private final ReplayFile replayFile;
+    private final StormParser parser;
 
 
-    public UploadTask(final Collection<Provider> providers, final BlockingQueue<ReplayFile> queue) {
+    public UploadTask(final Collection<Provider> providers, ReplayFile replayFile, StormParser parser) {
         this.providers = providers;
-        this.replayQueue = queue;
+        this.replayFile = replayFile;
+        this.parser = parser;
 
         setOnFailed(event -> {
             LOG.error("UploadTask failed.", event.getSource().getException());
@@ -49,19 +50,17 @@ public class UploadTask extends Task<ReplayFile> {
 
     @Override
     protected ReplayFile call() throws Exception {
-        final ReplayFile replayFile = replayQueue.take();
         //take suceeded, so we now have a file to handle
-        LOG.info("Uploading replay " + replayFile);
+        LOG.info("Uploading replayFile " + replayFile);
         providers.forEach(provider -> {
 
-            final StormParser parser = new StormParser(replayFile.getFile());
             Replay replay = null;
             Status preStatus;
             try {
-                replay = parser.parseReplay();
+                replay = parser.apply(replayFile.getFile());
                 preStatus = provider.getPreStatus(replay);
             } catch (MpqException e) {
-                LOG.warn("Could not parse replay, deferring to upload: " + replayFile, e);
+                LOG.warn("Could not parse replayFile, deferring to upload: " + replayFile, e);
 
                 preStatus = Status.EXCEPTION;
             }

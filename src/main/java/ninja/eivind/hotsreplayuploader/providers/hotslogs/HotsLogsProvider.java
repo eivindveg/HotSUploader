@@ -21,6 +21,7 @@ import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.stormparser.models.Player;
+import ninja.eivind.stormparser.models.PlayerType;
 import ninja.eivind.stormparser.models.Replay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,11 +160,11 @@ public class HotsLogsProvider extends Provider {
             switch (result) {
                 case "duplicate":
                 case "success":
-                case "computerplayerfound":
-                case "trymemode":
                     LOG.info("File registered with HotSLogs.com");
                     return Status.UPLOADED;
                 case "prealphawipe":
+                case "computerplayerfound":
+                case "trymemode":
                     LOG.warn("File not supported by HotSLogs.com");
                     return Status.UNSUPPORTED_GAME_MODE;
                 case "maintenance":
@@ -185,8 +186,8 @@ public class HotsLogsProvider extends Provider {
         return replay.getReplayDetails()
                 .getPlayers()
                 .stream()
-                .map(Player::getShortName)
-                .anyMatch(name -> name.contains(" "));
+                .map(Player::getPlayerType)
+                .anyMatch(playerType -> playerType == PlayerType.COMPUTER);
     }
 
     protected String getMatchId(Replay replay) throws NoSuchAlgorithmException {

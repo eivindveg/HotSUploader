@@ -23,6 +23,8 @@ import com.j256.ormlite.support.ConnectionSource;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.UploadStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,19 +43,18 @@ import java.util.stream.Collectors;
 @Repository
 public class OrmLiteFileRepository implements FileRepository, InitializingBean, DisposableBean {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrmLiteFileRepository.class);
     private static final String FILE_NAME = "fileName";
-    @Autowired
     private ConnectionSource connectionSource;
     private Dao<ReplayFile, Long> dao;
-    @Autowired
-    private AccountDirectoryWatcher accountDirectoryWatcher;
+    private final AccountDirectoryWatcher accountDirectoryWatcher;
     private Dao<UploadStatus, Long> statusDao;
 
-    public OrmLiteFileRepository() {
-    }
 
-    public OrmLiteFileRepository(ConnectionSource connectionSource) {
+    @Autowired
+    public OrmLiteFileRepository(ConnectionSource connectionSource, AccountDirectoryWatcher accountDirectoryWatcher) {
         this.connectionSource = connectionSource;
+        this.accountDirectoryWatcher = accountDirectoryWatcher;
     }
 
     /**
@@ -87,6 +88,7 @@ public class OrmLiteFileRepository implements FileRepository, InitializingBean, 
             }
             dao.refresh(file);
         } catch (SQLException e) {
+            logger.error("File update failed", e);
             throw new RuntimeException(e);
         }
     }

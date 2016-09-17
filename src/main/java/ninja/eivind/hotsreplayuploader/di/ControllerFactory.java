@@ -18,6 +18,8 @@ import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -26,24 +28,21 @@ import org.springframework.stereotype.Component;
  * @author Eivind Vegsundvåg
  */
 @Component
-public class ControllerFactory implements Callback<Class<?>, Object>, ApplicationContextAware {
+public class ControllerFactory implements Callback<Class<?>, Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ControllerFactory.class);
-    private ApplicationContext applicationContext;
 
-    @Override
-    public Object call(Class<?> param) {
-        try {
-            Object instance = param.newInstance();
-            applicationContext.getAutowireCapableBeanFactory().autowireBean(instance);
-            return instance;
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException("Could not instantiate JavaFX controller of type " + param.getName(), e);
-        }
+    private final AutowireCapableBeanFactory beanFactory;
+
+    @Autowired
+    public ControllerFactory(AutowireCapableBeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    public Object call(Class<?> param) {
+        Object bean = beanFactory.createBean(param);
+        beanFactory.autowireBean(bean);
+        return bean;
     }
 }

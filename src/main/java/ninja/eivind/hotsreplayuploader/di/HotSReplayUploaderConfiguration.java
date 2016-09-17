@@ -21,9 +21,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.util.Builder;
 import javafx.util.BuilderFactory;
 import ninja.eivind.hotsreplayuploader.Client;
+import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyWatcher;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
+import ninja.eivind.stormparser.StandaloneBattleLobbyParser;
+import ninja.eivind.stormparser.StormParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -55,6 +58,16 @@ public class HotSReplayUploaderConfiguration {
             loader.setBuilderFactory(builderFactory);
             return loader;
         };
+    }
+
+    @Bean
+    public StandaloneBattleLobbyParser battleLobbyParser() {
+        return new StandaloneBattleLobbyParser();
+    }
+
+    @Bean
+    public StormParser stormParser() {
+        return new StormParser();
     }
 
     @Bean

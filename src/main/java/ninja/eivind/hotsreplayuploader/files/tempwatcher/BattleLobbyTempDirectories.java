@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,16 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package ninja.eivind.hotsreplayuploader.di;
+package ninja.eivind.hotsreplayuploader.files.tempwatcher;
 
-import javafx.fxml.FXMLLoader;
-import org.springframework.beans.factory.InitializingBean;
+import java.io.File;
 
-/**
- * Functional interface used by JavaFX controllers that need to be initialized by the {@link FXMLLoader}
- */
-@FunctionalInterface
-public interface JavaFXController {
+public class BattleLobbyTempDirectories {
 
-    void initialize();
+    private final File root;
+    private final File remainder;
+
+    public BattleLobbyTempDirectories(File root, File remainder) {
+        this.root = root;
+        this.remainder = remainder;
+    }
+
+    public File getRoot() {
+        return root;
+    }
+
+    public File getRemainder() {
+        return remainder;
+    }
 }
