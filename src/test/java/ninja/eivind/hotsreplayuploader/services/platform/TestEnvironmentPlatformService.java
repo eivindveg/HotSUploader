@@ -15,12 +15,14 @@
 package ninja.eivind.hotsreplayuploader.services.platform;
 
 import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyTempDirectories;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.net.URL;
 
 @Component
+@Profile("test")
 public class TestEnvironmentPlatformService implements PlatformService {
     public static final File TEST_ROOT = new File("target" + File.separator + "test");
 
@@ -56,8 +58,8 @@ public class TestEnvironmentPlatformService implements PlatformService {
         final File remainder = new File(root,
                 "some" + File.separator
                         + "nested" + File.separator
-                        + "to" + File.separator
                         + "path" + File.separator
+                        + "to" + File.separator
                         + "Heroes of the Storm");
 
         return new BattleLobbyTempDirectories(
