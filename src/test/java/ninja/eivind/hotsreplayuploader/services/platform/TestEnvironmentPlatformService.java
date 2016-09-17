@@ -58,8 +58,8 @@ public class TestEnvironmentPlatformService implements PlatformService {
         final File remainder = new File(root,
                 "some" + File.separator
                         + "nested" + File.separator
-                        + "to" + File.separator
                         + "path" + File.separator
+                        + "to" + File.separator
                         + "Heroes of the Storm");
 
         return new BattleLobbyTempDirectories(
