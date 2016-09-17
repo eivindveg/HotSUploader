@@ -76,7 +76,7 @@
             <plugin>
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>8.5.0</version>
+                <version>8.7.0</version>
                 <configuration>
                     <updateExistingJar>true</updateExistingJar>
                     <nativeReleaseVersion>${releaseVersion}</nativeReleaseVersion>
@@ -91,6 +91,7 @@
                             -Xms25M
                         </jvmArg>
                     </jvmArgs>
+
                 </configuration>
                 <executions>
                     <execution>
