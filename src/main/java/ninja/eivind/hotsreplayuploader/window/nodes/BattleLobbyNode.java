@@ -89,7 +89,7 @@ public class BattleLobbyNode extends VBox implements JavaFXNode {
             final Player player = players.get(i);
             final String playerName = getPlayerName(player);
             final ObservableList<String> items;
-            if (i >= 5) {
+            if (i < 5) {
                 items = teamOneList.getItems();
             } else {
                 items = teamTwoList.getItems();
