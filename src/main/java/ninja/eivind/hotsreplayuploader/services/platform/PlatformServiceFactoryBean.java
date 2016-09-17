@@ -32,7 +32,7 @@ public class PlatformServiceFactoryBean implements FactoryBean<PlatformService> 
         LOG.info("Constructing PlatformService for " + OS_NAME);
         if (OS_NAME.contains("Windows")) {
             return new WindowsService();
-        } else if (OS_NAME.contains("Mac")) {
+        } else if (OS_NAME.toLowerCase().contains("mac")) {
             return new OSXService();
         } else if (OS_NAME.contains("Linux")) {
             return new LinuxService();
