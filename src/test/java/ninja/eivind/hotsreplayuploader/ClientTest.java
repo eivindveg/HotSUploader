@@ -119,6 +119,15 @@ public class ClientTest {
     }
 
     @Test
+    public void testNonSnapshotBuildIsThreeDigitName() throws Exception {
+        final String version = parse.select("project > version").text();
+        final String regex = "(\\d+\\.){2}\\d+";
+        if(!version.contains("-SNAPSHOT")) {
+            assertTrue("Not a development build, and the version is semver compliant.", version.matches(regex));
+        }
+    }
+
+    @Test
     public void testApplicationHasOSXIcon() throws Exception {
         String appName = parse.select("project > name").text();
         File icon = new File("src/main/deploy/package/macosx/" + appName + ".icns");
