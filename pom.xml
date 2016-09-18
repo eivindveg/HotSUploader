@@ -54,7 +54,6 @@
     <name>HotS Replay Uploader</name>
 
     <build>
-        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -80,7 +79,7 @@
                 <configuration>
                     <updateExistingJar>true</updateExistingJar>
                     <nativeReleaseVersion>${releaseVersion}</nativeReleaseVersion>
-                    <identifier>${project.build.finalName}</identifier>
+                    <identifier>${project.name}</identifier>
                     <css2bin>true</css2bin>
 
                     <jvmArgs>
