@@ -17,6 +17,8 @@ package ninja.eivind.hotsreplayuploader;
 import javafx.concurrent.Task;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.services.platform.TestEnvironmentPlatformService;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.BeforeClass;
@@ -90,6 +92,21 @@ public class ClientTest {
         if(!latch.await(1, TimeUnit.SECONDS)) {
             fail("JavaFX is not available.");
         }
+    }
+
+    @Test
+    public void testNotTryingToReleaseSnapshot() throws Exception {
+        Repository repository = new FileRepositoryBuilder()
+                .findGitDir(new File("."))
+                .build();
+
+        String branch = repository.getBranch();
+
+        final String version = parse.select("project > version").text();
+
+        assertFalse("We are not trying to merge a -SNAPSHOT version into master.",
+                version.contains("-SNAPSHOT") && branch.equals("master"));
+
     }
 
     @Test
