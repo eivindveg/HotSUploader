@@ -1,17 +1,21 @@
 language: java
-jdk:
-  - oraclejdk8
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3
-os:
-  - linux
-  - osx
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
+matrix:
+  include:
+    - os: linux
+      before_script:
+        - "export DISPLAY=:99.0"
+        - "sh -e /etc/init.d/xvfb start"
+        - sleep 3
+      jdk: oraclejdk8
+      addons:
+        apt:
+          packages:
+          - oracle-java8-installer
+    - os: osx
+      before_script:
+        - "ulimit -c unlimited"
+      osx_image: xcode7.3
+
 # this is not a library, so we can prepare for testing compiling - package for good measure to be as close to install
 # as possible
 install: mvn package -DskipTests=true
