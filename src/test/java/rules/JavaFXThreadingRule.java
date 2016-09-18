@@ -14,6 +14,7 @@
 
 package rules;
 
+import com.sun.javafx.application.PlatformImpl;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import org.junit.Rule;
@@ -81,12 +82,9 @@ public class JavaFXThreadingRule implements TestRule {
 
             logger.info("Attempting to initialize JavaFX");
 
-            SwingUtilities.invokeLater(() -> {
-                // initializes JavaFX environment
-                logger.info("Initializing JavaFX...");
-                new JFXPanel();
+            // initializes JavaFX environment
+            PlatformImpl.startup(() -> {
                 logger.info("JavaFX initialized.");
-
                 latch.countDown();
             });
 
