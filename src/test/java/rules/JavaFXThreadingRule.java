@@ -20,6 +20,8 @@ import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.util.concurrent.CountDownLatch;
@@ -35,6 +37,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class JavaFXThreadingRule implements TestRule {
 
+    private static final Logger logger = LoggerFactory.getLogger(JavaFXThreadingRule.class);
     /**
      * Flag for setting up the JavaFX, we only need to do this once for all tests.
      */
@@ -76,14 +79,17 @@ public class JavaFXThreadingRule implements TestRule {
 
             final CountDownLatch latch = new CountDownLatch(1);
 
+            logger.info("Attempting to initialize JavaFX");
+
             SwingUtilities.invokeLater(() -> {
                 // initializes JavaFX environment
+                logger.info("Initializing JavaFX...");
                 new JFXPanel();
+                logger.info("JavaFX initialized.");
 
                 latch.countDown();
             });
 
-            System.out.println("Initializing JavaFX...");
             latch.await();
             System.out.println("JavaFX was initialized in " + ((double) (System.currentTimeMillis() - timeMillis) / 1000.0) + "s");
         }
