@@ -59,6 +59,8 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
     @FXML
     private Label qmMmr;
     @FXML
+    private Label urMmr;
+    @FXML
     private Label hlMmr;
     @FXML
     private Label tlMmr;
@@ -185,6 +187,7 @@ public class HotsLogsNode extends VBox implements JavaFXNode {
         }
 
         qmMmr.setText(readMmr(account.getLeaderboardRankings(), "QuickMatch"));
+        urMmr.setText(readMmr(account.getLeaderboardRankings(), "UnrankedDraft"));
         hlMmr.setText(readMmr(account.getLeaderboardRankings(), "HeroLeague"));
         tlMmr.setText(readMmr(account.getLeaderboardRankings(), "TeamLeague"));
     }

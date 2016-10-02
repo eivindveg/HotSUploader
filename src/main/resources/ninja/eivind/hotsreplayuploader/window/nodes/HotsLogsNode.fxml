@@ -67,6 +67,14 @@
         </BorderPane>
         <BorderPane>
             <left>
+                <Label styleClass="primary" text="Unranked Draft MMR: " BorderPane.alignment="CENTER" />
+            </left>
+            <right>
+                <Label fx:id="urMmr" styleClass="secondary" text="N/A" BorderPane.alignment="CENTER" />
+            </right>
+        </BorderPane>
+        <BorderPane>
+            <left>
                 <Label styleClass="primary" text="Quick Match MMR: " BorderPane.alignment="CENTER" />
             </left>
             <right>
