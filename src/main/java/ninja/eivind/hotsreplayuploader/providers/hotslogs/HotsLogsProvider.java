@@ -23,6 +23,7 @@ import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.stormparser.models.Player;
 import ninja.eivind.stormparser.models.PlayerType;
 import ninja.eivind.stormparser.models.Replay;
+import ninja.eivind.stormparser.models.replaycomponents.GameMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +135,10 @@ public class HotsLogsProvider extends Provider {
         // Temporary fix for computer players found until the parser supports this
         if (replayHasComputerPlayers(replay)) {
             LOG.info("Computer players found for replay, tagging as uploaded.");
+            return Status.UNSUPPORTED_GAME_MODE;
+        }
+        if (replay.getInitData().getGameMode() == GameMode.BRAWL) {
+            LOG.info("Brawl detected, which is unsupported by Hotslogs.com. Tagging as unsupported.");
             return Status.UNSUPPORTED_GAME_MODE;
         }
         try {
