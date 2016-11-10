@@ -137,10 +137,6 @@ public class HotsLogsProvider extends Provider {
             LOG.info("Computer players found for replay, tagging as uploaded.");
             return Status.UNSUPPORTED_GAME_MODE;
         }
-        if (replay.getInitData().getGameMode() == GameMode.BRAWL) {
-            LOG.info("Brawl detected, which is unsupported by Hotslogs.com. Tagging as unsupported.");
-            return Status.UNSUPPORTED_GAME_MODE;
-        }
         try {
             final String matchId = getMatchId(replay);
             LOG.info("Calculated matchId to be" + matchId);
