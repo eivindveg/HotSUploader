@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root prefHeight="460.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../../styles/window.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="460.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../../styles/window.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
     <HBox BorderPane.alignment="CENTER">
         <children>
             <HBox HBox.hgrow="SOMETIMES">
@@ -64,6 +64,9 @@
             </children>
          </VBox>
       </children>
+      <VBox.margin>
+         <Insets left="8.0" right="8.0" />
+      </VBox.margin>
    </HBox>
    <HBox>
       <children>
@@ -79,7 +82,4 @@
          <Insets left="16.0" right="16.0" top="16.0" />
       </padding>
    </HBox>
-    <padding>
-        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-    </padding>
 </fx:root>

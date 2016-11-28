@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root prefHeight="200.0" prefWidth="100.0" spacing="10.0" styleClass="root" stylesheets="@../../../../../styles/window.css" type="VBox" BorderPane.alignment="CENTER" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.76-ea">
+<fx:root prefHeight="200.0" prefWidth="100.0" spacing="10.0" styleClass="root" stylesheets="@../../../../../styles/window.css" type="VBox" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <ImageView fx:id="logo" fitWidth="225.0" pickOnBounds="true" preserveRatio="true">
             <image>
@@ -119,7 +119,4 @@
             </children>
         </VBox>
     </children>
-    <padding>
-        <Insets left="5.0" right="5.0" />
-    </padding>
 </fx:root>

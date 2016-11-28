@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -9,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root prefHeight="460.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../../styles/window.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="460.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../../styles/window.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
     <HBox BorderPane.alignment="CENTER">
         <children>
             <HBox HBox.hgrow="SOMETIMES">
@@ -56,7 +55,4 @@
             </Label>
         </children>
     </HBox>
-    <padding>
-        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-    </padding>
 </fx:root>

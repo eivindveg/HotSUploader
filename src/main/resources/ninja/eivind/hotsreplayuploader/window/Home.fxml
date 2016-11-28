@@ -15,9 +15,9 @@
 <?import ninja.eivind.hotsreplayuploader.window.nodes.HotsLogsNode?>
 <?import ninja.eivind.hotsreplayuploader.window.nodes.UploaderNode?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="root" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ninja.eivind.hotsreplayuploader.window.HomeController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="root" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ninja.eivind.hotsreplayuploader.window.HomeController">
     <padding>
-        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
     </padding>
    <bottom>
       <HBox BorderPane.alignment="CENTER" />
@@ -28,7 +28,7 @@
    <top>
       <HBox BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets bottom="20.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="24.0" />
          </BorderPane.margin>
          <children>
             <StackPane HBox.hgrow="SOMETIMES">
