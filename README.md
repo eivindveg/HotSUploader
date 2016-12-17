@@ -1,8 +1,13 @@
-[![Travis CI](http://travis-ci.org/eivindveg/HotSUploader.svg?branch=develop)](http://travis-ci.org/eivindveg/HotSUploader)
 [![VersionEye](https://www.versioneye.com/user/projects/563d0ed44d415e001b000073/badge.svg?style=flat)](https://www.versioneye.com/user/projects/563d0ed44d415e001b000073)
 [![Join the chat at https://gitter.im/eivindveg/HotSUploader](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/eivindveg/HotSUploader)
 # HotS Replay Uploader
 JavaFX-based Replay Uploader for Heroes of the Storm
+
+## Build statuses
+### Windows:
+[![Build status](https://ci.appveyor.com/api/projects/status/c9c2249xjsvpvxq5/branch/develop?svg=true)](https://ci.appveyor.com/project/eivindveg/hotsuploader/branch/develop)
+### Linux(Ubuntu):
+[![Travis CI](http://travis-ci.org/eivindveg/HotSUploader.svg?branch=develop)](http://travis-ci.org/eivindveg/HotSUploader)
 
 ## About
 HotS Replay Uploader is a JavaFX-based uploader for HotsLogs.com that aims to make uploading replays and looking up relevant statistics as effortless as possible.  
