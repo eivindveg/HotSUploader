@@ -153,7 +153,6 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.192</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -163,7 +162,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.11.33</version>
+            <version>1.11.63</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -174,7 +173,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>3.5.0.201409260305-r</version>
+            <version> 4.5.0.201609210915-r</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -196,7 +195,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.9.2</version>
+            <version>1.10.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
