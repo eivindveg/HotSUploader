@@ -32,6 +32,7 @@ import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import static org.junit.Assert.*;
@@ -96,6 +97,7 @@ public class RecursiveTempWatcherTest {
         final File[] fileAccessor = new File[1];
         final File tempWriteReplayFolder = new File(directories.getRemainder(), "TempWriteReplayP99");
         final File target = new File(tempWriteReplayFolder, BattleLobbyWatcher.REPLAY_SERVER_BATTLELOBBY);
+
         tempWatcher.setCallback(file -> {
             fileAccessor[0] = file;
             latch.countDown();
@@ -105,7 +107,7 @@ public class RecursiveTempWatcherTest {
             fail("Could not create file to drop target " + target + " in");
         }
 
-        if(!latch.await(50000, TimeUnit.MILLISECONDS)) {
+        if(latch.getCount() != 0 && !latch.await(50000, TimeUnit.MILLISECONDS)) {
             fail("Latch was not tripped.");
         }
 
