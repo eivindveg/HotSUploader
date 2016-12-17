@@ -33,6 +33,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
 import java.util.function.Consumer;
 
 import static org.junit.Assert.*;
@@ -93,7 +94,7 @@ public class RecursiveTempWatcherTest {
 
     @Test
     public void testCallbackIsInvokedWhenRelevantFileIsDiscovered() throws Exception {
-        CountDownLatch latch = new CountDownLatch(1);
+        final CountDownLatch latch = new CountDownLatch(1);
         final File[] fileAccessor = new File[1];
         final File tempWriteReplayFolder = new File(directories.getRemainder(), "TempWriteReplayP99");
         final File target = new File(tempWriteReplayFolder, BattleLobbyWatcher.REPLAY_SERVER_BATTLELOBBY);
@@ -107,8 +108,12 @@ public class RecursiveTempWatcherTest {
             fail("Could not create file to drop target " + target + " in");
         }
 
-        if(latch.getCount() != 0 && !latch.await(50000, TimeUnit.MILLISECONDS)) {
-            fail("Latch was not tripped.");
+        long stopAt = System.currentTimeMillis() + 50_000;
+        while (latch.getCount() != 0) {
+            if(System.currentTimeMillis() > stopAt) {
+                fail("Latch was not tripped");
+            }
+            Thread.sleep(1_000);
         }
 
         final String expected = target.getName();
