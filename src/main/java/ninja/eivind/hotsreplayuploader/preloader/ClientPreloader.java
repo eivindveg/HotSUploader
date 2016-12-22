@@ -40,11 +40,6 @@ public class ClientPreloader extends Preloader {
     private ProgressIndicator progress;
 
     @Override
-    public void init() {
-
-    }
-
-    @Override
     public void handleApplicationNotification(PreloaderNotification info) {
         super.handleApplicationNotification(info);
         if (info instanceof BeanNotification) {
@@ -58,10 +53,6 @@ public class ClientPreloader extends Preloader {
                 messageBox.setText("Loading bean " + beanName);
             }
         }
-    }
-
-    @Override
-    public void handleProgressNotification(ProgressNotification info) {
     }
 
     @Override
