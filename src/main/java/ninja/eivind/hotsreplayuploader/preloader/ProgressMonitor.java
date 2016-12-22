@@ -15,8 +15,6 @@
 package ninja.eivind.hotsreplayuploader.preloader;
 
 import javafx.application.Preloader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContextInitializer;
@@ -31,8 +29,6 @@ public class ProgressMonitor implements ApplicationContextInitializer<Configurab
      * In any case, >= 75 seems to mean the context is fully mapped
      */
     private static final int MIN_BEAN_DEF_COUNT = 75;
-    private static final Logger logger = LoggerFactory.getLogger(ProgressMonitor.class);
-    private ConfigurableListableBeanFactory beanFactory;
     private PreloaderHandle handle;
 
     public ProgressMonitor(PreloaderHandle handle) {
@@ -42,8 +38,8 @@ public class ProgressMonitor implements ApplicationContextInitializer<Configurab
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
+        final ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
         applicationContext.addApplicationListener(this);
-        beanFactory = applicationContext.getBeanFactory();
         beanFactory.addBeanPostProcessor(new ProgressMonitorBeanPostProcessor(beanFactory, handle, MIN_BEAN_DEF_COUNT));
     }
 
