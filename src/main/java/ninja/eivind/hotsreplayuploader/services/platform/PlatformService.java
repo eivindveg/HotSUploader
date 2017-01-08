@@ -41,7 +41,7 @@ public interface PlatformService {
     File getHotSHome();
 
     /**
-     * Defines how the application reacts on window events like closing or hiding.
+     * Defines how the application reacts on window notifications like closing or hiding.
      * @param primaryStage the main stage
      */
     default void setupWindowBehaviour(Stage primaryStage) {

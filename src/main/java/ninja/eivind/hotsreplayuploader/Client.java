@@ -1,4 +1,4 @@
-// Copyright 2015 Eivind Vegsundvåg
+// Copyright 2015-2016 Eivind Vegsundvåg
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
+import ninja.eivind.hotsreplayuploader.preloader.ClientPreloader;
+import ninja.eivind.hotsreplayuploader.preloader.ProgressMonitor;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceFactoryBean;
@@ -33,9 +35,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.*;
 
 import java.awt.*;
 import java.net.URL;
@@ -60,12 +60,15 @@ public class Client extends Application implements ApplicationContextAware {
     @Autowired
     private SceneBuilderFactory sceneBuilderFactory;
 
+    private static boolean preloaderSupported;
+
     private ConfigurableApplicationContext context;
 
     public static void main(String... args) throws Exception {
         launchArgs = args;
         PlatformService platformService = new PlatformServiceFactoryBean().getObject();
-        if (platformService.isPreloaderSupported()) {
+        preloaderSupported = platformService.isPreloaderSupported();
+        if (preloaderSupported) {
             LOG.info("Launching with preloader.");
             LauncherImpl.launchApplication(Client.class, ClientPreloader.class, args);
         } else {
@@ -86,6 +89,9 @@ public class Client extends Application implements ApplicationContextAware {
     @Override
     public void init() {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(Client.class);
+        if(preloaderSupported) {
+            builder.initializers(new ProgressMonitor(this::notifyPreloader));
+        }
         context = builder.headless(false).run(launchArgs);
         context.getAutowireCapableBeanFactory().autowireBean(this);
 
