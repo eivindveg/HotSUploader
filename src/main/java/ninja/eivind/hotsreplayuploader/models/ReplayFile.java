@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,7 +68,8 @@ public class ReplayFile implements Serializable {
                     .map(ReplayFile::new)
                     .collect(Collectors.toList());
         } catch (IOException exception) {
-            throw new RuntimeException(exception);
+            LOG.debug("Ignored file {}. Cause : {}", file, exception);
+            return Collections.emptyList();
         }
     }
 
