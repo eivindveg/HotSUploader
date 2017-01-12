@@ -25,10 +25,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Repesents a physical replay file, which can be parsed and uploaded to {@link Provider}s.<br>
@@ -56,17 +61,14 @@ public class ReplayFile implements Serializable {
     }
 
     public static List<ReplayFile> fromDirectory(File file) {
-        final List<ReplayFile> replayFiles = new ArrayList<>();
-        final File[] children = file.listFiles((dir, name) -> name.endsWith(".StormReplay"));
-        for (final File child : children) {
-            if (child.isDirectory()) {
-                replayFiles.addAll(fromDirectory(child));
-            } else {
-                replayFiles.add(new ReplayFile(child));
-            }
+        try {
+            return Files.walk(file.toPath(), FileVisitOption.FOLLOW_LINKS)
+                    .map(Path::toFile)
+                    .map(ReplayFile::new)
+                    .collect(Collectors.toList());
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
         }
-
-        return replayFiles;
     }
 
     public long getId() {
