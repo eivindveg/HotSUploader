@@ -43,11 +43,7 @@ public class WindowsService implements PlatformService {
     @Override
     public File getApplicationHome() {
         if (documentsHome == null) {
-            try {
-                documentsHome = findMyDocuments();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            documentsHome = findMyDocuments();
         }
         return new File(documentsHome, APPLICATION_DIRECTORY_NAME);
     }
@@ -55,11 +51,7 @@ public class WindowsService implements PlatformService {
     @Override
     public File getHotSHome() {
         if (documentsHome == null) {
-            try {
-                documentsHome = findMyDocuments();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            documentsHome = findMyDocuments();
         }
         return new File(documentsHome, "Heroes of the Storm\\Accounts");
     }
