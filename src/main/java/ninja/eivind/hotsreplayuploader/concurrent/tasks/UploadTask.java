@@ -54,7 +54,7 @@ public class UploadTask extends Task<ReplayFile> {
         LOG.info("Uploading replayFile " + replayFile);
         providers.forEach(provider -> {
 
-            Replay replay = null;
+            Replay replay;
             Status preStatus;
             try {
                 replay = parser.apply(replayFile.getFile());

@@ -23,11 +23,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.BuilderFactory;
-import ninja.eivind.hotsreplayuploader.di.FXMLLoaderFactory;
 import ninja.eivind.hotsreplayuploader.di.JavaFXController;
 import ninja.eivind.hotsreplayuploader.di.nodes.JavaFXNode;
 import ninja.eivind.hotsreplayuploader.files.AccountDirectoryWatcher;
-import ninja.eivind.hotsreplayuploader.files.tempwatcher.BattleLobbyWatcher;
 import ninja.eivind.hotsreplayuploader.files.tempwatcher.TempWatcher;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.versions.GitHubRelease;
@@ -40,7 +38,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 /**

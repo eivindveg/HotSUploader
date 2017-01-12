@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
-import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -99,7 +98,7 @@ public class WindowsService implements PlatformService {
         return new BattleLobbyTempDirectories(root, remainder);
     }
 
-    private File findMyDocuments() throws FileNotFoundException {
+    private File findMyDocuments() {
         Process p = null;
         String myDocuments = null;
         try {

@@ -15,12 +15,10 @@
 package ninja.eivind.hotsreplayuploader.window.nodes;
 
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import ninja.eivind.hotsreplayuploader.di.FXMLLoaderFactory;
 import ninja.eivind.hotsreplayuploader.di.nodes.JavaFXNode;
