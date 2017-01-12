@@ -20,6 +20,7 @@ import ninja.eivind.hotsreplayuploader.providers.hotslogs.HotSLogsHero;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public class HeroListTask extends Task<List<HotSLogsHero>> {
         final String result = httpClient.simpleRequest(API_ROUTE);
         final HotSLogsHero[] heroes = new ObjectMapper().readValue(result, HotSLogsHero[].class);
         final List<HotSLogsHero> heroList = Arrays.asList(heroes);
-        heroList.sort((o1, o2) -> o1.getPrimaryName().compareTo(o2.getPrimaryName()));
+        heroList.sort(Comparator.comparing(HotSLogsHero::getPrimaryName));
         return heroList;
     }
 }
