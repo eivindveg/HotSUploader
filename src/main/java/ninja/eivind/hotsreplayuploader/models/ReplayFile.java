@@ -132,9 +132,7 @@ public class ReplayFile implements Serializable {
 
     public boolean hasExceptions() {
         return uploadStatuses.stream()
-                .filter(uploadStatus -> uploadStatus.getStatus() == Status.EXCEPTION)
-                .findAny()
-                .isPresent();
+                .anyMatch(uploadStatus -> uploadStatus.getStatus() == Status.EXCEPTION);
     }
 
     public String getFileName() {
