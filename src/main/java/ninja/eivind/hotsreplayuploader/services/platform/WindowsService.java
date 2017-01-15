@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
-import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -44,11 +43,7 @@ public class WindowsService implements PlatformService {
     @Override
     public File getApplicationHome() {
         if (documentsHome == null) {
-            try {
-                documentsHome = findMyDocuments();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            documentsHome = findMyDocuments();
         }
         return new File(documentsHome, APPLICATION_DIRECTORY_NAME);
     }
@@ -56,11 +51,7 @@ public class WindowsService implements PlatformService {
     @Override
     public File getHotSHome() {
         if (documentsHome == null) {
-            try {
-                documentsHome = findMyDocuments();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            documentsHome = findMyDocuments();
         }
         return new File(documentsHome, "Heroes of the Storm\\Accounts");
     }
@@ -99,7 +90,7 @@ public class WindowsService implements PlatformService {
         return new BattleLobbyTempDirectories(root, remainder);
     }
 
-    private File findMyDocuments() throws FileNotFoundException {
+    private File findMyDocuments() {
         Process p = null;
         String myDocuments = null;
         try {

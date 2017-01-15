@@ -28,7 +28,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import javax.xml.ws.Provider;
 import java.io.File;
 
 @Component

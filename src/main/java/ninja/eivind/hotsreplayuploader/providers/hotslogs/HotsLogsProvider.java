@@ -15,7 +15,6 @@
 package ninja.eivind.hotsreplayuploader.providers.hotslogs;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.models.Status;
 import ninja.eivind.hotsreplayuploader.providers.Provider;
@@ -23,12 +22,10 @@ import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.stormparser.models.Player;
 import ninja.eivind.stormparser.models.PlayerType;
 import ninja.eivind.stormparser.models.Replay;
-import ninja.eivind.stormparser.models.replaycomponents.GameMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
 
 import java.io.File;

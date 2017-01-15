@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,13 +52,7 @@ public class AccountDirectoryWatcher implements InitializingBean, DisposableBean
         LOG.info("Initiating watch against directories:");
         watchDirectories.stream()
                 .map(file -> Paths.get(file.toString()))
-                .map(path -> {
-                    try {
-                        return new WatchHandler(path);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
+                .map(WatchHandler::new)
                 .forEach(watchHandlers::add);
         LOG.info("Watcher initiated.");
     }

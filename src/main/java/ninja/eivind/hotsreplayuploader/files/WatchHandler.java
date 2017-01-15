@@ -38,7 +38,7 @@ public class WatchHandler implements Runnable {
     private final List<FileListener> fileListeners;
     private final Path path;
 
-    public WatchHandler(final Path path) throws IOException {
+    public WatchHandler(final Path path) {
         fileListeners = new ArrayList<>();
         this.path = path;
     }
