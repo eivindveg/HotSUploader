@@ -35,7 +35,7 @@ public class WindowsService implements PlatformService {
 
     private static final Logger LOG = LoggerFactory.getLogger(WindowsService.class);
     private Desktop desktop;
-    private Pattern pathPattern = Pattern.compile("[a-zA-Z]:\\\\(\\\\|(\\w+|\\.)| )+");
+    private Pattern pathPattern = Pattern.compile("^[a-zA-Z]:\\\\(((?![<>:\"/\\\\|?*]).)+((?<![ .])\\\\)?)*$");
     private File documentsHome;
     public WindowsService() {
         desktop = Desktop.getDesktop();
