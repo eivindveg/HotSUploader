@@ -34,7 +34,7 @@ public class WindowsService implements PlatformService {
 
     private static final Logger LOG = LoggerFactory.getLogger(WindowsService.class);
     private Desktop desktop;
-    private Pattern pathPattern = Pattern.compile("[a-zA-Z]:\\\\(\\\\|(\\w+|\\.)| )+");
+    private Pattern pathPattern = Pattern.compile("^[a-zA-Z]:\\\\(((?![<>:\"/\\\\|?*]).)+((?<![ .])\\\\)?)*$");
     private File documentsHome;
     public WindowsService() {
         desktop = Desktop.getDesktop();
@@ -92,7 +92,6 @@ public class WindowsService implements PlatformService {
 
     private File findMyDocuments() {
         Process p = null;
-        String myDocuments = null;
         try {
             LOG.info("Querying registry for Documents folder location.");
             p = Runtime.getRuntime().exec("reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders\" /v personal");
@@ -105,8 +104,7 @@ public class WindowsService implements PlatformService {
                 for (final String value : values) {
                     Optional<String> matchForPath = getMatchForPath(value);
                     if(matchForPath.isPresent()) {
-                        myDocuments = matchForPath.get();
-                        break;
+                        return new File(matchForPath.get());
                     }
                 }
             }
@@ -119,12 +117,10 @@ public class WindowsService implements PlatformService {
             }
         }
 
-        if (myDocuments == null) {
-            LOG.warn("Could not reliably query register for My Documents folder. This usually means you have" +
-                    " a unicode name and standard location. Falling back to legacy selection:");
-            myDocuments = USER_HOME + "\\Documents";
-            LOG.warn("Result: " + myDocuments);
-        }
+        LOG.warn("Could not reliably query register for My Documents folder. This usually means you have" +
+                " a unicode name and standard location. Falling back to legacy selection:");
+        final String myDocuments = USER_HOME + "\\Documents";
+        LOG.warn("Result: " + myDocuments);
         return new File(myDocuments);
     }
 
