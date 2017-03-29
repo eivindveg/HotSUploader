@@ -33,17 +33,40 @@ public class WindowsServiceTest {
     @Test
     public void testDocumentsPathCanContainDots() {
         final String expected = "Z:\\Users\\S.omeUser\\Documents\\";
-        final Optional<String> matchForPath = windowsService.getMatchForPath(expected);
-
-        assertTrue("Path matches.", matchForPath.isPresent());
-
-        final String actual = matchForPath.get();
-        assertEquals("Path match is equal to inserted path.", expected, actual);
+        assertPathMatchForExpected(expected);
     }
 
     @Test
     public void testGetMatchForPath() {
         final String expected = "Z:\\Users\\SomeUser\\Documents\\";
+        assertPathMatchForExpected(expected);
+    }
+
+    @Test
+    public void testDocumentsPathCanContainDashes() {
+        final String expected = "Z:\\Users\\user-name\\Documents\\";
+        assertPathMatchForExpected(expected);
+    }
+
+    @Test
+    public void testDocumentsPathCanNestQuiteDeep() {
+        final String expected = "Z:\\Users\\username\\Documents\\OneDrive\\username\\Documents\\";
+        assertPathMatchForExpected(expected);
+    }
+
+    @Test
+    public void testDocumentsPathCanContainNumbers() {
+        final String expected = "Z:\\Users\\user1\\Documents\\";
+        assertPathMatchForExpected(expected);
+    }
+
+    @Test
+    public void testCaseForIssue148() {
+        final String expected = "C:\\Users\\User\\OneDrive\\User-i5\\Documents";
+        assertPathMatchForExpected(expected);
+    }
+
+    private void assertPathMatchForExpected(String expected) {
         final Optional<String> matchForPath = windowsService.getMatchForPath(expected);
 
         assertTrue("Path matches.", matchForPath.isPresent());
@@ -51,15 +74,7 @@ public class WindowsServiceTest {
         final String actual = matchForPath.get();
         assertEquals("Path match is equal to inserted path.", expected, actual);
     }
-
-    @Test
-    public void testGetMatchForPathDoesNotAllowNonCompliantUnicode() {
-        final String expected = "C:\\Users\\Eivind Vegsundv�g\\Documents\\";
-        final Optional<String> matchForPath = windowsService.getMatchForPath(expected);
-
-        assertFalse("Path matches.", matchForPath.isPresent());
-    }
-
+    
     @Test
     public void testGetMatchForPathDoesNotMatchNonPaths() {
         final String expected = "N:ot\\A\\Path\\";

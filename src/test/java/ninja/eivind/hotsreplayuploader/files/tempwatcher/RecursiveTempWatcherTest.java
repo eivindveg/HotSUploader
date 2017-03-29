@@ -41,18 +41,17 @@ import static org.junit.Assert.*;
 public class RecursiveTempWatcherTest {
 
     private static final Logger logger = LoggerFactory.getLogger(RecursiveTempWatcherTest.class);
+    @Rule
+    public JavaFXThreadingRule rule = new JavaFXThreadingRule();
     @Autowired
     private PlatformService platformService;
     private RecursiveTempWatcher tempWatcher;
     private BattleLobbyTempDirectories directories;
 
-    @Rule
-    public JavaFXThreadingRule rule = new JavaFXThreadingRule();
-
     @Before
     public void setUp() throws Exception {
         directories = platformService.getBattleLobbyTempDirectories();
-        if(!(directories.getRoot().exists() || directories.getRoot().mkdirs())) {
+        if (!(directories.getRoot().exists() || directories.getRoot().mkdirs())) {
             fail("Could not create tmp root");
         }
 
@@ -69,7 +68,7 @@ public class RecursiveTempWatcherTest {
                 latch.countDown();
             }
         });
-        if(!latch.await(1, TimeUnit.SECONDS)) {
+        if (!latch.await(1, TimeUnit.SECONDS)) {
             fail("Service did not start.");
         }
         // give watchers some time to wind up
@@ -85,14 +84,14 @@ public class RecursiveTempWatcherTest {
 
         callback.accept(null);
 
-        if(!latch.await(500, TimeUnit.MILLISECONDS)) {
+        if (!latch.await(500, TimeUnit.MILLISECONDS)) {
             throw new TimeoutException("Latch was not tripped.");
         }
     }
 
     @Test
     public void testCallbackIsInvokedWhenRelevantFileIsDiscovered() throws Exception {
-        CountDownLatch latch = new CountDownLatch(1);
+        final CountDownLatch latch = new CountDownLatch(1);
         final File[] fileAccessor = new File[1];
         final File tempWriteReplayFolder = new File(directories.getRemainder(), "TempWriteReplayP99");
         final File target = new File(tempWriteReplayFolder, BattleLobbyWatcher.REPLAY_SERVER_BATTLELOBBY);
@@ -101,12 +100,16 @@ public class RecursiveTempWatcherTest {
             latch.countDown();
         });
 
-        if(!(tempWriteReplayFolder.mkdirs() && target.createNewFile())) {
+        if (!(tempWriteReplayFolder.mkdirs() && target.createNewFile())) {
             fail("Could not create file to drop target " + target + " in");
         }
 
-        if(!latch.await(50000, TimeUnit.MILLISECONDS)) {
-            fail("Latch was not tripped.");
+        long stopAt = System.currentTimeMillis() + 50_000;
+        while (latch.getCount() != 0) {
+            if (System.currentTimeMillis() > stopAt) {
+                fail("Latch was not tripped");
+            }
+            Thread.sleep(1_000);
         }
 
         final String expected = target.getName();
@@ -118,7 +121,7 @@ public class RecursiveTempWatcherTest {
     private TempWatcher getChildRecursively(RecursiveTempWatcher tempWatcher) {
         TempWatcher child = tempWatcher.getChild();
         //noinspection InstanceofConcreteClass
-        if(child instanceof RecursiveTempWatcher) {
+        if (child instanceof RecursiveTempWatcher) {
             return getChildRecursively((RecursiveTempWatcher) child);
         }
         return tempWatcher;
@@ -127,7 +130,7 @@ public class RecursiveTempWatcherTest {
     @Test
     public void testGetChildCount() throws Exception {
         final File remainder = directories.getRemainder();
-        if(!remainder.mkdirs()) {
+        if (!remainder.mkdirs()) {
             fail("Failed to create files.");
         }
 
@@ -151,11 +154,11 @@ public class RecursiveTempWatcherTest {
     public void tearDown() throws Exception {
         CountDownLatch latch = new CountDownLatch(1);
         Platform.runLater(() -> {
-            if(tempWatcher.cancel()) {
+            if (tempWatcher.cancel()) {
                 latch.countDown();
             }
         });
-        if(!latch.await(1, TimeUnit.SECONDS)) {
+        if (!latch.await(1, TimeUnit.SECONDS)) {
             fail("Service failed to stop");
         }
         // give watchers some time to wind down recursively
@@ -168,7 +171,7 @@ public class RecursiveTempWatcherTest {
         for (File child : children != null ? children : new File[0]) {
             cleanupRecursive(child);
         }
-        if(file.exists() && !file.delete()) {
+        if (file.exists() && !file.delete()) {
             fail("Failed to clean up file " + file);
         }
 
