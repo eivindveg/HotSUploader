@@ -19,6 +19,7 @@ import ninja.eivind.hotsreplayuploader.HotsReplayUploaderTest;
 import ninja.eivind.hotsreplayuploader.concurrent.tasks.UploadTask;
 import ninja.eivind.hotsreplayuploader.models.ReplayFile;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
+import ninja.eivind.hotsreplayuploader.utils.ReplayUtils;
 import ninja.eivind.stormparser.StormParser;
 import ninja.eivind.stormparser.models.Replay;
 import org.junit.Before;
@@ -67,7 +68,7 @@ public class HotSLogsProviderTest {
     @Test
     public void testGetMatchId() throws NoSuchAlgorithmException {
         String expected = "5543abb9-af35-3ce6-a026-e9d5517f2964";
-        String actual = provider.getMatchId(parsedReplay);
+        String actual = ReplayUtils.getMatchId(parsedReplay);
 
         assertEquals("Match ID is calculated as expected", expected, actual);
     }
