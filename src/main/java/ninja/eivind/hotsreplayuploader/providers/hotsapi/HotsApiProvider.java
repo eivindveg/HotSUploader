@@ -81,7 +81,7 @@ public class HotsApiProvider extends Provider {
     private static final Logger LOG = LoggerFactory.getLogger(HotsApiProvider.class);
 
     private static final String UPLOAD_URL = "http://hotsapi.net/api/v1/replays/";
-    private static final String DUPLICATE_URL = "http://hotsapi.net/api/v1/replays/fingerprints/v2/";
+    private static final String DUPLICATE_URL = "http://hotsapi.net/api/v1/replays/fingerprints/v3/";
 
     public HotsApiProvider() {
         super("HotsApi");
