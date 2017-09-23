@@ -19,7 +19,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.fxml.FXMLLoader;
 import javafx.util.BuilderFactory;
+import ninja.eivind.hotsreplayuploader.di.locations.ApplicationHome;
 import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.utils.SimpleHttpClient;
 import ninja.eivind.stormparser.StandaloneBattleLobbyParser;
 import ninja.eivind.stormparser.StormParser;
@@ -28,6 +30,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.File;
 
 @Configuration
 @ComponentScan()
@@ -69,5 +73,11 @@ public class HotSReplayUploaderConfiguration {
     @Bean
     public StatusBinder statusBinder() {
         return new StatusBinder();
+    }
+
+    @Bean
+    @ApplicationHome
+    public File applicationHomeDirectory(PlatformService platformService) {
+        return platformService.getApplicationHome();
     }
 }
