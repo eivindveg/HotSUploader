@@ -83,13 +83,15 @@ public class JavaFXThreadingRule implements TestRule {
             logger.info("Attempting to initialize JavaFX");
 
             // initializes JavaFX environment
-            PlatformImpl.startup(() -> {
-                logger.info("JavaFX initialized.");
+            SwingUtilities.invokeLater(() -> {
+                // initializes JavaFX environment
+                new JFXPanel();
+
                 latch.countDown();
             });
 
             latch.await();
-            System.out.println("JavaFX was initialized in " + ((double) (System.currentTimeMillis() - timeMillis) / 1000.0) + "s");
+            logger.info("JavaFX was initialized in " + ((double) (System.currentTimeMillis() - timeMillis) / 1000.0) + "s");
         }
 
     }
