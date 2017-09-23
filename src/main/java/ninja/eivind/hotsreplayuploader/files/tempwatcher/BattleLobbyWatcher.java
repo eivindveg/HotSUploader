@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.*;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Consumer;
@@ -33,6 +35,7 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 public class BattleLobbyWatcher extends TempWatcher {
     public static final String REPLAY_SERVER_BATTLELOBBY = "replay.server.battlelobby";
     public static final long DELAY = 250L;
+    public static final long OLD_FILE_TIMEOUT = 3600; //in seconds
     private static final Logger logger = LoggerFactory.getLogger(BattleLobbyWatcher.class);
     private final File heroesDirectory;
     private final FilenameFilter fileNameFilter;
@@ -97,9 +100,20 @@ public class BattleLobbyWatcher extends TempWatcher {
                     File[] files = heroesDirectory.listFiles(fileNameFilter);
                     for (File file : files != null ? files : new File[0]) {
                         File target = new File(file, REPLAY_SERVER_BATTLELOBBY);
+
                         if (target.exists()) {
-                            handleFile(target);
-                            return;
+                            /* If the game crashes, battlobby files may not get removed properly.
+                             * We should ignore old game files, as they don't seem to be active anymore. */
+                            long secondsSinceGameCreation = Duration.between(
+                                Instant.ofEpochMilli(target.lastModified()), Instant.now()).getSeconds();
+                            if(secondsSinceGameCreation > OLD_FILE_TIMEOUT) {
+                                logger.warn("Old game files detected. Files are " + secondsSinceGameCreation + " seconds old:");
+                                logger.warn(target.getAbsolutePath());
+                            }
+                            else {
+                                handleFile(target);
+                                return;
+                            }
                         }
                     }
                     Thread.sleep(DELAY);
