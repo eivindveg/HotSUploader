@@ -16,6 +16,7 @@
 
 package ninja.eivind.hotsreplayuploader.settings;
 
+import ninja.eivind.hotsreplayuploader.di.locations.ApplicationHome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +31,7 @@ public class SettingsConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(SettingsConfiguration.class);
 
     @Bean
-    public JavaFXApplicationSettings applicationSettings(File applicationHome) {
+    public JavaFXApplicationSettings applicationSettings(@ApplicationHome File applicationHome) {
         final SimpleApplicationSettings settings = readFromYamlFile(new File(applicationHome, "settings.yml"))
                 .orElseGet(() -> {
                     logger.info("Received no settings object from reader. Generating new settings.");
