@@ -14,7 +14,7 @@ matrix:
     - os: osx
       before_script:
         - "ulimit -c unlimited"
-      osx_image: xcode8.2
+      osx_image: xcode9
 
 # this is not a library, so we can prepare for testing compiling - package for good measure to be as close to install
 # as possible
