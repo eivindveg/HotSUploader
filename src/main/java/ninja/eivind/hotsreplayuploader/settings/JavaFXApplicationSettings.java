@@ -22,7 +22,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * JavaFX property object for propagating events on changes to settings
  */
-@ConfigurationProperties("uploader.settings")
+@ConfigurationProperties("settings")
 public class JavaFXApplicationSettings {
 
     private final SimpleBooleanProperty startMinimized = new SimpleBooleanProperty(false);
