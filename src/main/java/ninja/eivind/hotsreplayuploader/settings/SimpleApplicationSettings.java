@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Eivind Vegsundvåg
+ * Copyright 2015-2017 Eivind Vegsundvåg
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,13 @@
 package ninja.eivind.hotsreplayuploader.settings;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Simple POJO for holding the application's settings when reading from or writing to YAML.
  */
 @Data
+@ConfigurationProperties("uploader.settings")
 public class SimpleApplicationSettings {
 
     private boolean startMinimized;
