@@ -16,19 +16,11 @@
 
 package ninja.eivind.hotsreplayuploader.settings;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@SuppressWarnings("EmptyClass")
 @Configuration
-@EnableConfigurationProperties(SimpleApplicationSettings.class)
+@EnableConfigurationProperties(JavaFXApplicationSettings.class)
 public class SettingsConfiguration {
-    private static final Logger logger = LoggerFactory.getLogger(SettingsConfiguration.class);
-
-    @Bean
-    public JavaFXApplicationSettings applicationSettings(SimpleApplicationSettings settings) {
-        return new JavaFXApplicationSettings(settings);
-    }
 }

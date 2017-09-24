@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Eivind Vegsundvåg
+ * Copyright 2015-2017 Eivind Vegsundvåg
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,22 @@
 package ninja.eivind.hotsreplayuploader.settings;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * JavaFX property object for propagating events on changes to settings
  */
+@ConfigurationProperties("uploader.settings")
 public class JavaFXApplicationSettings {
 
-    private final SimpleBooleanProperty startMinimized;
-
-    public JavaFXApplicationSettings(SimpleApplicationSettings settings) {
-        startMinimized = new SimpleBooleanProperty(settings.isStartMinimized());
-    }
+    private final SimpleBooleanProperty startMinimized = new SimpleBooleanProperty(false);
 
     public boolean isStartMinimized() {
         return startMinimized.get();
+    }
+
+    public void setStartMinimized(boolean startMinimized) {
+        this.startMinimized.set(startMinimized);
     }
 
     public SimpleBooleanProperty startMinimizedProperty() {
