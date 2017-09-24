@@ -16,7 +16,6 @@
 
 package ninja.eivind.hotsreplayuploader.settings;
 
-import javafx.beans.property.SimpleBooleanProperty;
 import ninja.eivind.hotsreplayuploader.settings.window.WindowSettings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
