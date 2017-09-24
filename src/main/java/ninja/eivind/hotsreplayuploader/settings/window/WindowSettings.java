@@ -14,13 +14,24 @@
  * limitations under the License.
  */
 
-package ninja.eivind.hotsreplayuploader.settings;
+package ninja.eivind.hotsreplayuploader.settings.window;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import javafx.beans.property.SimpleBooleanProperty;
 
-@SuppressWarnings("EmptyClass")
-@Configuration
-@EnableConfigurationProperties(ApplicationSettings.class)
-public class SettingsConfiguration {
+public class WindowSettings {
+
+    private final SimpleBooleanProperty startMinimized = new SimpleBooleanProperty(false);
+
+    public boolean isStartMinimized() {
+        return startMinimized.get();
+    }
+
+    public void setStartMinimized(boolean startMinimized) {
+        this.startMinimized.set(startMinimized);
+    }
+
+    public SimpleBooleanProperty startMinimizedProperty() {
+        return startMinimized;
+    }
+
 }

@@ -28,7 +28,7 @@ import ninja.eivind.hotsreplayuploader.preloader.ProgressMonitor;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceFactoryBean;
-import ninja.eivind.hotsreplayuploader.settings.JavaFXApplicationSettings;
+import ninja.eivind.hotsreplayuploader.settings.ApplicationSettings;
 import ninja.eivind.hotsreplayuploader.settings.SettingsFileInitializer;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
@@ -68,7 +68,7 @@ public class Client extends Application implements ApplicationContextAware {
     private SceneBuilderFactory sceneBuilderFactory;
 
     @Autowired
-    private JavaFXApplicationSettings settings;
+    private ApplicationSettings settings;
 
     private static boolean preloaderSupported;
 
@@ -132,7 +132,7 @@ public class Client extends Application implements ApplicationContextAware {
 
 
             primaryStage.setScene(scene);
-            if(!settings.isStartMinimized()) {
+            if(!settings.getWindow().isStartMinimized()) {
                 primaryStage.show();
             }
         } catch (Exception e) {

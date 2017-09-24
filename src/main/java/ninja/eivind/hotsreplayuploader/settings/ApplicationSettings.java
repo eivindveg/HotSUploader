@@ -17,25 +17,21 @@
 package ninja.eivind.hotsreplayuploader.settings;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import ninja.eivind.hotsreplayuploader.settings.window.WindowSettings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * JavaFX property object for propagating events on changes to settings
  */
 @ConfigurationProperties("settings")
-public class JavaFXApplicationSettings {
+public class ApplicationSettings {
 
-    private final SimpleBooleanProperty startMinimized = new SimpleBooleanProperty(false);
+    @NestedConfigurationProperty
+    private final WindowSettings window = new WindowSettings();
 
-    public boolean isStartMinimized() {
-        return startMinimized.get();
+    public WindowSettings getWindow() {
+        return window;
     }
 
-    public void setStartMinimized(boolean startMinimized) {
-        this.startMinimized.set(startMinimized);
-    }
-
-    public SimpleBooleanProperty startMinimizedProperty() {
-        return startMinimized;
-    }
 }
