@@ -1,16 +1,18 @@
-// Copyright 2015-2016 Eivind Vegsundvåg
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/*
+ * Copyright 2015-2017 Eivind Vegsundvåg
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package ninja.eivind.hotsreplayuploader;
 
@@ -26,6 +28,8 @@ import ninja.eivind.hotsreplayuploader.preloader.ProgressMonitor;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
 import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceFactoryBean;
+import ninja.eivind.hotsreplayuploader.settings.ApplicationSettings;
+import ninja.eivind.hotsreplayuploader.settings.SettingsFileInitializer;
 import ninja.eivind.hotsreplayuploader.utils.Constants;
 import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
 import ninja.eivind.hotsreplayuploader.window.builder.SceneBuilderFactory;
@@ -35,7 +39,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.awt.*;
 import java.net.URL;
@@ -43,6 +49,7 @@ import java.net.URL;
 /**
  * Application entry point. Sets up the actions that connect to the underlying platform.
  */
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 @SpringBootApplication
 public class Client extends Application implements ApplicationContextAware {
 
@@ -60,12 +67,16 @@ public class Client extends Application implements ApplicationContextAware {
     @Autowired
     private SceneBuilderFactory sceneBuilderFactory;
 
+    @Autowired
+    private ApplicationSettings settings;
+
     private static boolean preloaderSupported;
 
     private ConfigurableApplicationContext context;
 
     public static void main(String... args) throws Exception {
         launchArgs = args;
+        Application.launch();
         PlatformService platformService = new PlatformServiceFactoryBean().getObject();
         preloaderSupported = platformService.isPreloaderSupported();
         if (preloaderSupported) {
@@ -92,7 +103,9 @@ public class Client extends Application implements ApplicationContextAware {
         if(preloaderSupported) {
             builder.initializers(new ProgressMonitor(this::notifyPreloader));
         }
-        context = builder.headless(false).run(launchArgs);
+        context = builder.headless(false)
+                .initializers(new SettingsFileInitializer())
+                .run(launchArgs);
         context.getAutowireCapableBeanFactory().autowireBean(this);
 
         //add a shutdown hook to be really sure, resources are closed properly
@@ -119,7 +132,9 @@ public class Client extends Application implements ApplicationContextAware {
 
 
             primaryStage.setScene(scene);
-            primaryStage.show();
+            if(!settings.getWindow().isStartMinimized()) {
+                primaryStage.show();
+            }
         } catch (Exception e) {
             LOG.error("Failed to start", e);
             throw e;

@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.BuilderFactory;
@@ -58,6 +59,9 @@ public class HomeController implements JavaFXController, InitializingBean {
     @FXML
     private Pane nodeHolder;
 
+    @FXML
+    private ImageView settingsIcon;
+
     @Autowired
     private PlatformService platformService;
     @Autowired
@@ -82,6 +86,9 @@ public class HomeController implements JavaFXController, InitializingBean {
 
         currentContext = loadInitialContext();
         uploaderNode = (UploaderNode) currentContext;
+        settingsIcon.setOnMouseClicked(event -> {
+            LOG.error("NYI -> Settings icon clicked");
+        });
         LOG.info("Initialized HomeController");
     }
 

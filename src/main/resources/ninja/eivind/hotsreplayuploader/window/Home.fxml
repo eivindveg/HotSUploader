@@ -15,15 +15,24 @@
 <?import ninja.eivind.hotsreplayuploader.window.nodes.HotsLogsNode?>
 <?import ninja.eivind.hotsreplayuploader.window.nodes.UploaderNode?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="root" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ninja.eivind.hotsreplayuploader.window.HomeController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="root" stylesheets="@../../../../styles/window.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ninja.eivind.hotsreplayuploader.window.HomeController">
     <padding>
         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
     </padding>
-   <bottom>
-      <HBox BorderPane.alignment="CENTER" />
-   </bottom>
    <right>
-       <HotsLogsNode />
+      <VBox spacing="8.0">
+         <children>
+             <HotsLogsNode VBox.vgrow="ALWAYS" />
+            <HBox alignment="BOTTOM_RIGHT" VBox.vgrow="NEVER">
+               <children>
+                  <ImageView fx:id="settingsIcon" fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../settings/settings-icon.png" />
+                     </image></ImageView>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
    </right>
    <top>
       <HBox BorderPane.alignment="CENTER">
