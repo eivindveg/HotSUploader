@@ -14,31 +14,33 @@
 
 package ninja.eivind.hotsreplayuploader;
 
-import com.sun.javafx.application.LauncherImpl;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
-import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
-import ninja.eivind.hotsreplayuploader.preloader.ClientPreloader;
-import ninja.eivind.hotsreplayuploader.preloader.ProgressMonitor;
-import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
-import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
-import ninja.eivind.hotsreplayuploader.services.platform.PlatformServiceFactoryBean;
-import ninja.eivind.hotsreplayuploader.utils.Constants;
-import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
-import ninja.eivind.hotsreplayuploader.window.builder.SceneBuilderFactory;
+import java.awt.AWTException;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
+import java.net.URL;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 
-import java.awt.*;
-import java.net.URL;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
+import ninja.eivind.hotsreplayuploader.models.stringconverters.StatusBinder;
+import ninja.eivind.hotsreplayuploader.preloader.ProgressMonitor;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformNotSupportedException;
+import ninja.eivind.hotsreplayuploader.services.platform.PlatformService;
+import ninja.eivind.hotsreplayuploader.utils.Constants;
+import ninja.eivind.hotsreplayuploader.versions.ReleaseManager;
+import ninja.eivind.hotsreplayuploader.window.builder.SceneBuilderFactory;
 
 /**
  * Application entry point. Sets up the actions that connect to the underlying platform.
@@ -65,7 +67,8 @@ public class Client extends Application implements ApplicationContextAware {
     private ConfigurableApplicationContext context;
 
     public static void main(String... args) throws Exception {
-        launchArgs = args;
+        launch(Client.class, launchArgs = args);
+        /*launchArgs = args;
         PlatformService platformService = new PlatformServiceFactoryBean().getObject();
         preloaderSupported = platformService.isPreloaderSupported();
         if (preloaderSupported) {
@@ -74,7 +77,7 @@ public class Client extends Application implements ApplicationContextAware {
         } else {
             LOG.info("Launching without preloader.");
             launch(Client.class, args);
-        }
+        }*/
     }
 
 

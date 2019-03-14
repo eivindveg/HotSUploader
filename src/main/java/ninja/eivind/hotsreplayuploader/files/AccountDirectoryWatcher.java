@@ -51,9 +51,12 @@ public class AccountDirectoryWatcher implements InitializingBean, DisposableBean
     public void beginWatch() {
         LOG.info("Initiating watch against directories:");
         watchDirectories.stream()
-                .map(file -> Paths.get(file.toString()))
-                .map(WatchHandler::new)
-                .forEach(watchHandlers::add);
+            .peek(f -> {
+                LOG.info("\t{}", f);
+            })
+            .map(file -> Paths.get(file.toString()))
+            .map(WatchHandler::new)
+            .forEach(watchHandlers::add);
         LOG.info("Watcher initiated.");
     }
 
