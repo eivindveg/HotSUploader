@@ -1,15 +1,15 @@
 language: java
 jdk:
-  - oraclejdk8
+  - openjdk11
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3
 
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
+#addons:
+#  apt:
+#    packages:
+#      - openjdk-11-jdk
 # this is not a library, so we can prepare for testing compiling - package for good measure to be as close to install
 # as possible
 install: mvn package -DskipTests=true
@@ -20,3 +20,14 @@ notifications:
     on_success: change
     on_failure: always
     on_start: never
+
+deploy:
+  provider: releases
+  overwrite: true
+  api_key:
+    secure: tHbYmjJqlBsF6IuAED9qJTUmoADh5JQ+qDtLq5Guu/UsngZNW999MeBk9an5IOae4Hrs9T6hlQWXTlMTYB0U5pavTnD1EPSZ7xDg7dJ+Mblpx/yiL85LCjSlYYpdBRZ+dReztfO6nNGk1+yg2LIZY7ZFklE21w0srxPw17ZJKmWSlge3UgdZVaq8DTkkUxh4yznTLqIY9kR21NNx7pWWfx/VGYcarFfk1jTppetlL9jGNE3N1Nnknqvz5woxvjibGiED2174uyu7X9eqMU/j2DtZKcxVEj5r9ZzqXVdopq18mZAAaHNXpA/zy31V8sPp/lrarKJGre1ORi4iq86C0NvDm/xX8ubeZbHaiJd1GFRxCTSvsQ1iwdQF1LjDw4riD1o3bYtaEpvsWKbTV3Gv5VEjJbtoKLDtx0H3VDQAEjfVjbIfg4MgK52vcXyiVTqjogjlUy+r38p6w0AkATRZVcaST9uPFvEFMhMxT9SXaFcOR71qCMHtiv0DwuYwMbf/fHkFlnPCE8DKio34Q48Me/TuwEFDnbVihlNbhVDbBFFGmJT/LUqdkz/tjJyO4QmbEEnfYiaCaOegBEBQFQM++jrIz6YmZYojW607cSWXEAnDI3X0Cehtg4444Nhf3DkXQ/gxRXDMtNDd4Iy2qio2uc2mveTOfFZx1qEAnghxm9s=
+  file: "target/HotS\ Replay\ Uploader-boot.jar"
+  skip_cleanup: true
+  on:
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ ^develop|master$

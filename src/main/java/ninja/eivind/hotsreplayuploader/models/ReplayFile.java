@@ -65,6 +65,7 @@ public class ReplayFile implements Serializable {
         try {
             return Files.walk(file.toPath(), FileVisitOption.FOLLOW_LINKS)
                     .map(Path::toFile)
+                    .filter(f -> f.getName().endsWith(".StormReplay"))
                     .map(ReplayFile::new)
                     .collect(Collectors.toList());
         } catch (IOException exception) {
